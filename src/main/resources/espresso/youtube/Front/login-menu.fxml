@@ -14,7 +14,8 @@
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" />
       <AnchorPane layoutX="248.0" layoutY="131.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="785.0" style="-fx-background-color: transparent;">
          <children>
-            <Pane fx:id="signUpPane" layoutX="420.0" layoutY="18.0" opacity="0.0" prefHeight="409.0" prefWidth="367.0" styleClass="glass" stylesheets="@styleSheet.css">
+            <Pane opacity="0.11" prefHeight="458.0" prefWidth="785.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 2;" styleClass="glow" stylesheets="@styleSheet.css" />
+            <Pane fx:id="signUpPane" layoutX="392.0" layoutY="23.0" opacity="0.0" prefHeight="409.0" prefWidth="367.0" styleClass="glass" stylesheets="@styleSheet.css">
                <children>
                   <TextField layoutX="49.0" layoutY="84.0" prefHeight="30.0" prefWidth="270.0" promptText="Esprsso1383" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
@@ -48,13 +49,12 @@
                   </PasswordField>
                   <Button layoutX="147.0" layoutY="291.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="74.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5;" text="Sign up" textFill="WHITE">
                      <font>
-                        <Font name="Century Gothic" size="12.0" />
+                        <Font name="Century Gothic" size="13.0" />
                      </font>
                   </Button>
                </children>
             </Pane>
-            <Pane opacity="0.11" prefHeight="458.0" prefWidth="785.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 2;" styleClass="glow" stylesheets="@styleSheet.css" />
-            <Pane fx:id="logInPane" prefHeight="409.0" prefWidth="367.0" styleClass="glass" stylesheets="@styleSheet.css">
+            <Pane fx:id="logInPane" layoutX="32.0" layoutY="22.0" prefHeight="409.0" prefWidth="367.0" styleClass="glass" stylesheets="@styleSheet.css">
                <children>
                   <TextField layoutX="49.0" layoutY="100.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
@@ -78,7 +78,7 @@
                   </Label>
                   <Button layoutX="147.0" layoutY="278.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="74.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5;" text="Log in" textFill="WHITE">
                      <font>
-                        <Font name="Century Gothic" size="12.0" />
+                        <Font name="Century Gothic" size="13.0" />
                      </font>
                   </Button>
                </children>

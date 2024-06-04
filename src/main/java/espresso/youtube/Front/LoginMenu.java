@@ -89,7 +89,7 @@ public class LoginMenu implements Initializable {
             timelineFadeLog.play();
             //fade signup pane
             Timeline timelineMoveSign = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.layoutYProperty(), 22)),
+                    new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.layoutYProperty(), 25)),
                     new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.layoutYProperty(), 18))
             );
             timelineMoveSign.play();
@@ -119,7 +119,7 @@ public class LoginMenu implements Initializable {
             //fade signup pane
             Timeline timelineMoveSign = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.layoutYProperty(), 18)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.layoutYProperty(), 22))
+                    new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.layoutYProperty(), 25))
             );
             timelineMoveSign.play();
             Timeline timelineFadeSign = new Timeline(
