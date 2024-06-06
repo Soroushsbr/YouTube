@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="329.0" prefWidth="200.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="13.0" layoutY="14.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="Home" textFill="WHITE">
+      <Button layoutX="13.0" layoutY="14.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="Home" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>
@@ -17,7 +17,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="13.0" layoutY="82.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="           Subscriptions" textFill="WHITE">
+      <Button layoutX="13.0" layoutY="82.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="           Subscriptions" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>
@@ -25,7 +25,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="13.0" layoutY="48.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="Shorts" textFill="WHITE">
+      <Button layoutX="13.0" layoutY="48.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="Shorts" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>
@@ -37,7 +37,7 @@
       <Pane disable="true" layoutX="22.0" layoutY="55.0" prefHeight="19.0" prefWidth="17.0" styleClass="shorts" stylesheets="@styleSheet.css" />
       <Pane disable="true" layoutX="22.0" layoutY="90.0" prefHeight="19.0" prefWidth="23.0" styleClass="sub" stylesheets="@styleSheet.css" />
       <Line endX="63.0" layoutX="121.0" layoutY="134.0" startX="-105.0" stroke="#686868" />
-      <Button layoutX="13.0" layoutY="147.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="           Your channel" textFill="WHITE">
+      <Button layoutX="13.0" layoutY="147.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="           Your channel" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>
@@ -46,7 +46,7 @@
          </cursor>
       </Button>
       <Pane disable="true" layoutX="22.0" layoutY="155.0" prefHeight="19.0" prefWidth="17.0" styleClass="your-channel" stylesheets="@styleSheet.css" />
-      <Button layoutX="13.0" layoutY="181.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="   Playlists" textFill="WHITE">
+      <Button layoutX="13.0" layoutY="181.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="   Playlists" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>
@@ -55,7 +55,7 @@
          </cursor>
       </Button>
       <Pane disable="true" layoutX="23.0" layoutY="191.0" prefHeight="18.0" prefWidth="21.0" styleClass="playlists" stylesheets="@styleSheet.css" />
-      <Button layoutX="13.0" layoutY="215.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="          Watch Later" textFill="WHITE">
+      <Button layoutX="13.0" layoutY="215.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="          Watch Later" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>
@@ -64,7 +64,7 @@
          </cursor>
       </Button>
       <Pane disable="true" layoutX="23.0" layoutY="223.0" prefHeight="20.0" prefWidth="20.0" styleClass="watch-later" stylesheets="@styleSheet.css" />
-      <Button layoutX="12.0" layoutY="249.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" stylesheets="@styleSheet.css" text="           Liked videos" textFill="WHITE">
+      <Button layoutX="12.0" layoutY="249.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" styleClass="button_left" stylesheets="@styleSheet.css" text="           Liked videos" textFill="WHITE">
          <font>
             <Font size="13.0" />
          </font>

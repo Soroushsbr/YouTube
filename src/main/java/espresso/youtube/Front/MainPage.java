@@ -1,8 +1,12 @@
 package espresso.youtube.Front;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -11,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,6 +31,8 @@ public class MainPage implements Initializable {
     VBox videosBox;
     @FXML
     Circle profile;
+    @FXML
+    ScrollPane dashboardPane;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -41,7 +48,7 @@ public class MainPage implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        test();
+        appendVideos();
     }
 
     //to show the notifications of user
@@ -53,15 +60,16 @@ public class MainPage implements Initializable {
         }
     }
 
-    /*
-    * this is for putting videos in the vbox, and I'm still working on it.
-    public void test(){
+    //this method gets videos from server and show them to user
+    public void appendVideos(){
         try {
             HBox hBox = new HBox();
             hBox.getChildren().clear();
             for(int i = 0 ; i < 3; i++) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
                 AnchorPane videoPane = loader.load();
+//                this can remove the red line blow video
+//                (((AnchorPane) videoPane.getChildren().get(0)).getChildren().get(0)).setVisible(false);
                 hBox.getChildren().add(videoPane);
             }
             videosBox.getChildren().clear();
@@ -70,5 +78,23 @@ public class MainPage implements Initializable {
             throw new RuntimeException(e);
         }
     }
-    */
+
+    public void showDash(){
+        if(dashboardPane.isVisible()){
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(dashboardPane.layoutXProperty(), dashboardPane.getLayoutX())),
+                    new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), -200))
+            );
+            timeline.play();
+            timeline.setOnFinished(event -> dashboardPane.setVisible(false));
+        }else {
+            dashboardPane.setVisible(true);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(dashboardPane.layoutXProperty(), dashboardPane.getLayoutX())),
+                    new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), 0))
+            );
+            timeline.play();
+        }
+    }
+
 }

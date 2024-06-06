@@ -24,6 +24,12 @@ public class LoginMenu implements Initializable {
     AnchorPane backgroundPane;
     @FXML
     AnchorPane youtubeBackground;
+    @FXML
+    Pane logInPane;
+    @FXML
+    Pane signUpPane;
+    @FXML
+    Hyperlink changeOption;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set the background video
@@ -57,12 +63,6 @@ public class LoginMenu implements Initializable {
         );
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
-    @FXML
-    Pane logInPane;
-    @FXML
-    Pane signUpPane;
-    @FXML
-    Hyperlink changeOption;
     /*
     * this method change the option between sign up and login.
     * it includes animation for each panel.
@@ -130,4 +130,5 @@ public class LoginMenu implements Initializable {
             changeOption.setText("Sign Up");
         }
     }
+    //todo: make animation for when user input the wrong pass or name.
 }
