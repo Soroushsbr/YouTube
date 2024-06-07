@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+// Server class is where threads from Client_Handler runs
 public class Server {
 
     private static final int PORT = 3000;
