@@ -34,7 +34,6 @@ public class VideoPage implements Initializable {
         leftVbox.getChildren().add(videoPane);
         //this is for binding video into pane
 
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
