@@ -33,6 +33,7 @@ public class MainPage implements Initializable {
     Circle profile;
     @FXML
     ScrollPane dashboardPane;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -43,7 +44,7 @@ public class MainPage implements Initializable {
             //here it sets the user profile picture
             //I put a random picture to see if it's working
             //todo: replace the test image with the actual image
-            ImagePattern pattern = new ImagePattern(new Image(getClass().getResource("test.jpg").openStream()));
+            ImagePattern pattern = new ImagePattern(new Image(getClass().getResource("Images/test.jpg").openStream()));
             profile.setFill(pattern);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -66,7 +67,7 @@ public class MainPage implements Initializable {
             HBox hBox = new HBox();
             hBox.getChildren().clear();
             for(int i = 0 ; i < 3; i++) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                 AnchorPane videoPane = loader.load();
 //                this can remove the red line blow video
 //                (((AnchorPane) videoPane.getChildren().get(0)).getChildren().get(0)).setVisible(false);

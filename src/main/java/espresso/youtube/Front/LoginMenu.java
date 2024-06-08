@@ -33,7 +33,7 @@ public class LoginMenu implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set the background video
-        URL file = getClass().getResource("back2.mp4");
+        URL file = getClass().getResource("Images/back2.mp4");
         Media media = new Media(file.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mediaPlayer);
@@ -54,12 +54,12 @@ public class LoginMenu implements Initializable {
         timelineFade.play();
         Timeline timelineMove = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(youtubeBackground.layoutYProperty(), youtubeBackground.getLayoutY())),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(youtubeBackground.layoutYProperty(), 70 ))
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(youtubeBackground.layoutYProperty(), 60 ))
         );
         timelineMove.play();
         Timeline timelineMove2 = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(youtubeBackground.layoutYProperty(), 70)),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(youtubeBackground.layoutYProperty(), 90 ))
+                new KeyFrame(Duration.ZERO, new KeyValue(youtubeBackground.layoutYProperty(), 60)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(youtubeBackground.layoutYProperty(), 80 ))
         );
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
@@ -73,58 +73,58 @@ public class LoginMenu implements Initializable {
         if(changeOption.getText().equals("Sign Up")) {
             Timeline timelineMoveYT = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(youtubeBackground.layoutXProperty(), youtubeBackground.getLayoutX())),
-                    new KeyFrame(Duration.seconds(0.8), new KeyValue(youtubeBackground.layoutXProperty(), 40))
+                    new KeyFrame(Duration.seconds(0.7), new KeyValue(youtubeBackground.layoutXProperty(), 40))
             );
             timelineMoveYT.play();
             //fade the login pane
             Timeline timelineMoveLog = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(logInPane.layoutYProperty(), logInPane.getLayoutY())),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(logInPane.layoutYProperty(), 22))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(logInPane.layoutYProperty(), 22))
             );
             timelineMoveLog.play();
             Timeline timelineFadeLog = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(logInPane.opacityProperty(), 1)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(logInPane.opacityProperty(), 0))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(logInPane.opacityProperty(), 0))
             );
             timelineFadeLog.play();
             //fade signup pane
             Timeline timelineMoveSign = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.layoutYProperty(), 25)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.layoutYProperty(), 18))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(signUpPane.layoutYProperty(), 18))
             );
             timelineMoveSign.play();
             Timeline timelineFadeSign = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.opacityProperty(), 0)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.opacityProperty(), 1))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(signUpPane.opacityProperty(), 1))
             );
             timelineFadeSign.play();
             changeOption.setText("Log In");
         }else{
             Timeline timelineMoveYT = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(youtubeBackground.layoutXProperty(), youtubeBackground.getLayoutX())),
-                    new KeyFrame(Duration.seconds(0.8), new KeyValue(youtubeBackground.layoutXProperty(), 440))
+                    new KeyFrame(Duration.seconds(0.7), new KeyValue(youtubeBackground.layoutXProperty(), 440))
             );
             timelineMoveYT.play();
             //fade the login pane
             Timeline timelineMoveLog = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(logInPane.layoutYProperty(), logInPane.getLayoutY())),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(logInPane.layoutYProperty(), 18))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(logInPane.layoutYProperty(), 18))
             );
             timelineMoveLog.play();
             Timeline timelineFadeLog = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(logInPane.opacityProperty(), 0)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(logInPane.opacityProperty(), 1))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(logInPane.opacityProperty(), 1))
             );
             timelineFadeLog.play();
             //fade signup pane
             Timeline timelineMoveSign = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.layoutYProperty(), 18)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.layoutYProperty(), 25))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(signUpPane.layoutYProperty(), 25))
             );
             timelineMoveSign.play();
             Timeline timelineFadeSign = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(signUpPane.opacityProperty(), 1)),
-                    new KeyFrame(Duration.seconds(0.7), new KeyValue(signUpPane.opacityProperty(), 0))
+                    new KeyFrame(Duration.seconds(0.6), new KeyValue(signUpPane.opacityProperty(), 0))
             );
             timelineFadeSign.play();
             changeOption.setText("Sign Up");

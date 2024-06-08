@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
@@ -92,7 +93,11 @@
             </Pane>
             <AnchorPane fx:id="youtubeBackground" layoutX="440.0" layoutY="20.0" opacity="0.0" prefHeight="293.0" prefWidth="321.0">
                <children>
-                  <Pane layoutX="61.0" layoutY="14.0" prefHeight="130.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-width: 3;" styleClass="youtube_logo" stylesheets="@styleSheet.css" />
+                  <Pane layoutX="61.0" layoutY="14.0" prefHeight="130.0" prefWidth="200.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-width: 3;" stylesheets="@styleSheet.css">
+                     <styleClass>
+                        <String fx:value="youtube_logo" />
+                        <String fx:value="shadow" />
+                     </styleClass></Pane>
                   <Label layoutX="37.0" layoutY="183.0" text="Enjoy your favorite videos" textFill="WHITE">
                      <font>
                         <Font name="Century Gothic Bold" size="20.0" />
