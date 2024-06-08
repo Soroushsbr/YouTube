@@ -26,13 +26,18 @@
                   <Font size="13.0" />
                </font>
             </TextField>
+            <Button layoutX="1128.0" layoutY="4.0" mnemonicParsing="false" onAction="#selectNotif" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
             <Pane layoutX="77.0" layoutY="14.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
             <Button layoutX="64.0" layoutY="9.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label layoutX="107.25" layoutY="8.700000762939453" prefHeight="22.0" scaleX="0.9" scaleY="1.2" text="YouTube" textFill="WHITE">
+            <Label layoutX="103.25" layoutY="11.700000762939453" prefHeight="22.0" scaleX="0.9" scaleY="1.2" text="YouTube" textFill="WHITE">
                <font>
                   <Font name="TradeGothic-BoldCondTwenty" size="21.0" />
                </font>
@@ -42,10 +47,15 @@
                   <Font size="1.0" />
                </font>
             </Button>
+            <Button layoutX="1067.0" layoutY="3.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
             <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" stylesheets="@styleSheet.css" />
             <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" stylesheets="@styleSheet.css" />
             <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-            <Button layoutY="5.0" mnemonicParsing="false" onAction="#showDash" prefHeight="33.0" prefWidth="33.0" stylesheets="@styleSheet.css">
+            <Button layoutY="4.0" mnemonicParsing="false" onAction="#showDash" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -63,15 +73,6 @@
             <VBox prefHeight="373.0" prefWidth="277.0" style="-fx-background-radius: 20;" />
          </children>
       </AnchorPane>
-      <Button layoutX="1153.0" layoutY="18.0" mnemonicParsing="false" onAction="#selectNotif" prefHeight="33.0" prefWidth="36.0" stylesheets="@styleSheet.css">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Button layoutX="1092.0" layoutY="16.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="37.0" stylesheets="@styleSheet.css">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Button>
       <Button layoutX="16.0" layoutY="308.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="50.0" stylesheets="@styleSheet.css">
          <cursor>
             <Cursor fx:constant="HAND" />

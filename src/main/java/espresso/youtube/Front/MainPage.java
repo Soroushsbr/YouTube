@@ -70,7 +70,7 @@ public class MainPage implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                 AnchorPane videoPane = loader.load();
 //                this can remove the red line blow video
-//                (((AnchorPane) videoPane.getChildren().get(0)).getChildren().get(0)).setVisible(false);
+//                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
                 hBox.getChildren().add(videoPane);
             }
             videosBox.getChildren().clear();
