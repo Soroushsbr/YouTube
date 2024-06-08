@@ -3,14 +3,11 @@ package espresso.youtube.Front;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -32,8 +29,6 @@ public class VideoPage implements Initializable {
         videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
         videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
         leftVbox.getChildren().add(videoPane);
-        //this is for binding video into pane
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,5 +67,16 @@ public class VideoPage implements Initializable {
             );
             timeline.play();
         }
+    }
+    //this method place the video and plays it(this needs the video from database)
+    public void appendVideo(Media media, AnchorPane videoPane){
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        MediaView mediaView = new MediaView(mediaPlayer);
+        mediaPlayer.play();
+        //make the video to be middle of vbox
+        mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
+        mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
+
+        ((VBox) videoPane.getChildren().get(0)).getChildren().add(mediaView);
     }
 }
