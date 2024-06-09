@@ -7,4 +7,6 @@ module espresso.youtube {
     opens espresso.youtube to javafx.fxml;
     exports espresso.youtube;
     exports espresso.youtube.Server;
+    exports espresso.youtube.models;
+    exports espresso.youtube.models.account;
 }

@@ -8,7 +8,6 @@ public class Handle_Server_Response implements Runnable {
     public Handle_Server_Response(Socket client) throws IOException {
         this.in = new DataInputStream(client.getInputStream());
     }
-
     @Override
     public void run() {
         try {
