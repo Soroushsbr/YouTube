@@ -11,8 +11,8 @@ public class ClassInfo {
         this.request = request;
     }
 
-    public String getClass_name() {
-        return class_name;
+    public String getClassName() {
+        return className;
     }
 
     public String getRequest() {
