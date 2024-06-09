@@ -20,6 +20,8 @@ import java.util.ResourceBundle;
 public class VideoPage implements Initializable {
     @FXML
     VBox leftVbox;
+    @FXML
+    VBox rightBox;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -79,4 +81,6 @@ public class VideoPage implements Initializable {
 
         ((VBox) videoPane.getChildren().get(0)).getChildren().add(mediaView);
     }
+
+
 }
