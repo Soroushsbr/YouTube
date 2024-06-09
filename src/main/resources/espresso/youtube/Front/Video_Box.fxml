@@ -13,11 +13,11 @@
 
 <AnchorPane prefHeight="707.0" prefWidth="973.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox alignment="CENTER" layoutX="20.0" layoutY="16.0" prefHeight="542.0" prefWidth="933.0" style="-fx-background-color: black;" />
-      <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="550.0" layoutX="20.0" layoutY="12.0" stroke="#0f0f0f" strokeWidth="10.0" width="933.0" />
-      <AnchorPane layoutX="20.0" layoutY="15.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="542.0" prefWidth="933.0" style="-fx-background-color: transparent;">
+      <VBox alignment="CENTER" layoutX="20.0" layoutY="16.0" prefHeight="526.0" prefWidth="933.0" style="-fx-background-color: black;" />
+      <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="534.0" layoutX="20.0" layoutY="12.0" stroke="#0f0f0f" strokeWidth="10.0" width="933.0" />
+      <AnchorPane layoutX="20.0" layoutY="15.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="538.0" prefWidth="933.0" style="-fx-background-color: transparent;">
          <children>
-            <Button layoutX="28.0" layoutY="505.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="play" stylesheets="@video_page.css">
+            <Button layoutX="26.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="play" stylesheets="@video_page.css">
                <font>
                   <Font size="10.0" />
                </font>
@@ -25,7 +25,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="82.0" layoutY="505.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="nextVid" stylesheets="@video_page.css">
+            <Button layoutX="80.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="nextVid" stylesheets="@video_page.css">
                <font>
                   <Font size="10.0" />
                </font>
@@ -33,7 +33,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="147.0" layoutY="505.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="mute" stylesheets="@video_page.css">
+            <Button layoutX="145.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="mute" stylesheets="@video_page.css">
                <font>
                   <Font size="10.0" />
                </font>
@@ -41,12 +41,12 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label layoutX="240.0" layoutY="505.0" text="00:00/00:00" textFill="WHITE">
+            <Label layoutX="237.0" layoutY="494.0" text="00:00/00:00" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <Button layoutX="774.0" layoutY="504.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" scaleX="0.9" scaleY="0.9" styleClass="setting" stylesheets="@video_page.css">
+            <Button layoutX="772.0" layoutY="493.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" scaleX="0.9" scaleY="0.9" styleClass="setting" stylesheets="@video_page.css">
                <font>
                   <Font size="11.0" />
                </font>
@@ -54,7 +54,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="830.0" layoutY="506.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="30.0" scaleX="0.9" scaleY="0.9" styleClass="miniPlay" stylesheets="@video_page.css">
+            <Button layoutX="828.0" layoutY="495.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="30.0" scaleX="0.9" scaleY="0.9" styleClass="miniPlay" stylesheets="@video_page.css">
                <font>
                   <Font size="9.0" />
                </font>
@@ -62,7 +62,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Pane layoutX="886.0" layoutY="499.0" prefHeight="37.0" prefWidth="36.0" scaleX="0.8" scaleY="0.8">
+            <Pane layoutX="884.0" layoutY="488.0" prefHeight="37.0" prefWidth="36.0" scaleX="0.8" scaleY="0.8">
                <children>
                   <Pane layoutX="3.0" layoutY="3.0" prefHeight="12.0" prefWidth="12.0" styleClass="tpLfullscreen" stylesheets="@video_page.css" />
                   <Pane layoutX="20.0" layoutY="3.0" prefHeight="12.0" prefWidth="12.0" styleClass="tpRfullscreen" stylesheets="@video_page.css" />
@@ -75,7 +75,7 @@
                   </Button>
                </children>
             </Pane>
-            <Slider layoutX="26.0" layoutY="474.0" prefHeight="0.0" prefWidth="890.0" />
+            <Slider layoutX="26.0" layoutY="470.0" prefHeight="0.0" prefWidth="890.0" />
          </children>
       </AnchorPane>
       <Circle fill="WHITE" layoutX="51.0" layoutY="635.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
