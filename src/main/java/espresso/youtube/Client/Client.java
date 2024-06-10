@@ -1,5 +1,6 @@
 package espresso.youtube.Client;
 
+import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Client_account;
 
 import java.io.DataOutputStream;
@@ -32,13 +33,26 @@ public class Client {
         client.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        espresso.youtube.Client.Client client1 = new espresso.youtube.Client.Client();
-        Handle_Server_Response handleServerResponse = new Handle_Server_Response(client1.getClient());
+        Client client1 = new Client();
+        ServerResponse serverResponse = new ServerResponse();
+        Handle_Server_Response handleServerResponse = new Handle_Server_Response(client1.getClient(), serverResponse);
+
         Thread listener = new Thread(handleServerResponse);
         listener.start();
+
         Client_account client_account = new Client_account(client1.getOut());
-        client_account.login("mobin", "1234");
+        client_account.login("mobin", "1234", 100);
+
+        while (true){
+            Thread.sleep(50);
+            if(serverResponse.getRequest_id() == 100){
+                System.out.println(serverResponse.getMessage());
+                break;
+            }
+            System.out.println("still running");
+        }
+
     }
 }

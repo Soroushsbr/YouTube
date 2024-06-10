@@ -1,7 +1,9 @@
 package espresso.youtube.Server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 import espresso.youtube.models.account.Server_account;
 
@@ -23,10 +25,13 @@ public class Client_Handler implements Runnable {
     public void run() {
         try {
             String jsonString = "";
+            String response = "";
+            ServerResponse serverResponse = null;
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode;
             String className;
             boolean cond = true;
+
             while (cond) {
                 jsonString = this.in.readUTF();
                 rootNode = mapper.readTree(jsonString);
@@ -34,11 +39,18 @@ public class Client_Handler implements Runnable {
 
                 if(className.equals("account")){
                     Server_account Server_account = mapper.readValue(jsonString, Server_account.class);
-                    Server_account.handle_request();
+                    serverResponse = Server_account.handle_request();
                 }
+
+
+                try {
+                    response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(serverResponse);
+                    System.out.println(response);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                out.writeUTF(response);
             }
-
-
         } catch (IOException e) {
             System.err.println("IO Exception in client handler!!!!!!");
             e.printStackTrace();
