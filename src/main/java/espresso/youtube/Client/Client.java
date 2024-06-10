@@ -48,7 +48,7 @@ public class Client {
         while (true){
             Thread.sleep(50);
             if(serverResponse.getRequest_id() == 100){
-                System.out.println(serverResponse.getMessage());
+                System.out.println(serverResponse.get_part("message"));
                 break;
             }
             System.out.println("still running");
