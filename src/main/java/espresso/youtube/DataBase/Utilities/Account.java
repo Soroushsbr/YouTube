@@ -171,3 +171,10 @@ public class Account {
     }
 
 }
+
+
+//add comment like/dislike tables
+//create a default channel with name of uesr
+//watch later for each user
+//
+
