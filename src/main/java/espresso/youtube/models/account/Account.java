@@ -2,18 +2,25 @@ package espresso.youtube.models.account;
 
 import espresso.youtube.models.ClassInfo;
 
+import java.util.UUID;
+
 public class Account extends ClassInfo {
     private String username;
+    private String gmail;
     private String password;
     private String name;
-    private int id;
-
+    private String id;
     public Account(){
         super.className = "account";
     }
 
-    public void setId(int id) {
+    //------------------ setters -----------------------
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public void setGmail(String gmail) {
+        this.gmail = gmail;
     }
 
     public void setName(String name) {
@@ -28,8 +35,13 @@ public class Account extends ClassInfo {
         this.username = username;
     }
 
-    public int getId() {
+    //------------------ getters -----------------------
+    public String getId() {
         return id;
+    }
+
+    public String getGmail() {
+        return gmail;
     }
 
     public String getName() {

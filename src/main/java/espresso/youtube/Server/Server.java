@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 // Server class is where threads from Client_Handler runs
 public class Server {
 
-    private static final int PORT = 3000;
+    private static final int PORT = 8000;
 
     private static ArrayList<Socket> clients = new ArrayList<>();
 
