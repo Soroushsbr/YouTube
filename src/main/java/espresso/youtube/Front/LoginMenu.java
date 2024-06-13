@@ -1,12 +1,20 @@
 package espresso.youtube.Front;
 
+import espresso.youtube.Client.Client;
+import espresso.youtube.Client.Handle_Server_Response;
+import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.account.Client_account;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,9 +23,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -44,8 +54,20 @@ public class LoginMenu implements Initializable {
     TextField loginUsernameTF;
     @FXML
     PasswordField loginPasswordTF;
+    private Parent root;
+    private Stage stage;
+    private Scene scene;
+    private Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            this.client = new Client();
+            Handle_Server_Response handleServerResponse = new Handle_Server_Response(client.getClient(), client.requests);
+            Thread listener = new Thread(handleServerResponse);
+            listener.start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         //set the background video
         URL file = getClass().getResource("Images/back2.mp4");
         Media media = new Media(file.toString());
@@ -78,26 +100,87 @@ public class LoginMenu implements Initializable {
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
 
-    public void signUp(){
+    public void signUp(ActionEvent event) throws InterruptedException {
         String username = signupUsernameTF.getText();
         String gmail = singupgmailTF.getText();
         String password = singupPasswordTF.getText();
 
-
+        if(username.equals("")){
+            applyShakeEffect(signupUsernameTF);
+        }
+        if (gmail.equals("")){
+            applyShakeEffect(singupgmailTF);
+        }
+        if(password.equals("")){
+            applyShakeEffect(singupPasswordTF);
+        }
+        if(!(username.equals("") || gmail.equals("") || password.equals(""))) {
+            Client_account client_account = new Client_account(client.getOut());
+            client_account.sign_up(username, password, gmail, 1);
+            while (true) {
+                Thread.sleep(50);
+                if (client.requests.get(1) != null) {
+                    if ((boolean) client.requests.get(1).get_part("isSuccessful")) {
+                        switchToMainPage(event, this.client);
+                        return;
+                    }
+                    if (!(boolean) client.requests.get(1).get_part("isValidGamil")) {
+                        applyShakeEffect(singupgmailTF);
+                        return;
+                    }
+                    if (!(boolean) client.requests.get(1).get_part("isValidUsername")) {
+                        applyShakeEffect(signupUsernameTF);
+                        return;
+                    }
+                    break;
+                }
+                System.out.println("still running");
+            }
+        }
     }
 
-    public void logIn(){
+    public void switchToMainPage(ActionEvent event, Client client){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            //set client for next stage
+            MainPage mainPage = loader.load();
+            mainPage.setClient(client);
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+
+    public void logIn(ActionEvent event) throws InterruptedException {
         String username = loginUsernameTF.getText();
         String password = loginPasswordTF.getText();
-        System.out.println(password);
+
         if(username.equals("")){
             applyShakeEffect(loginUsernameTF);
         }
         if(password.equals("")){
             applyShakeEffect(loginPasswordTF);
         }
-
-
+        if(!(username.equals("") || password.equals(""))) {
+            Client_account client_account = new Client_account(client.getOut());
+            client_account.login(username, password, 2);
+            while (true) {
+                Thread.sleep(50);
+                if (client.requests.get(2) != null) {
+                    if ((boolean) client.requests.get(2).get_part("isSuccessful")) {
+                        switchToMainPage(event, client);
+                    } else {
+                        applyShakeEffect(loginUsernameTF);
+                        applyShakeEffect(loginPasswordTF);
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     private void applyShakeEffect(Node textField) {

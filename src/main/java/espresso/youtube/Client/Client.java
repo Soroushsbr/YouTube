@@ -42,16 +42,16 @@ public class Client {
         Thread listener = new Thread(handleServerResponse);
         listener.start();
 
-        Client_account client_account = new Client_account(client1.getOut());
-        client_account.login("mobin", "1234", 100);
-        while (true){
-            Thread.sleep(50);
-            if(client1.requests.get(100) != null){
-                System.out.println(client1.requests.get(100).get_part("message"));
-                break;
-            }
-            System.out.println("still running");
-        }
+//        Client_account client_account = new Client_account(client1.getOut());
+//        client_account.login("mobin", "1234", 100);
+//        while (true){
+//            Thread.sleep(50);
+//            if(client1.requests.get(100) != null){
+//                System.out.println(client1.requests.get(100).get_part("message"));
+//                break;
+//            }
+//            System.out.println("still running");
+//        }
 
     }
 }
