@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="707.0" prefWidth="973.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" layoutX="20.0" layoutY="16.0" prefHeight="526.0" prefWidth="933.0" style="-fx-background-color: black;" />
+      <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="534.0" layoutX="20.0" layoutY="12.0" stroke="#0f0f0f" strokeWidth="10.0" width="933.0" />
+      <AnchorPane layoutX="20.0" layoutY="15.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="538.0" prefWidth="933.0" style="-fx-background-color: transparent;">
+         <children>
+            <Button layoutX="26.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="play" stylesheets="@video_page.css">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="80.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="nextVid" stylesheets="@video_page.css">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="145.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="mute" stylesheets="@video_page.css">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="237.0" layoutY="494.0" text="00:00/00:00" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button layoutX="772.0" layoutY="493.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" scaleX="0.9" scaleY="0.9" styleClass="setting" stylesheets="@video_page.css">
+               <font>
+                  <Font size="11.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="828.0" layoutY="495.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="30.0" scaleX="0.9" scaleY="0.9" styleClass="miniPlay" stylesheets="@video_page.css">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane layoutX="884.0" layoutY="488.0" prefHeight="37.0" prefWidth="36.0" scaleX="0.8" scaleY="0.8">
+               <children>
+                  <Pane layoutX="3.0" layoutY="3.0" prefHeight="12.0" prefWidth="12.0" styleClass="tpLfullscreen" stylesheets="@video_page.css" />
+                  <Pane layoutX="20.0" layoutY="3.0" prefHeight="12.0" prefWidth="12.0" styleClass="tpRfullscreen" stylesheets="@video_page.css" />
+                  <Pane layoutX="3.0" layoutY="20.0" prefHeight="12.0" prefWidth="12.0" styleClass="btLfullscreen" stylesheets="@video_page.css" />
+                  <Pane layoutX="20.0" layoutY="20.0" prefHeight="12.0" prefWidth="12.0" styleClass="btRfullscreen" stylesheets="@video_page.css" />
+                  <Button layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="33.0" prefWidth="39.0" text="Button">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </Pane>
+            <Slider layoutX="26.0" layoutY="470.0" prefHeight="0.0" prefWidth="890.0" />
+         </children>
+      </AnchorPane>
+      <Circle fill="WHITE" layoutX="51.0" layoutY="635.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="26.0" layoutY="570.0" text="discription" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="19.0" />
+         </font>
+      </Label>
+      <Label layoutX="79.0" layoutY="613.0" text="Channel name" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="79.0" layoutY="639.0" text="subs" textFill="#757575" />
+      <Button layoutX="223.0" layoutY="619.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="96.0" style="-fx-background-color: white; -fx-background-radius: 20;" text="Subscribe">
+         <font>
+            <Font size="14.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>

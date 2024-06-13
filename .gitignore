@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+src/main/java/espresso/youtube/Server/test.java
+src/main/java/espresso/youtube/temporary.java

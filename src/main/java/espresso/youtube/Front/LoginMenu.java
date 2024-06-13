@@ -64,10 +64,10 @@ public class LoginMenu implements Initializable {
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
     /*
-     * this method change the option between sign up and login.
-     * it includes animation for each panel.
-     * using Timeline for animation , this class gets first and last of action and the time to do it.
-     * */
+    * this method change the option between sign up and login.
+    * it includes animation for each panel.
+    * using Timeline for animation , this class gets first and last of action and the time to do it.
+    * */
     public void changeOptionScene(){
         //to move the logo to the left
         if(changeOption.getText().equals("Sign Up")) {

@@ -23,12 +23,12 @@ public class VideoPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
-            AnchorPane videoPane = loader.load();
-            //to set hover action to show video icons when mouse hovers it
-            videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
-            videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
-            leftVbox.getChildren().add(videoPane);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
+        AnchorPane videoPane = loader.load();
+        //to set hover action to show video icons when mouse hovers it
+        videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
+        videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
+        leftVbox.getChildren().add(videoPane);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
