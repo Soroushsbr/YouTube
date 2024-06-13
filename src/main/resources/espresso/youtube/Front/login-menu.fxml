@@ -19,12 +19,12 @@
             <Pane opacity="0.11" prefHeight="458.0" prefWidth="785.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 2;" styleClass="glow" stylesheets="@styleSheet.css" />
             <Pane fx:id="signUpPane" layoutX="392.0" layoutY="23.0" opacity="0.0" prefHeight="409.0" prefWidth="367.0" stylesheets="@styleSheet.css">
                <children>
-                  <TextField layoutX="49.0" layoutY="84.0" prefHeight="30.0" prefWidth="270.0" promptText="Esprsso1383" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
+                  <TextField fx:id="signupUsernameTF" layoutX="49.0" layoutY="84.0" prefHeight="30.0" prefWidth="270.0" promptText="Esprsso1383" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
                         <Font size="13.0" />
                      </font>
                   </TextField>
-                  <TextField layoutX="49.0" layoutY="161.0" prefHeight="30.0" prefWidth="270.0" promptText="Espresso@gmail.com" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
+                  <TextField fx:id="singupgmailTF" layoutX="49.0" layoutY="161.0" prefHeight="30.0" prefWidth="270.0" promptText="Espresso@gmail.com" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -34,7 +34,7 @@
                         <Font name="Century Gothic Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Label layoutX="50.0" layoutY="133.0" text="Email :" textFill="WHITE">
+                  <Label layoutX="50.0" layoutY="133.0" text="Gmail :" textFill="WHITE">
                      <font>
                         <Font name="Century Gothic Bold" size="16.0" />
                      </font>
@@ -44,12 +44,12 @@
                         <Font name="Century Gothic Bold" size="16.0" />
                      </font>
                   </Label>
-                  <PasswordField layoutX="49.0" layoutY="235.0" prefHeight="30.0" prefWidth="270.0" promptText="1234568" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
+                  <PasswordField fx:id="singupPasswordTF" layoutX="49.0" layoutY="235.0" prefHeight="30.0" prefWidth="270.0" promptText="1234568" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
                         <Font size="13.0" />
                      </font>
                   </PasswordField>
-                  <Button layoutX="147.0" layoutY="291.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="74.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 10; -fx-border-width: 1.5;" text="Sign up" textFill="WHITE">
+                  <Button layoutX="147.0" layoutY="291.0" mnemonicParsing="false" onAction="#signUp" prefHeight="31.0" prefWidth="74.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 10; -fx-border-width: 1.5;" text="Sign up" textFill="WHITE">
                      <font>
                         <Font name="Century Gothic" size="13.0" />
                      </font>
@@ -61,12 +61,12 @@
             </Pane>
             <Pane fx:id="logInPane" layoutX="32.0" layoutY="22.0" prefHeight="409.0" prefWidth="367.0">
                <children>
-                  <TextField layoutX="49.0" layoutY="100.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
+                  <TextField fx:id="loginUsernameTF" layoutX="49.0" layoutY="100.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
                         <Font size="13.0" />
                      </font>
                   </TextField>
-                  <PasswordField layoutX="49.0" layoutY="205.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
+                  <PasswordField fx:id="loginPasswordTF" layoutX="49.0" layoutY="205.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 1.5; -fx-text-inner-color: white;">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -81,7 +81,7 @@
                         <Font name="Century Gothic Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Button layoutX="150.0" layoutY="285.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="68.0" style="-fx-background-color: transparent; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 1.5;" text="Log in" textFill="WHITE">
+                  <Button layoutX="150.0" layoutY="285.0" mnemonicParsing="false" onAction="#logIn" prefHeight="31.0" prefWidth="68.0" style="-fx-background-color: transparent; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 1.5;" text="Log in" textFill="WHITE">
                      <font>
                         <Font name="Century Gothic" size="13.0" />
                      </font>

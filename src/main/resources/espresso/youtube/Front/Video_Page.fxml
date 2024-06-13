@@ -18,8 +18,8 @@
          <content>
             <HBox prefHeight="651.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;">
                <children>
-                  <VBox fx:id="leftVbox" alignment="TOP_CENTER" fillWidth="false" prefHeight="651.0" prefWidth="973.0" />
-                  <VBox prefHeight="651.0" prefWidth="295.0" />
+                  <VBox fx:id="leftVbox" alignment="TOP_CENTER" fillWidth="false" prefHeight="651.0" prefWidth="957.0" />
+                  <VBox fx:id="rightBox" prefHeight="651.0" prefWidth="302.0" />
                </children>
             </HBox>
          </content>
