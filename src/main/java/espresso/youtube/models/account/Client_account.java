@@ -14,7 +14,7 @@ public class Client_account {
         this.out = out;
     }
 
-    public void login(String username, String password, int request_id) throws IOException {
+    public void login(String username, String password, int request_id){
         account.setRequest("login");
         account.setRequest_id(request_id);
         account.setUsername(username);

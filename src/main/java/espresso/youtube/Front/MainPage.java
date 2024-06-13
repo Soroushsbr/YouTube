@@ -1,5 +1,6 @@
 package espresso.youtube.Front;
 
+import espresso.youtube.Client.Client;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -32,7 +33,7 @@ public class MainPage implements Initializable {
     Circle profile;
     @FXML
     ScrollPane dashboardPane;
-
+    private Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -49,6 +50,10 @@ public class MainPage implements Initializable {
             throw new RuntimeException(e);
         }
         appendVideos();
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     //to show the notifications of user
