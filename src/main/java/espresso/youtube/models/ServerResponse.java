@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 public class ServerResponse {
 //------------------ jackson informations -------------------
-
     @JsonProperty("response_part")
     private HashMap<String, Object> response_parts = new HashMap<>();
     @JsonProperty("request_id")

@@ -16,9 +16,18 @@ public class Client_account {
 
     public void login(String username, String password, int request_id) throws IOException {
         account.setRequest("login");
+        account.setRequest_id(request_id);
         account.setUsername(username);
         account.setPassword(password);
+        send_request();
+    }
+
+    public void sign_up(String username, String password, String email, int request_id){
+        account.setRequest("sign_up");
         account.setRequest_id(request_id);
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setGmail(email);
         send_request();
     }
 
@@ -32,12 +41,11 @@ public class Client_account {
             erase_info();
         }
     }
-
     private void erase_info(){
         account.setRequest(null);
         account.setUsername(null);
         account.setPassword(null);
-        account.setId(-1);
+        account.setId("");
         account.setName(null);
     }
 
