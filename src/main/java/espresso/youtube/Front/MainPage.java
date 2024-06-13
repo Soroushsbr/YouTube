@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainPage implements Initializable {
-
     @FXML
     VBox leftSideBox;
     @FXML

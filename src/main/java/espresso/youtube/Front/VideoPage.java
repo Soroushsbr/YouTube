@@ -38,7 +38,10 @@ public class VideoPage implements Initializable {
             videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
             videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
             leftVbox.getChildren().add(videoPane);
-//        appendVideo(mediaPlayer , videoPane);
+            URL file = getClass().getResource("Images/c.mp4");
+            Media media = new Media(file.toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            appendVideo(mediaPlayer , videoPane);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -80,18 +83,19 @@ public class VideoPage implements Initializable {
     public void appendVideo(MediaPlayer mediaPlayer, AnchorPane videoPane){
         MediaView mediaView = new MediaView(mediaPlayer);
         mediaPlayer.play();
-        //make the video to be middle of vbox
+        //make the video to be in middle of vbox
         mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
         mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
-
+        //append actions of buttons
         ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(0)).setOnAction(event -> pause(mediaPlayer , (Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(0)));
         ((Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(8)).setOnMouseDragged(event -> setVolume(mediaPlayer , (Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(8)));
         ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(2)).setOnAction(event -> mute(mediaPlayer , (Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(2)));
         ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(4)).setOnAction(event -> showSpeed((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)));
         ((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0).setOnMouseDragged(event -> setSpeed(mediaPlayer , (Slider)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0), (Label) ((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(1)));
         ((Button)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(2)).setOnAction(event -> refSpeed((Slider)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0)));
+        //-------------------------
 
-        //slider setting
+        //slider setting as long as the video length
         setProgress(mediaPlayer , ((Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(7)));
         //--------------
         ((VBox) videoPane.getChildren().get(0)).getChildren().add(mediaView);

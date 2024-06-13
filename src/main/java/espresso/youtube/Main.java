@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Front/Video_Page.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Front/login-menu.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setResizable(false);
         stage.setTitle("YouTube");

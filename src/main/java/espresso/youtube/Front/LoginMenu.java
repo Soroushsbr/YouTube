@@ -3,9 +3,13 @@ package espresso.youtube.Front;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -30,6 +34,16 @@ public class LoginMenu implements Initializable {
     Pane signUpPane;
     @FXML
     Hyperlink changeOption;
+    @FXML
+    TextField signupUsernameTF;
+    @FXML
+    TextField singupgmailTF;
+    @FXML
+    PasswordField singupPasswordTF;
+    @FXML
+    TextField loginUsernameTF;
+    @FXML
+    PasswordField loginPasswordTF;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set the background video
@@ -63,6 +77,39 @@ public class LoginMenu implements Initializable {
         );
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
+
+    public void signUp(){
+        String username = signupUsernameTF.getText();
+        String gmail = singupgmailTF.getText();
+        String password = singupPasswordTF.getText();
+
+
+    }
+
+    public void logIn(){
+        String username = loginUsernameTF.getText();
+        String password = loginPasswordTF.getText();
+        System.out.println(password);
+        if(username.equals("")){
+            applyShakeEffect(loginUsernameTF);
+        }
+        if(password.equals("")){
+            applyShakeEffect(loginPasswordTF);
+        }
+
+
+    }
+
+    private void applyShakeEffect(Node textField) {
+        TranslateTransition shakeTransition = new TranslateTransition(Duration.millis(70), textField);
+        shakeTransition.setFromX(0);
+        shakeTransition.setToX(10);
+        shakeTransition.setCycleCount(4);
+        shakeTransition.setAutoReverse(true);
+        shakeTransition.play();
+    }
+
+
     /*
     * this method change the option between sign up and login.
     * it includes animation for each panel.
