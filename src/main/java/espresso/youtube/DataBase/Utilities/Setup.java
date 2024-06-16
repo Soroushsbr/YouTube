@@ -13,7 +13,7 @@ public class Setup {
             connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123");
             statement = connection.createStatement();
             String[] queries = {
-                    "CREATE TABLE IF NOT EXISTS accounts (id UUID PRIMARY KEY, username TEXT, gmail TEXT, password TEXT, darkmod BOOLEAN, profile_photo UUID, is_premium UUID)",
+                    "CREATE TABLE IF NOT EXISTS accounts (id UUID PRIMARY KEY, username TEXT, gmail TEXT, password TEXT, darkmod BOOLEAN, profile_photo UUID, is_premium BOOLEAN)",
                     "CREATE TABLE IF NOT EXISTS channels (id UUID PRIMARY KEY, name TEXT, owner_id UUID, description TEXT)",
                     "CREATE TABLE IF NOT EXISTS playlists (id UUID PRIMARY KEY, name TEXT, owner_id UUID, is_public BOOLEAN)",
                     "CREATE TABLE IF NOT EXISTS posts (id UUID PRIMARY KEY, title TEXT, owner_id UUID, channel_id UUID, is_public BOOLEAN)",
@@ -77,5 +77,9 @@ public class Setup {
             connection.close();
         } catch (SQLException e) { throw new RuntimeException(e); }
         create_tables();
+    }
+
+    public static void main(String[] args) {
+        restart_tables();
     }
 }

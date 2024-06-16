@@ -2,8 +2,6 @@ package espresso.youtube.models.account;
 
 import espresso.youtube.models.ClassInfo;
 
-import java.util.UUID;
-
 public class Account extends ClassInfo {
     private String username;
     private String gmail;

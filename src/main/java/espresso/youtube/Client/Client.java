@@ -1,7 +1,6 @@
 package espresso.youtube.Client;
 
 import espresso.youtube.models.ServerResponse;
-import espresso.youtube.models.account.Client_account;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 public class Client {
 
     private static final String SERVER_IP = "127.0.0.1";
+    private int req_id = 1;
     private static final int PORT = 8000;
     private Socket client;
     private DataOutputStream out;
@@ -53,5 +53,13 @@ public class Client {
 //            System.out.println("still running");
 //        }
 
+    }
+
+    public int getReq_id() {
+        return req_id;
+    }
+
+    public void setReq_id() {
+        this.req_id++;
     }
 }

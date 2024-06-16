@@ -1,5 +1,6 @@
 package espresso.youtube.DataBase.Utilities;
 
+import espresso.youtube.models.ServerResponse;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
@@ -16,17 +17,35 @@ public class Account {
     }
 
     public static boolean check_gmail_exists(String gmail) {
-        try {
-            Connection connection = create_connection();
+//        try {
+//            Connection connection = create_connection();
+//            String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE gmail = ?)";
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setString(1, gmail);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+////            connection.close();
+////            preparedStatement.close();
+////            resultSet.close();
+//            return resultSet.getBoolean(1);
+//        } catch (SQLException e) {throw new RuntimeException(e);}
             String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE gmail = ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, gmail);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            connection.close();
-            preparedStatement.close();
-            resultSet.close();
-            return resultSet.getBoolean(1);
-        } catch (SQLException e) {throw new RuntimeException(e);}
+
+            try (Connection connection = create_connection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+                preparedStatement.setString(1, gmail);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getBoolean(1);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Database error occurred", e);
+            }
+
+            return false; // Shouldn't reach here in typical usage
     }
 
     public static boolean check_gmail_validation(String gmail) {
@@ -43,52 +62,124 @@ public class Account {
         return(hashed_password);
     }
 
-    public static void save_account(String username, String password, String gmail) {
-        UUID uuid = UUID.randomUUID();
-        boolean darkmod = false;
-        boolean is_premium = false;
-        UUID profile_photo = null;
+//    public static void save_account(String username, String password, String gmail) {
+//        UUID uuid = UUID.randomUUID();
+//        boolean darkmod = true;
+//        boolean is_premium = false;
+//        UUID profile_photo = null;
+//
+//        try {
+//            Connection connection = create_connection();
+//            String query = "INSERT INTO accounts (id, username, gmail, password, darkmod, profile_photo, is_premium) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setObject(1, uuid);
+//            preparedStatement.setString(2, username);
+//            preparedStatement.setString(3, gmail);
+//            preparedStatement.setString(4, password);
+//            preparedStatement.setBoolean(5, darkmod);
+//            preparedStatement.setObject(6, profile_photo);
+//            preparedStatement.setObject(7, is_premium);
+//
+//            preparedStatement.executeUpdate();
+//
+//            connection.close();
+//            preparedStatement.close();
+//        } catch (SQLException e) { throw new RuntimeException(e); }
+//    }
+public static void save_account(String username, String password, String gmail) {
+    UUID uuid = UUID.randomUUID();
+    boolean darkmod = true;
+    boolean isPremium = false;
+    UUID profilePhoto = null;
 
-        try {
-            Connection connection = create_connection();
-            String query = "INSERT INTO accounts (id, username, gmail, password, darkmod, profile_photo, is_premium) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setObject(1, uuid);
-            preparedStatement.setString(2, username);
-            preparedStatement.setString(3, gmail);
-            preparedStatement.setString(4, password);
-            preparedStatement.setBoolean(5, darkmod);
-            preparedStatement.setObject(6, profile_photo);
-            preparedStatement.setObject(7, is_premium);
+    String query = "INSERT INTO accounts (id, username, gmail, password, darkmod, profile_photo, is_premium) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            preparedStatement.executeUpdate();
+    try (Connection connection = create_connection();
+         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            connection.close();
-            preparedStatement.close();
-        } catch (SQLException e) { throw new RuntimeException(e); }
+        preparedStatement.setObject(1, uuid);
+        preparedStatement.setString(2, username);
+        preparedStatement.setString(3, gmail);
+        preparedStatement.setString(4, password);
+        preparedStatement.setBoolean(5, darkmod);
+
+        if (profilePhoto != null) {
+            preparedStatement.setObject(6, profilePhoto);
+        } else {
+            preparedStatement.setNull(6, Types.OTHER);
+        }
+
+        preparedStatement.setBoolean(7, isPremium);
+
+        preparedStatement.executeUpdate();
+
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
+}
+
+//    public static boolean is_password_correct(String username, String password) {
+//        try {
+//            Connection connection = create_connection();
+//            String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ? AND password = ?)";
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setString(1, username);
+//            preparedStatement.setString(2, password);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            return resultSet.getBoolean(1);
+//        } catch (SQLException e) { throw new RuntimeException(e); }
+//    }
 
     public static boolean is_password_correct(String username, String password) {
-        try {
-            Connection connection = create_connection();
-            String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE id = ? AND password = ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+        String query = "SELECT COUNT(1) FROM accounts WHERE username = ? AND password = ?";
+
+        try (Connection connection = create_connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.getBoolean(1);
-        } catch (SQLException e) { throw new RuntimeException(e); }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
     }
 
     public static boolean check_username_exists(String username) {
-        try {
-            Connection connection = create_connection();
-            String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setObject(1, username);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.getBoolean(1);
-        } catch (SQLException e) { throw new RuntimeException(e); }
+//        try {
+//            Connection connection = create_connection();
+//            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+//            String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ?)";
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setObject(1, username);
+//            ResultSet resultSet = preparedStatement.executeQuery();
+//            return resultSet.getBoolean(1);
+//        } catch (SQLException e) { throw new RuntimeException(e); }
+        String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ?)";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Database error occurred", e);
+        }
+
+        return false; // Shouldn't reach here in typical usage
     }
 
     public static void add_profile_photo(UUID uesr_id, UUID photo_id) {
@@ -169,6 +260,47 @@ public class Account {
             preparedStatement.close();
         } catch (SQLException e) {throw new RuntimeException(e);}
     }
+
+    public static ServerResponse sign_up(String username, String password, String gmail, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        serverResponse.add_part("isValidUsername" , !check_username_exists(username));
+        serverResponse.add_part("isValidGmail" , !check_gmail_exists(gmail) && check_gmail_validation(gmail));
+
+//        serverResponse.add_part("isValidGamil" , true);
+
+        if ((boolean)serverResponse.get_part("isValidUsername") && (boolean)serverResponse.get_part("isValidGmail")){
+
+            save_account(username, password,gmail);
+
+            serverResponse.add_part("isSuccessful", true);
+        } else {
+            serverResponse.add_part("isSuccessful", false);
+        }
+
+//        serverResponse.add_part("isValidUsername" , true);
+//        serverResponse.add_part("isValidGamil" , true);
+//        serverResponse.add_part("isSuccessful", true);
+
+        return serverResponse;
+    }
+
+    public static ServerResponse login(String username , String password, int request_id){
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
+        return serverResponse;
+    }
+
+    public static void main(String[] args) {
+        if(check_username_exists("ali")){
+            System.out.println("yes");
+        } else {
+            System.out.println("no");
+        }
+    }
+
+
 
 }
 

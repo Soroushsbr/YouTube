@@ -2,7 +2,6 @@ package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
 import espresso.youtube.Client.Handle_Server_Response;
-import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Client_account;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -26,11 +25,8 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class LoginMenu implements Initializable {
@@ -116,26 +112,34 @@ public class LoginMenu implements Initializable {
         }
         if(!(username.equals("") || gmail.equals("") || password.equals(""))) {
             Client_account client_account = new Client_account(client.getOut());
-            client_account.sign_up(username, password, gmail, 1);
+            client.setReq_id();
+            client_account.sign_up(username, password, gmail, client.getReq_id());
             while (true) {
                 Thread.sleep(50);
-                if (client.requests.get(1) != null) {
-                    if ((boolean) client.requests.get(1).get_part("isSuccessful")) {
+//                if (client.requests.get(1) != null) {
+//                    System.out.println("hi");
+//                }
+                if (client.requests.get(client.getReq_id()) != null) {
+                    if ((boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful")) {
                         switchToMainPage(event, this.client);
-                        return;
+                        System.out.println("hi");
+                        break;
+//                        return;
                     }
-                    if (!(boolean) client.requests.get(1).get_part("isValidGamil")) {
+                    if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
                         applyShakeEffect(singupgmailTF);
-                        return;
+//                        return;
                     }
-                    if (!(boolean) client.requests.get(1).get_part("isValidUsername")) {
+                    if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidUsername")) {
                         applyShakeEffect(signupUsernameTF);
-                        return;
+//                        return;
                     }
+
                     break;
                 }
                 System.out.println("still running");
             }
+
         }
     }
 
@@ -167,11 +171,12 @@ public class LoginMenu implements Initializable {
         }
         if(!(username.equals("") || password.equals(""))) {
             Client_account client_account = new Client_account(client.getOut());
-            client_account.login(username, password, 2);
+            client.setReq_id();
+            client_account.login(username, password, client.getReq_id());
             while (true) {
-                Thread.sleep(50);
-                if (client.requests.get(2) != null) {
-                    if ((boolean) client.requests.get(2).get_part("isSuccessful")) {
+                Thread.sleep(200);
+                if (client.requests.get(client.getReq_id()) != null) {
+                    if ((boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful")) {
                         switchToMainPage(event, client);
                     } else {
                         applyShakeEffect(loginUsernameTF);
