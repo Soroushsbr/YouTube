@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -33,6 +34,9 @@ public class VideoPage implements Initializable {
         //to set hover action to show video icons when mouse hovers it
         videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
         videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
+            URL file = getClass().getResource("Images/back2.mp4");
+            Media media = new Media(file.toString());
+            appendVideo(media , videoPane);
 
         leftVbox.getChildren().add(videoPane);
         } catch (IOException e) {
@@ -82,7 +86,7 @@ public class VideoPage implements Initializable {
         //make the video to be middle of vbox
         mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
         mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
-
+        //---give buttons actions---
         ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(0)).setOnAction(event -> pause(mediaPlayer , (Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(0)));
         ((Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(8)).setOnMouseDragged(event -> setVolume(mediaPlayer , (Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(8)));
         ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(2)).setOnAction(event -> mute(mediaPlayer , (Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(2)));
@@ -91,7 +95,7 @@ public class VideoPage implements Initializable {
         ((Button)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(2)).setOnAction(event -> refSpeed((Slider)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0)));
 
         setProgress(mediaPlayer , ((Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(7)));
-        //--------------
+        //--------------------------
         ((VBox) videoPane.getChildren().get(0)).getChildren().add(mediaView);
     }
 
@@ -111,6 +115,10 @@ public class VideoPage implements Initializable {
         volume.valueProperty().addListener((obs, oldVal, newVal) -> {
             mediaPlayer.setVolume(newVal.doubleValue());
         });
+        volume.valueProperty().addListener((obs, oldval, newVal) -> {
+            double percentage = (newVal.doubleValue() - volume.getMin()) / (volume.getMax() - volume.getMin()) * 100;
+            volume.lookup(".track").setStyle("-fx-background-color: linear-gradient(to right, red " + percentage + "%, rgba(211, 211, 211, 1) " + percentage + "%);");
+        });
     }
     public void mute(MediaPlayer mediaPlayer , Button btn ){
         if(mediaPlayer.isMute()){
@@ -128,6 +136,10 @@ public class VideoPage implements Initializable {
             BigDecimal x = BigDecimal.valueOf(newVal.doubleValue());
             mediaPlayer.setRate(newVal.doubleValue());
             speedLabel.setText(x.setScale(2, RoundingMode.HALF_DOWN) + "x");
+        });
+        speed.valueProperty().addListener((obs, oldval, newVal) -> {
+            double percentage = (newVal.doubleValue() - speed.getMin()) / (speed.getMax() - speed.getMin()) * 100;
+            speed.lookup(".track").setStyle("-fx-background-color: linear-gradient(to right, red " + percentage + "%, rgba(211, 211, 211, 1) " + percentage + "%);");
         });
     }
     public void refSpeed(Slider speed){
@@ -151,6 +163,10 @@ public class VideoPage implements Initializable {
         }
     }
     public void setProgress(MediaPlayer mediaPlayer , Slider slider){
+        slider.valueProperty().addListener((obs, oldval, newVal) -> {
+            double percentage = (newVal.doubleValue() - slider.getMin()) / (slider.getMax() - slider.getMin()) * 100;
+            slider.lookup(".track").setStyle("-fx-background-color: linear-gradient(to right, red " + percentage + "%, rgba(211, 211, 211, 1) " + percentage + "%);");
+        });
         //set the length of video as max of the slider
         if (mediaPlayer.getStatus() == MediaPlayer.Status.UNKNOWN) {
             mediaPlayer.statusProperty().addListener((obs, oldStatus, newStatus) -> {
@@ -173,5 +189,11 @@ public class VideoPage implements Initializable {
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) ->
                 slider.setValue(newTime.toSeconds())
         );
+    }
+
+    public void addComment() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
+        HBox commentBox = loader.load();
+        leftVbox.getChildren().add(commentBox);
     }
 }
