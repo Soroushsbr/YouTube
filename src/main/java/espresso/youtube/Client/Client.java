@@ -12,6 +12,7 @@ public class Client {
 
     private static final String SERVER_IP = "127.0.0.1";
     private int req_id = 1;
+    private String user_id;
     private static final int PORT = 8000;
     private Socket client;
     private DataOutputStream out;

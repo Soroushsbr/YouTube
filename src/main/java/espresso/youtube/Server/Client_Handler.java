@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Server_account;
+import espresso.youtube.models.video.Server_video;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -39,8 +40,11 @@ public class Client_Handler implements Runnable {
                 className = rootNode.path("className").textValue();
 
                 if(className.equals("account")){
-                    Server_account Server_account = mapper.readValue(jsonString, Server_account.class);
-                    serverResponse = Server_account.handle_request();
+                    Server_account server_account = mapper.readValue(jsonString, Server_account.class);
+                    serverResponse = server_account.handle_request();
+                }else if(className.equals("video")){
+                    Server_video server_video = mapper.readValue(jsonString, Server_video.class);
+                    serverResponse = server_video.handle_request();
                 }
 
 
