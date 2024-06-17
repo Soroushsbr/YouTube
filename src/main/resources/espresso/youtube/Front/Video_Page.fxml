@@ -62,7 +62,7 @@
                   <Font size="1.0" />
                </font>
             </Button>
-            <Button layoutX="1067.0" layoutY="3.0" mnemonicParsing="false" onAction="#addComment" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+            <Button layoutX="1067.0" layoutY="3.0" mnemonicParsing="false" onAction="#da" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

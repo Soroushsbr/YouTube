@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.Dashboard">
+   <children>
+      <AnchorPane layoutX="-1.0" prefHeight="85.0" prefWidth="1280.0" style="-fx-background-color: #282828;">
+         <children>
+            <Button layoutX="16.0" layoutY="22.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <TextField layoutX="421.0" layoutY="17.0" prefHeight="41.0" prefWidth="396.0" promptText="  Search across your channel" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 10; -fx-border-width: 1; -fx-text-inner-color: white;">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </TextField>
+            <Pane layoutX="77.0" layoutY="31.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
+            <Button layoutX="64.0" layoutY="26.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="104.25" layoutY="25.700000762939453" prefHeight="22.0" scaleX="0.9" scaleY="1.2" text="Studio" textFill="WHITE">
+               <font>
+                  <Font name="TradeGothic-BoldCondTwenty" size="24.0" />
+               </font>
+            </Label>
+            <Button layoutX="788.0" layoutY="30.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@styleSheet.css">
+               <font>
+                  <Font size="1.0" />
+               </font>
+            </Button>
+            <Button layoutX="1081.0" layoutY="20.0" mnemonicParsing="false" onAction="#showUploadPane" prefHeight="38.0" prefWidth="111.0" style="-fx-background-radius: 100;" stylesheets="@styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane disable="true" layoutX="1095.0" layoutY="29.0" prefHeight="20.0" prefWidth="27.0" style="-fx-background-color: red;" styleClass="create" stylesheets="@styleSheet.css" />
+            <Circle fx:id="profile" fill="WHITE" layoutX="1234.0" layoutY="39.0" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+            <Pane disable="true" layoutX="22.0" layoutY="31.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" stylesheets="@styleSheet.css" />
+            <Text disable="true" fill="WHITE" fontSmoothingType="LCD" layoutX="1128.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CREATE">
+               <font>
+                  <Font name="Arial Bold" size="13.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+      <VBox alignment="TOP_CENTER" layoutY="87.0" prefHeight="633.0" prefWidth="263.0" style="-fx-background-color: #282828;">
+         <children>
+            <AnchorPane prefHeight="24.0" prefWidth="263.0" />
+            <Circle fill="WHITE" radius="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <AnchorPane prefHeight="55.0" prefWidth="263.0">
+               <children>
+                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="90.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your channel">
+                     <font>
+                        <Font name="Arial Bold" size="13.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#c6c6c6" fontSmoothingType="LCD" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel name" textAlignment="CENTER" wrappingWidth="263.0">
+                     <font>
+                        <Font name="System Bold" size="11.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="263.0" layoutY="87.0" prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: transparent;" stylesheets="@Dashboard.css">
+         <content>
+            <VBox prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: #1f1f1f;" />
+         </content>
+      </ScrollPane>
+      <Rectangle fx:id="backgroundFade" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.44" stroke="BLACK" strokeType="INSIDE" visible="false" width="1280.0" />
+      <AnchorPane fx:id="uploadVidPane" layoutX="251.0" layoutY="63.0" prefHeight="540.0" prefWidth="778.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 10;" visible="false">
+         <children>
+            <Button layoutX="302.0" layoutY="94.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="176.0" prefWidth="176.0" style="-fx-background-color: #282828; -fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="327.0" layoutY="363.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="33.0" prefWidth="127.0" style="-fx-background-color: #3da5fe;" text="SELECT FILES">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane disable="true" layoutX="358.0" layoutY="140.0" prefHeight="85.0" prefWidth="65.0" styleClass="upload" stylesheets="@Dashboard.css" />
+            <Text fill="WHITE" fontSmoothingType="LCD" layoutX="266.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Drag and drop video files to upload">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Text>
+            <Text fill="#c3c3c3" fontSmoothingType="LCD" layoutX="259.0" layoutY="325.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your videos will be private until you publish them.">
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font>
+            </Text>
+            <Line endX="664.0" layoutX="111.0" layoutY="55.0" startX="-108.0" stroke="#686868" />
+            <Button layoutX="734.0" layoutY="10.0" mnemonicParsing="false" onAction="#hideUploadPane" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane disable="true" layoutX="743.0" layoutY="19.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" stylesheets="@Dashboard.css" />
+            <Text fill="#c3c3c3" layoutX="82.0" layoutY="468.0" strokeType="OUTSIDE" strokeWidth="0.0" text="By submitting your videos to YouTube, you acknowledge that you agree to YouTube's Terms of Service and Community Guidelines.Please make sure that you do not violate others' copyright or privacy rights. Learn more" textAlignment="CENTER" wrappingWidth="654.404296875" />
+            <Text fill="WHITE" layoutX="20.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload videos">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
