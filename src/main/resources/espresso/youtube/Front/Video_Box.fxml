@@ -8,14 +8,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="707.0" prefWidth="957.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="707.0" prefWidth="957.0" style="-fx-background-color: #0f0f0f;" stylesheets="@video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" layoutX="19.0" layoutY="17.0" prefHeight="526.0" prefWidth="933.0" style="-fx-background-color: black;" />
       <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="534.0" layoutX="19.0" layoutY="13.0" stroke="#0f0f0f" strokeWidth="10.0" width="933.0" />
-      <AnchorPane layoutX="19.0" layoutY="16.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="538.0" prefWidth="933.0" style="-fx-background-color: transparent;">
+      <AnchorPane layoutX="19.0" layoutY="16.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="538.0" prefWidth="933.0" style="-fx-background-color: transparent;" stylesheets="@video_page.css">
          <children>
             <Button layoutX="26.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="pause" stylesheets="@video_page.css">
                <font>
@@ -98,11 +100,6 @@
          </children>
       </AnchorPane>
       <Circle fill="WHITE" layoutX="50.0" layoutY="636.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-      <Label layoutX="25.0" layoutY="571.0" text="discription" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="19.0" />
-         </font>
-      </Label>
       <Label layoutX="78.0" layoutY="614.0" text="Channel name" textFill="WHITE">
          <font>
             <Font name="System Bold" size="17.0" />
@@ -117,5 +114,32 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
+      <Text fill="WHITE" layoutX="29.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" wrappingWidth="879.13671875">
+         <font>
+            <Font name="Arial Bold" size="24.0" />
+         </font>
+      </Text>
+      <AnchorPane layoutX="667.0" layoutY="618.0">
+         <children>
+            <Button fx:id="likeBtn" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane fx:id="like" disable="true" layoutX="14.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" />
+            <Button fx:id="dislikeBtn" layoutX="78.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="42.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane fx:id="dislike" disable="true" layoutX="89.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" />
+            <Line endX="100.0" layoutX="-22.0" layoutY="11.0" startX="100.0" startY="16.0" stroke="WHITE" />
+            <Text disable="true" fill="WHITE" layoutX="43.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="likes">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>
