@@ -30,3 +30,42 @@
     -fx-border-width: 3;
     -fx-padding: -2;
 }
+.text-field {
+    -fx-background-color:  #1f1f1f;
+    -fx-border-color: #ccc;
+    -fx-font-size: 15;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-family: Arial, sans-serif;
+}
+.text-area{
+    -fx-background-color:  #1f1f1f;
+    -fx-font-size: 15;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+    -fx-control-inner-background:  #1f1f1f;
+    -fx-prompt-text-fill: #ccc;
+    -fx-font-family: Arial, sans-serif;
+}
+.combo-box {
+    -fx-background-color: #2b2b2b;
+    -fx-border-color: #4d4d4d;
+    -fx-border-radius: 5;
+    -fx-text-fill: white;
+    -fx-padding: 5px;
+}
+
+.combo-box .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
