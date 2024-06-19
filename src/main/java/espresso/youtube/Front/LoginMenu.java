@@ -7,6 +7,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,9 +24,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -96,52 +100,60 @@ public class LoginMenu implements Initializable {
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
 
-    public void signUp(ActionEvent event) throws InterruptedException {
+    public void signUp(ActionEvent event) {
         String username = signupUsernameTF.getText();
         String gmail = singupgmailTF.getText();
         String password = singupPasswordTF.getText();
 
-        if(username.equals("")){
+        if(username.isEmpty()){
             applyShakeEffect(signupUsernameTF);
         }
-        if (gmail.equals("")){
+        if(gmail.isEmpty()){
             applyShakeEffect(singupgmailTF);
         }
-        if(password.equals("")){
+        if(password.isEmpty()){
             applyShakeEffect(singupPasswordTF);
         }
-        if(!(username.equals("") || gmail.equals("") || password.equals(""))) {
-            Client_account client_account = new Client_account(client.getOut());
-            client.setReq_id();
-            client_account.sign_up(username, password, gmail, client.getReq_id());
-            while (true) {
-                Thread.sleep(50);
-//                if (client.requests.get(1) != null) {
-//                    System.out.println("hi");
-//                }
-                if (client.requests.get(client.getReq_id()) != null) {
-                    if ((boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful")) {
-                        switchToMainPage(event, this.client);
-                        System.out.println("hi");
-                        break;
-//                        return;
+        if(!username.isEmpty() && !gmail.isEmpty() && !password.isEmpty()) {
+            //here it validate the data from database without lag
+            Task<Boolean> task = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    Client_account client_account = new Client_account(client.getOut());
+                    client.setReq_id();
+                    client_account.sign_up(username, password, gmail, client.getReq_id());
+
+                    while (true) {
+                        //checks for if the response is available or not
+                        if (client.requests.get(client.getReq_id()) != null) {
+                            if ((boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful")) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                        Thread.sleep(50);
                     }
+                }
+            };
+
+            task.setOnSucceeded(e -> {
+                if (task.getValue()) {
+                    switchToMainPage(event, this.client);
+                } else {
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
                         applyShakeEffect(singupgmailTF);
-//                        return;
                     }
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidUsername")) {
                         applyShakeEffect(signupUsernameTF);
-//                        return;
                     }
-
-                    break;
                 }
-                System.out.println("still running");
-            }
-
+            });
+            //use the task as a thread so it doesn't lag
+            new Thread(task).start();
         }
     }
+
 
     public void switchToMainPage(ActionEvent event, Client client){
         try {
@@ -159,35 +171,52 @@ public class LoginMenu implements Initializable {
         }
     }
 
-    public void logIn(ActionEvent event) throws InterruptedException {
+
+    public void logIn(ActionEvent event) {
         String username = loginUsernameTF.getText();
         String password = loginPasswordTF.getText();
 
-        if(username.equals("")){
+        //checks if input is empty or not
+        if(username.isEmpty()){
             applyShakeEffect(loginUsernameTF);
         }
-        if(password.equals("")){
+        if(password.isEmpty()){
             applyShakeEffect(loginPasswordTF);
         }
-        if(!(username.equals("") || password.equals(""))) {
-            Client_account client_account = new Client_account(client.getOut());
-            client.setReq_id();
-            client_account.login(username, password, client.getReq_id());
-            while (true) {
-                Thread.sleep(200);
-                if (client.requests.get(client.getReq_id()) != null) {
-                    if ((boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful")) {
-                        switchToMainPage(event, client);
-                    } else {
-                        applyShakeEffect(loginUsernameTF);
-                        applyShakeEffect(loginPasswordTF);
+
+        //checks for if the user can log in or not
+        if(!username.isEmpty() && !password.isEmpty()) {
+            Task<Boolean> task = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    Client_account client_account = new Client_account(client.getOut());
+                    client.setReq_id();
+                    client_account.login(username, password, client.getReq_id());
+
+                    while (true) {
+                        //checks for if the response is available or not
+                        if (client.requests.get(client.getReq_id()) != null) {
+                            return (boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful");
+                        }
+                        Thread.sleep(50);
                     }
-                    return;
                 }
-            }
+            };
+            //after the task done it goes for actions in stage
+            task.setOnSucceeded(e -> {
+                if (task.getValue()) {
+                    switchToMainPage(event, client);
+                } else {
+                    applyShakeEffect(loginUsernameTF);
+                    applyShakeEffect(loginPasswordTF);
+                }
+            });
+
+            new Thread(task).start();
         }
     }
 
+    //shakes the Node object, I used this for text field so when the user input is wrong it shakes.
     private void applyShakeEffect(Node textField) {
         TranslateTransition shakeTransition = new TranslateTransition(Duration.millis(70), textField);
         shakeTransition.setFromX(0);

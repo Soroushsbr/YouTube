@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<HBox focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="957.0" style="-fx-background-color: #0f0f0f;" stylesheets="@video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<HBox focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="957.0" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="123.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
          <children>

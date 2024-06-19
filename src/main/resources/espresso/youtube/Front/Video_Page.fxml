@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;" stylesheets="@video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.VideoPage">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.VideoPage">
    <children>
       <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutY="69.0" prefHeight="651.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;">
          <content>
@@ -24,14 +24,14 @@
             </HBox>
          </content>
       </ScrollPane>
-      <ScrollPane fx:id="dashboardPane" hbarPolicy="NEVER" hmax="0.0" layoutX="-200.0" layoutY="75.0" prefHeight="645.0" prefWidth="202.0" style="-fx-background-color: transparent;" styleClass="scroll-bar" stylesheets="@styleSheet.css" visible="false">
+      <ScrollPane fx:id="dashboardPane" hbarPolicy="NEVER" hmax="0.0" layoutX="-200.0" layoutY="75.0" prefHeight="645.0" prefWidth="202.0" style="-fx-background-color: transparent;" styleClass="scroll-bar" stylesheets="@Style/Dark/styleSheet.css" visible="false">
          <content>
             <VBox fx:id="leftSideBox" prefHeight="644.0" prefWidth="196.0" style="-fx-background-color: #0f0f0f;" />
          </content>
       </ScrollPane>
       <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
          <children>
-            <Button layoutY="5.0" mnemonicParsing="false" onAction="#showDash" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+            <Button layoutY="5.0" mnemonicParsing="false" onAction="#showDash" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -41,13 +41,13 @@
                   <Font size="13.0" />
                </font>
             </TextField>
-            <Button layoutX="1128.0" layoutY="4.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+            <Button layoutX="1128.0" layoutY="4.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
             <Pane layoutX="77.0" layoutY="14.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
-            <Button layoutX="64.0" layoutY="9.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@styleSheet.css">
+            <Button layoutX="64.0" layoutY="9.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -57,20 +57,20 @@
                   <Font name="TradeGothic-BoldCondTwenty" size="21.0" />
                </font>
             </Label>
-            <Button layoutX="788.0" layoutY="13.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@styleSheet.css">
+            <Button layoutX="788.0" layoutY="13.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@Style/Dark/styleSheet.css">
                <font>
                   <Font size="1.0" />
                </font>
             </Button>
-            <Button layoutX="1067.0" layoutY="3.0" mnemonicParsing="false" onAction="#addComment" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+            <Button layoutX="1067.0" layoutY="3.0" mnemonicParsing="false"  prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" stylesheets="@styleSheet.css" />
-            <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" stylesheets="@styleSheet.css" />
+            <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" stylesheets="@Style/Dark/styleSheet.css" />
+            <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" stylesheets="@Style/Dark/styleSheet.css" />
             <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-            <Pane disable="true" layoutX="6.0" layoutY="14.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" stylesheets="@styleSheet.css" />
+            <Pane disable="true" layoutX="6.0" layoutY="14.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" stylesheets="@Style/Dark/styleSheet.css" />
          </children>
       </AnchorPane>
    </children>
