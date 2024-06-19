@@ -2,11 +2,9 @@ package espresso.youtube.models.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import espresso.youtube.models.ServerResponse;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class Client_video {
@@ -32,22 +30,21 @@ public class Client_video {
         json.put("data_type", data_type);
         json.put("client_handler_id", client_handler_id);
         json.put("video_id", uuid.toString());
+        json.put("request_id", video.getRequest_id());
         out.writeUTF(mapper.writeValueAsString(json));
         
         byte[] buffer = new byte[4096];
         int bytesRead;
         while ((bytesRead = fin.read(buffer)) != -1) {
             out.write(buffer, 0, bytesRead);
-            System.out.println("running");
         }
         fin.close();
         out.close();
         in.close();
         v.close();
 
-        System.out.println("client video closed");
+        System.out.println("[CLIENT] video uploaded");
         video.setVideo_id(uuid.toString());
-        System.out.println(video.getVideo_id());
         send_request();
     }
 
@@ -59,7 +56,7 @@ public class Client_video {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();
         json.put("owner_id", owner_id);
-        json.put("video_id", media_id);
+        json.put("media_id", media_id);
         json.put("type", type);
         json.put("data_type", data_type);
         json.put("request_id", request_id);
@@ -71,7 +68,7 @@ public class Client_video {
             out.close();
             in.close();
             v.close();
-            System.out.println("client video closed");
+            System.out.println("[CLIENT] video not found");
             return;
         }
 
@@ -87,7 +84,7 @@ public class Client_video {
         dos.close();
         v.close();
 
-        System.out.println("client video closed");
+        System.out.println("[CLIENT] video received");
     }
     public void send_video_info(String owner_id, String title, String description, String channel_id, int request_id){
         video.setRequest("send_video_info");
@@ -102,7 +99,6 @@ public class Client_video {
             jsonString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(video);
             out.writeUTF(jsonString);
         } catch (IOException e) {
-            System.out.println("error in Client_video");
             e.printStackTrace();
         } finally {
             video = new Video();

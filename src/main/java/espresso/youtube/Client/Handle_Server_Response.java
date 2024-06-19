@@ -27,7 +27,7 @@ public class Handle_Server_Response implements Runnable {
                     requests.put(serverResponse.getRequest_id(), serverResponse);
                 else
                     requests.replace(serverResponse.getRequest_id(), serverResponse);
-                System.out.println(jsonString);
+                System.out.println("[CLIENT] response " + serverResponse.getRequest_id() + " received");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
