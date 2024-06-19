@@ -23,7 +23,11 @@ public class Handle_Server_Response implements Runnable {
                 jsonString = this.in.readUTF();
                 ServerResponse serverResponse = new ServerResponse();
                 serverResponse.update_request(jsonString);
-                requests.put(serverResponse.getRequest_id(), serverResponse);
+                if(requests.get(serverResponse.getRequest_id()) == null)
+                    requests.put(serverResponse.getRequest_id(), serverResponse);
+                else
+                    requests.replace(serverResponse.getRequest_id(), serverResponse);
+                System.out.println(jsonString);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

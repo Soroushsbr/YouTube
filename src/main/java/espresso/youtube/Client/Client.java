@@ -1,6 +1,7 @@
 package espresso.youtube.Client;
 
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.video.Client_video;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class Client {
         client = new Socket(SERVER_IP, PORT);
         out = new DataOutputStream(client.getOutputStream());
         System.out.println("[CLIENT] " + client.getInetAddress() + " connected to server.");
+        Handle_Server_Response handleServerResponse = new Handle_Server_Response(client, requests);
+        Thread listener = new Thread(handleServerResponse);
+        listener.start();
     }
 
     public DataOutputStream getOut(){
@@ -38,10 +42,6 @@ public class Client {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         Client client1 = new Client();
-        ServerResponse serverResponse = new ServerResponse();
-        Handle_Server_Response handleServerResponse = new Handle_Server_Response(client1.getClient(), client1.requests);
-        Thread listener = new Thread(handleServerResponse);
-        listener.start();
 
 //        Client_account client_account = new Client_account(client1.getOut());
 //        client_account.login("mobin", "1234", 100);
@@ -53,6 +53,22 @@ public class Client {
 //            }
 //            System.out.println("still running");
 //        }
+        while (true){
+            Thread.sleep(100);
+            if(client1.requests.get(0) != null)
+                break;
+        }
+
+        Client_video v = new Client_video(client1.getOut());
+        Client_video.get_media("","123","pdf","video",(int)client1.requests.get(0).get_part("client_handler_id"), 1);
+        while (true){
+            Thread.sleep(100);
+            if(client1.requests.get(1) != null){
+                System.out.println(client1.requests.get(1).get_part("status"));
+                break;
+            } else
+                System.out.println("still running");
+        }
 
     }
 

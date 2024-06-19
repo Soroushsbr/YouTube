@@ -16,9 +16,10 @@ public class Client_Handler implements Runnable {
     private Socket client;
     private DataInputStream in;
     private DataOutputStream out;
-
-    public Client_Handler(Socket client) throws IOException {
+    private int client_handler_id;
+    public Client_Handler(Socket client, int client_handler_id) throws IOException {
         this.client = client;
+        this.client_handler_id = client_handler_id;
         this.in = new DataInputStream(client.getInputStream());
         this.out = new DataOutputStream(client.getOutputStream());
     }
@@ -33,6 +34,11 @@ public class Client_Handler implements Runnable {
             JsonNode rootNode;
             String className;
             boolean cond = true;
+
+            serverResponse = new ServerResponse();
+            serverResponse.setRequest_id(0);
+            serverResponse.add_part("client_handler_id" , client_handler_id);
+            out.writeUTF(mapper.writeValueAsString(serverResponse));
 
             while (cond) {
                 jsonString = this.in.readUTF();
@@ -68,5 +74,10 @@ public class Client_Handler implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void send_video_response(ServerResponse serverResponse) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        out.writeUTF(mapper.writeValueAsString(serverResponse));
     }
 }
