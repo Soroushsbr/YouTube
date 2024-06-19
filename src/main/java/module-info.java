@@ -9,6 +9,7 @@ module espresso.youtube {
 
     opens espresso.youtube to javafx.fxml;
     opens espresso.youtube.Front to javafx.fxml;
+    opens espresso.youtube.models.video;
     
     exports espresso.youtube;
     exports espresso.youtube.Server;

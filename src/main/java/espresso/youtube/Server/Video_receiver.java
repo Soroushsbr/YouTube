@@ -8,13 +8,13 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Video_sender implements Runnable{
+public class Video_receiver implements Runnable {
     private Socket client;
     private ArrayList<Client_Handler> client_handlers;
     private DataInputStream in;
     private DataOutputStream out;
     private DataInputStream fin;
-    public Video_sender(Socket client, ArrayList<Client_Handler> client_handlers) throws IOException {
+    public Video_receiver(Socket client, ArrayList<Client_Handler> client_handlers) throws IOException {
         this.client = client;
         this.client_handlers = client_handlers;
         this.in = new DataInputStream(client.getInputStream());
@@ -27,34 +27,19 @@ public class Video_sender implements Runnable{
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(json);
             int client_handler_id = rootNode.path("client_handler_id").asInt();
+            String owner_id = rootNode.path("owner_id").asText();
+            String data_type = rootNode.path("data_type").asText();
+            String type = rootNode.path("type").asText();
+            String video_id = rootNode.path("video_id").asText();
 
-            ServerResponse serverResponse = new ServerResponse();
-            serverResponse.add_part("status", "sending...");
-            serverResponse.setRequest_id(1);
-            serverResponse.add_part("exist", true);
-
-            File mediaFile = new File("src/main/java/espresso/youtube/models/video/jozv.pdf");
-            if(mediaFile.exists()){
-                serverResponse.set_part("exist", true);
-                out.writeUTF("1");
-            } else {
-                serverResponse.set_part("exist", false);
-                client_handlers.get(client_handler_id).send_video_response(serverResponse);
-                out.writeUTF("0");
-                return;
-            }
-
-            fin = new DataInputStream(new FileInputStream(mediaFile));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream("src/main/java/espresso/youtube/Server/" + video_id + "." + data_type));
             byte[] buffer = new byte[4096];
             int bytesRead;
-            while ((bytesRead = fin.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-                System.out.println("running");
+            while ((bytesRead = in.read(buffer)) != -1) {
+                dos.write(buffer, 0, bytesRead);
             }
-            fin.close();
-            
-            serverResponse.set_part("status", "complete");
-            client_handlers.get(client_handler_id).send_video_response(serverResponse);
+            dos.close();
+
         } catch (IOException e){
             System.out.println("error");
         } finally {
@@ -68,4 +53,5 @@ public class Video_sender implements Runnable{
             }
         }
     }
+
 }

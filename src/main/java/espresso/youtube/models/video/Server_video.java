@@ -17,6 +17,10 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse insert_video_info(){
-        return null;
+        System.out.println(super.getTitle());
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(super.getRequest_id());
+        serverResponse.add_part("status", "received");
+        return serverResponse;
     }
 }

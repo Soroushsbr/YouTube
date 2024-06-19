@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import espresso.youtube.models.ServerResponse;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class Client_video {
     private Video video = new Video();
@@ -20,6 +18,39 @@ public class Client_video {
     public Client_video(DataOutputStream out){
         this.out = out;
     }
+    public void upload_media(File mediaFile, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
+        Socket v = new Socket("127.0.0.1", 8002);
+        DataOutputStream out = new DataOutputStream(v.getOutputStream());
+        DataInputStream in = new DataInputStream(v.getInputStream());
+        DataInputStream fin = new DataInputStream(new FileInputStream(mediaFile));
+        UUID uuid = UUID.randomUUID();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode json = mapper.createObjectNode();
+        json.put("owner_id", owner_id);
+        json.put("type", type);
+        json.put("data_type", data_type);
+        json.put("client_handler_id", client_handler_id);
+        json.put("video_id", uuid.toString());
+        out.writeUTF(mapper.writeValueAsString(json));
+        
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = fin.read(buffer)) != -1) {
+            out.write(buffer, 0, bytesRead);
+            System.out.println("running");
+        }
+        fin.close();
+        out.close();
+        in.close();
+        v.close();
+
+        System.out.println("client video closed");
+        video.setVideo_id(uuid.toString());
+        System.out.println(video.getVideo_id());
+        send_request();
+    }
+
     public static void get_media(String owner_id, String media_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8001);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
@@ -48,7 +79,6 @@ public class Client_video {
         byte[] buffer = new byte[4096];
         int bytesRead;
         while ((bytesRead = in.read(buffer)) != -1) {
-            //System.out.println("running");
             dos.write(buffer, 0, bytesRead);
         }
 
@@ -66,7 +96,6 @@ public class Client_video {
         video.setTitle(title);
         video.setDescription(description);
         video.setChannel_id(channel_id);
-        send_request();
     }
     private void send_request(){
         try {
@@ -74,6 +103,7 @@ public class Client_video {
             out.writeUTF(jsonString);
         } catch (IOException e) {
             System.out.println("error in Client_video");
+            e.printStackTrace();
         } finally {
             video = new Video();
         }

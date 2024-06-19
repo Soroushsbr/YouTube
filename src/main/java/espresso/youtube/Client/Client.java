@@ -4,6 +4,7 @@ import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.video.Client_video;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
@@ -60,7 +61,18 @@ public class Client {
         }
 
         Client_video v = new Client_video(client1.getOut());
-        Client_video.get_media("","123","pdf","video",(int)client1.requests.get(0).get_part("client_handler_id"), 1);
+//        Client_video.get_media("","123","pdf","video",(int)client1.requests.get(0).get_part("client_handler_id"), 1);
+//        while (true){
+//            Thread.sleep(100);
+//            if(client1.requests.get(1) != null){
+//                System.out.println(client1.requests.get(1).get_part("status"));
+//                break;
+//            } else
+//                System.out.println("still running");
+//        }
+        File file = new File("src/main/java/espresso/youtube/Client/video1.mp4");
+        v.send_video_info("23","title","description","123",1);
+        v.upload_media(file,"23","mp4","video",(int)client1.requests.get(0).get_part("client_handler_id"));
         while (true){
             Thread.sleep(100);
             if(client1.requests.get(1) != null){
