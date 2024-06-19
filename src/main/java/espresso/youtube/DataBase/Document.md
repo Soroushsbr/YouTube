@@ -16,6 +16,10 @@ After installation, open the SQL Shell to work with databases. At first, wants y
 - **List of tables:**
   ```sql
   \dt
+- **View a table:**
+  ```sql
+  SELECT * FROM table_name;
+
 ## Creating Database and Tables
 
 You can use methods inside the setup class to create the database, and create or reset tables the program needs. The schema of tables is shown below:
@@ -23,13 +27,19 @@ You can use methods inside the setup class to create the database, and create or
 
 ## Features
 
-Each class has utils related to its class object. You can call them to work with the database. Here is a list of them:
+Each class has methods related to its class object. You can call them to work with the database. Here is a list of them:
 
-- Account:
+- Account_DB:
 
-- Comment:
+- Comment_DB:
 
-- Channel
+- Channel_DB:
+- 
+- Comment_DB:
+- 
+- Playlist_DB:
+
+- Post_DB:
 
 ## Note
 
