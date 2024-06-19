@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -16,11 +17,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.Dashboard">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/Dashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.Dashboard">
    <children>
-      <AnchorPane layoutX="-1.0" prefHeight="85.0" prefWidth="1280.0" style="-fx-background-color: #282828;">
+      <AnchorPane layoutX="-1.0" prefHeight="85.0" prefWidth="1280.0" style="-fx-background-color: #282828;" stylesheets="@Style/Dark/Dashboard.css">
          <children>
-            <Button layoutX="16.0" layoutY="22.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+            <Button layoutX="16.0" layoutY="22.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -31,7 +32,7 @@
                </font>
             </TextField>
             <Pane layoutX="77.0" layoutY="31.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
-            <Button layoutX="64.0" layoutY="26.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@styleSheet.css">
+            <Button layoutX="64.0" layoutY="26.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -41,19 +42,19 @@
                   <Font name="TradeGothic-BoldCondTwenty" size="24.0" />
                </font>
             </Label>
-            <Button layoutX="788.0" layoutY="30.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@styleSheet.css">
+            <Button layoutX="788.0" layoutY="30.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@Style/Dark/styleSheet.css">
                <font>
                   <Font size="1.0" />
                </font>
             </Button>
-            <Button layoutX="1081.0" layoutY="20.0" mnemonicParsing="false" onAction="#showUploadPane" prefHeight="38.0" prefWidth="111.0" style="-fx-background-radius: 100;" stylesheets="@styleSheet.css">
+            <Button layoutX="1081.0" layoutY="20.0" mnemonicParsing="false" onAction="#showUploadPane" prefHeight="38.0" prefWidth="111.0" style="-fx-background-radius: 100;" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Pane disable="true" layoutX="1095.0" layoutY="29.0" prefHeight="20.0" prefWidth="27.0" style="-fx-background-color: red;" styleClass="create" stylesheets="@styleSheet.css" />
+            <Pane disable="true" layoutX="1095.0" layoutY="29.0" prefHeight="20.0" prefWidth="27.0" style="-fx-background-color: red;" styleClass="create" stylesheets="@Style/Dark/styleSheet.css" />
             <Circle fx:id="profile" fill="WHITE" layoutX="1234.0" layoutY="39.0" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-            <Pane disable="true" layoutX="22.0" layoutY="31.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" stylesheets="@styleSheet.css" />
+            <Pane disable="true" layoutX="22.0" layoutY="31.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" stylesheets="@Style/Dark/styleSheet.css" />
             <Text disable="true" fill="WHITE" fontSmoothingType="LCD" layoutX="1128.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CREATE">
                <font>
                   <Font name="Arial Bold" size="13.0" />
@@ -81,15 +82,15 @@
             </AnchorPane>
          </children>
       </VBox>
-      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="263.0" layoutY="87.0" prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: transparent;" stylesheets="@Dashboard.css">
+      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="263.0" layoutY="87.0" prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: transparent;" stylesheets="@Style/Dark/Dashboard.css">
          <content>
             <VBox prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: #1f1f1f;" />
          </content>
       </ScrollPane>
       <Rectangle fx:id="backgroundFade" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.44" stroke="BLACK" strokeType="INSIDE" visible="false" width="1280.0" />
-      <AnchorPane fx:id="uploadVidPane" layoutX="251.0" layoutY="63.0" prefHeight="549.0" prefWidth="778.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 10;" visible="false">
+      <AnchorPane fx:id="createPane" layoutX="251.0" layoutY="63.0" prefHeight="549.0" prefWidth="778.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 10;" visible="false">
          <children>
-            <AnchorPane fx:id="selectVidPane" layoutX="62.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0">
+            <AnchorPane fx:id="selectVidPane" layoutX="62.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" visible="false">
                <children>
                   <Button layoutX="239.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="176.0" prefWidth="176.0" style="-fx-background-color: #282828; -fx-background-radius: 1000;">
                      <cursor>
@@ -115,16 +116,16 @@
                      </font>
                   </Text>
                   <Text fill="#c3c3c3" layoutY="374.05078125" strokeType="OUTSIDE" strokeWidth="0.0" text="By submitting your videos to YouTube, you acknowledge that you agree to YouTube's Terms of Service and Community Guidelines.Please make sure that you do not violate others' copyright or privacy rights. Learn more" textAlignment="CENTER" wrappingWidth="654.404296875" />
-                  <AnchorPane disable="true" layoutX="295.0" layoutY="46.0" prefHeight="85.0" prefWidth="65.0" styleClass="upload" stylesheets="@Dashboard.css" />
+                  <AnchorPane disable="true" layoutX="295.0" layoutY="46.0" prefHeight="85.0" prefWidth="65.0" styleClass="upload" stylesheets="@Style/Dark/Dashboard.css" />
                </children>
             </AnchorPane>
             <Line endX="664.0" layoutX="111.0" layoutY="55.0" startX="-108.0" stroke="#686868" />
-            <Button layoutX="734.0" layoutY="10.0" mnemonicParsing="false" onAction="#hideUploadPane" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@styleSheet.css">
+            <Button layoutX="734.0" layoutY="10.0" mnemonicParsing="false" onAction="#hideUploadPane" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <AnchorPane disable="true" layoutX="743.0" layoutY="19.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" stylesheets="@Dashboard.css" />
+            <AnchorPane disable="true" layoutX="743.0" layoutY="19.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" stylesheets="@Style/Dark/Dashboard.css" />
             <Text fill="WHITE" layoutX="20.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload videos">
                <font>
                   <Font name="Arial Bold" size="18.0" />
@@ -142,12 +143,12 @@
                         <Font name="Arial Bold" size="20.0" />
                      </font>
                   </Text>
-                  <TextField alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field" stylesheets="@Dashboard.css">
+                  <TextField alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field" stylesheets="@Style/Dark/Dashboard.css">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <TextArea layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area" stylesheets="@Dashboard.css">
+                  <TextArea layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area" stylesheets="@Style/Dark/Dashboard.css">
                      <font>
                         <Font size="9.0" />
                      </font>
@@ -158,7 +159,7 @@
                         <Font name="Arial Bold" size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox accessibleRole="BUTTON" layoutX="23.0" layoutY="314.0" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Dashboard.css">
+                  <ComboBox accessibleRole="BUTTON" layoutX="23.0" layoutY="314.0" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Style/Dark/Dashboard.css">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -169,7 +170,7 @@
                      </font>
                   </Text>
                   <Text fill="#cccccc" layoutX="23.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add your video to one playlist to organise your content for viewers." />
-                  <Button layoutX="543.0" layoutY="352.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Next">
+                  <Button layoutX="543.0" layoutY="352.0" mnemonicParsing="false" onAction="#confirmUpload" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Next">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -184,6 +185,25 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <AnchorPane fx:id="uploadingPane" layoutX="112.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" style="-fx-background-color: #1f1f1f;" visible="false">
+               <children>
+                  <VBox fx:id="upVid" alignment="CENTER" layoutX="149.0" layoutY="65.0" prefHeight="191.0" prefWidth="357.0" style="-fx-background-color: black;" />
+                  <ProgressBar fx:id="progressBar" layoutX="149.0" layoutY="65.0" prefHeight="191.0" prefWidth="357.0" progress="0.0" />
+                  <Text fx:id="uploadText" fill="WHITE" layoutX="79.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Uploading..." textAlignment="CENTER" wrappingWidth="497.13671875">
+                     <font>
+                        <Font name="Arial Bold" size="22.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="doneBtn" disable="true" layoutX="291.0" layoutY="340.0" mnemonicParsing="false" onAction="#hideUploadPane" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Done">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>

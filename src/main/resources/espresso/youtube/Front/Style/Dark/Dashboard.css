@@ -11,6 +11,7 @@
     -fx-background-color: #aaaaaa;
 }
 
+
 .scroll-bar:vertical .track {
     -fx-background-color: #0f0f0f;
 }
@@ -68,4 +69,32 @@
 .combo-box .list-cell {
     -fx-background-color: #2b2b2b;
     -fx-text-fill: white;
+}
+/*.radio-background{*/
+/*    -fx-background-color: transparent;*/
+/*    -fx-border-radius: 10;*/
+/*    -fx-border-color: white;*/
+/*}*/
+/*.radio-button .radio{*/
+/*    -fx-background-color: transparent;*/
+/*    -fx-border-color: white;*/
+/*    -fx-border-radius: 100;*/
+/*    -fx-border-width: 1.5;*/
+/*}*/
+/*.radio-button:selected .radio .dot{*/
+/*    -fx-background-color: white;*/
+/*}*/
+.progress-bar > .track {
+    -fx-background-color: transparent;
+    -fx-text-box-border: transparent;
+    -fx-control-inner-background:  transparent;
+}
+
+/* Customize the progress bar itself */
+.progress-bar .bar {
+    -fx-background-radius: 3;
+    -fx-opacity: 0.45;
+    -fx-background-color: black;
+    -fx-background-insets: 0, 1, 2;
+    -fx-padding: 0.416667em; /* Adjust as needed */
 }

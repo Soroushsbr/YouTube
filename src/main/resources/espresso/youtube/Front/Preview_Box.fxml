@@ -19,7 +19,7 @@
                </font>
             </Label>
             <Line endX="267.0" layoutX="65.0" layoutY="178.0" startX="-61.0" stroke="RED" strokeWidth="4.0" />
-            <Button layoutY="-1.0" mnemonicParsing="false" opacity="0.42" prefHeight="181.0" prefWidth="334.0" styleClass="select_video" stylesheets="@styleSheet.css">
+            <Button layoutY="-1.0" mnemonicParsing="false" opacity="0.42" prefHeight="181.0" prefWidth="334.0" styleClass="select_video" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
