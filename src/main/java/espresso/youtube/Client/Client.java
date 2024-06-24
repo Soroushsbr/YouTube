@@ -15,7 +15,7 @@ public class Client {
 
     private static final String SERVER_IP = "127.0.0.1";
     private int req_id = 1;
-    private UUID user_id;
+    private String user_id;
     private static final int PORT = 8000;
     private Socket client;
     private DataOutputStream out;
@@ -93,11 +93,11 @@ public class Client {
         this.req_id++;
     }
 
-    public UUID getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(UUID user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 }

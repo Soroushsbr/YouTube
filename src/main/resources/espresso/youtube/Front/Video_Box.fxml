@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -19,7 +21,7 @@
       <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="534.0" layoutX="19.0" layoutY="13.0" stroke="#0f0f0f" strokeWidth="10.0" width="933.0" />
       <AnchorPane layoutX="19.0" layoutY="16.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="538.0" prefWidth="933.0" style="-fx-background-color: transparent;" stylesheets="@Style/Dark/video_page.css">
          <children>
-            <Button layoutX="26.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="pause" stylesheets="@Style/Dark/video_page.css">
+            <Button layoutX="26.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="play" stylesheets="@Style/Dark/video_page.css">
                <font>
                   <Font size="10.0" />
                </font>
@@ -119,27 +121,59 @@
             <Font name="Arial Bold" size="24.0" />
          </font>
       </Text>
-      <AnchorPane layoutX="667.0" layoutY="618.0">
+      <AnchorPane layoutX="555.0" layoutY="618.0" prefHeight="36.0" prefWidth="349.0">
          <children>
-            <Button fx:id="likeBtn" mnemonicParsing="false" prefHeight="36.0" prefWidth="78.0">
+            <Button fx:id="likeBtn" layoutX="-9.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0" styleClass="likeBtn">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <AnchorPane fx:id="like" disable="true" layoutX="14.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" />
-            <Button fx:id="dislikeBtn" layoutX="78.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="42.0">
+            <AnchorPane fx:id="like" disable="true" layoutX="10.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" styleClass="like" />
+            <Button fx:id="dislikeBtn" layoutX="78.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="56.0" styleClass="dislikeBtn">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <AnchorPane fx:id="dislike" disable="true" layoutX="89.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" />
+            <AnchorPane fx:id="dislike" disable="true" layoutX="98.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="dislike" />
             <Line endX="100.0" layoutX="-22.0" layoutY="11.0" startX="100.0" startY="16.0" stroke="WHITE" />
             <Text disable="true" fill="WHITE" layoutX="43.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="likes">
                <font>
                   <Font size="13.0" />
                </font>
             </Text>
+            <Button layoutX="148.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="106.0" styleClass="optionBtn">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Text disable="true" fill="WHITE" layoutX="182.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download">
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font>
+            </Text>
+            <AnchorPane fx:id="like1" disable="true" layoutX="159.0" layoutY="8.0" prefHeight="19.0" prefWidth="14.0" styleClass="download" />
          </children>
       </AnchorPane>
+      <Button fx:id="likeBtn1" layoutX="815.0" layoutY="618.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="821.0" layoutY="618.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0" styleClass="optionBtn">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Text disable="true" fill="WHITE" layoutX="869.0" layoutY="641.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Text>
+      <AnchorPane fx:id="like2" disable="true" layoutX="835.0" layoutY="631.0" prefHeight="12.0" prefWidth="25.0" styleClass="save" />
+      <ImageView fitHeight="60.0" fitWidth="126.0" layoutX="419.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Images/loading.gif" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

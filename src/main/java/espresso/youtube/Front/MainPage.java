@@ -2,6 +2,7 @@ package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
 import espresso.youtube.models.video.Client_video;
+import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -12,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -29,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import static espresso.youtube.Front.LoginMenu.client;
 
@@ -80,9 +83,12 @@ public class MainPage implements Initializable {
 //            Media media = new Media(file.toURI().toString());
 //            MediaPlayer mediaPlayer = new MediaPlayer(media);
 //            MediaView mediaView = new MediaView(mediaPlayer);
+            String id = "76750c4c-207a-4d07-8b2f-f3cd27c5d6e7";
             for(int i = 0 ; i < 1; i++) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                 AnchorPane videoPane = loader.load();
+                ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
+
 //                mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
 //                mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
 //                ((VBox)videoPane.getChildren().get(0)).getChildren().add(mediaView);
@@ -94,6 +100,23 @@ public class MainPage implements Initializable {
             videosBox.getChildren().add(hBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void switchToVideoPage(ActionEvent event ,String videoID){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
+            root = loader.load();
+            VideoPage videoPage = loader.getController();
+            videoPage.setVID(videoID);
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
         }
     }
 

@@ -5,6 +5,7 @@ module espresso.youtube {
     requires jbcrypt;
     requires javafx.media;
     requires com.fasterxml.jackson.databind;
+    requires java.desktop;
 
 
     opens espresso.youtube to javafx.fxml;

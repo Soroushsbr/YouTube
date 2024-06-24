@@ -1,8 +1,10 @@
 package espresso.youtube.Front;
 
+import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -18,31 +21,63 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
+import static espresso.youtube.Front.LoginMenu.client;
 
 public class VideoPage implements Initializable {
     @FXML
     VBox leftVbox;
+    String videoID;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
+//        try {
+////            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
+////            AnchorPane videoPane = loader.load();
+////            //to set hover action to show video icons when mouse hovers it
+////            videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
+////            videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
+////            System.out.println(videoID);
+////            File file = Client_video.get_media("1",videoID ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id") , 1);
+////            Media media = new Media(file.toURI().toString());
+////            appendVideo(media , videoPane);
+////            leftVbox.getChildren().add(videoPane);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+    }
+    public void setVID(String videoID) throws IOException {
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
         AnchorPane videoPane = loader.load();
         //to set hover action to show video icons when mouse hovers it
         videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
         videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
-            URL file = getClass().getResource("Images/back2.mp4");
-            Media media = new Media(file.toString());
-            appendVideo(media , videoPane);
+        Task<File> task = new Task<File>() {
+            @Override
+            protected File call() throws Exception {
 
+                File file = Client_video.get_media("1", videoID, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 1);
+//                Media media = new Media(file.toURI().toString());
+//                appendVideo(media, videoPane);
+//                leftVbox.getChildren().add(videoPane);
+                return file;
+            }
+        };
+        task.setOnSucceeded(e ->{
+            Media media = new Media(task.getValue().toURI().toString());
+            ((ImageView) videoPane.getChildren().get(13)).setVisible(false);
+            appendVideo(media , videoPane);
+        });
         leftVbox.getChildren().add(videoPane);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        new Thread(task).start();
 
     }
 
@@ -79,11 +114,11 @@ public class VideoPage implements Initializable {
             timeline.play();
         }
     }
+
     //this method place the video and plays it(this needs the video from database)
     public void appendVideo(Media media, AnchorPane videoPane){
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mediaPlayer);
-        mediaPlayer.play();
         //make the video to be middle of vbox
         mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
         mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());

@@ -137,6 +137,7 @@ public class LoginMenu implements Initializable {
             task.setOnSucceeded(e -> {
                 if (task.getValue()) {
                     switchToMainPage(event, this.client);
+                    client.setUser_id((String) client.requests.get(client.getReq_id()).get_part("UserID"));
                 } else {
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
                         applyShakeEffect(singupgmailTF);
@@ -202,6 +203,8 @@ public class LoginMenu implements Initializable {
             task.setOnSucceeded(e -> {
                 if (task.getValue()) {
                     switchToMainPage(event, client);
+                    client.setUser_id((String) client.requests.get(client.getReq_id()).get_part("UserID"));
+                    System.out.println(client.getUser_id());
                 } else {
                     applyShakeEffect(loginUsernameTF);
                     applyShakeEffect(loginPasswordTF);
