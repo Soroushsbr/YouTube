@@ -8,13 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.UUID;
 
 // Client Class
 public class Client {
 
     private static final String SERVER_IP = "127.0.0.1";
     private int req_id = 1;
-    private String user_id;
+    private UUID user_id;
     private static final int PORT = 8000;
     private Socket client;
     private DataOutputStream out;
@@ -23,10 +24,10 @@ public class Client {
     public Client() throws IOException {
         client = new Socket(SERVER_IP, PORT);
         out = new DataOutputStream(client.getOutputStream());
-        System.out.println("[CLIENT] " + client.getInetAddress() + " connected to server.");
         Handle_Server_Response handleServerResponse = new Handle_Server_Response(client, requests);
         Thread listener = new Thread(handleServerResponse);
         listener.start();
+        System.out.println("[CLIENT] " + client.getInetAddress() + " connected to server.");
     }
 
     public DataOutputStream getOut(){
@@ -90,5 +91,13 @@ public class Client {
 
     public void setReq_id() {
         this.req_id++;
+    }
+
+    public UUID getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(UUID user_id) {
+        this.user_id = user_id;
     }
 }

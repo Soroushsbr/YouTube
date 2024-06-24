@@ -48,7 +48,7 @@ public class Client_video {
         send_request();
     }
 
-    public static void get_media(String owner_id, String media_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
+    public static File get_media(String owner_id, String media_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8001);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
         DataInputStream in = new DataInputStream(v.getInputStream());
@@ -69,22 +69,29 @@ public class Client_video {
             in.close();
             v.close();
             System.out.println("[CLIENT] video not found");
-            return;
+            return null;
         }
 
-        DataOutputStream dos = new DataOutputStream(new FileOutputStream("src/main/java/espresso/youtube/Client/" + media_id + "." + data_type));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int bytesRead;
         while ((bytesRead = in.read(buffer)) != -1) {
-            dos.write(buffer, 0, bytesRead);
+            baos.write(buffer, 0, bytesRead);
         }
 
         out.close();
         in.close();
-        dos.close();
         v.close();
 
         System.out.println("[CLIENT] video received");
+
+        // Create a temporary file and write the data to it
+        File tempFile = File.createTempFile(media_id, "." + data_type);
+        FileOutputStream fos = new FileOutputStream(tempFile);
+        baos.writeTo(fos);
+        fos.close();
+
+        return tempFile;
     }
     public void send_video_info(String owner_id, String title, String description, String channel_id, int request_id){
         video.setRequest("send_video_info");

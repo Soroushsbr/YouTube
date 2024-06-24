@@ -1,6 +1,7 @@
 package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
+import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,14 +17,20 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static espresso.youtube.Front.LoginMenu.client;
 
 public class MainPage implements Initializable {
     @FXML
@@ -36,7 +43,6 @@ public class MainPage implements Initializable {
     Circle profile;
     @FXML
     ScrollPane dashboardPane;
-    private Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -55,9 +61,6 @@ public class MainPage implements Initializable {
         appendVideos();
     }
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
 
     //to show the notifications of user
     public void selectNotif(){
@@ -73,9 +76,16 @@ public class MainPage implements Initializable {
         try {
             HBox hBox = new HBox();
             hBox.getChildren().clear();
-            for(int i = 0 ; i < 3; i++) {
+//            File file = Client_video.get_media("1","d14521bf-3e3f-4b37-9a6e-be9a1848507f" ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id") , 1);
+//            Media media = new Media(file.toURI().toString());
+//            MediaPlayer mediaPlayer = new MediaPlayer(media);
+//            MediaView mediaView = new MediaView(mediaPlayer);
+            for(int i = 0 ; i < 1; i++) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                 AnchorPane videoPane = loader.load();
+//                mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
+//                mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
+//                ((VBox)videoPane.getChildren().get(0)).getChildren().add(mediaView);
 //                this can remove the red line blow video
 //                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
                 hBox.getChildren().add(videoPane);

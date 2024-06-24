@@ -1,6 +1,7 @@
 package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
+import espresso.youtube.models.video.Client_video;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -30,9 +31,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import static espresso.youtube.Front.LoginMenu.client;
+
 public class Dashboard {
     private UUID channelID;
-    private Client client;
     @FXML
     Rectangle backgroundFade;
     @FXML
@@ -57,6 +59,8 @@ public class Dashboard {
     Button doneBtn;
     @FXML
     Text uploadText;
+    private File selectedFile;
+
     public void showUploadPane(){
         detailsPane.setVisible(false);
         uploadingPane.setVisible(false);
@@ -76,6 +80,21 @@ public class Dashboard {
         doneBtn.setDisable(true);
     }
 
+    public void sendFile(File selectedFile) throws IOException, InterruptedException {
+        //todo: put this method in a thread
+        Client_video client_video = new Client_video(client.getOut());
+        client_video.send_video_info("1","title","description","123",1);
+        client_video.upload_media(selectedFile,"1","mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
+        while (true) {
+            Thread.sleep(100);
+            if (client.requests.get(1) != null) {
+                System.out.println(client.requests.get(1).get_part("status"));
+                break;
+            } else
+                System.out.println("waiting for response");
+        }
+    }
+
     public void selectFile(){
         uploadVidScene();
         FileChooser fileChooser = new FileChooser();
@@ -85,6 +104,7 @@ public class Dashboard {
         );
         File selectedFile = fileChooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
+            this.selectedFile =selectedFile;
             detailScene(selectedFile);
         }
     }
@@ -104,7 +124,8 @@ public class Dashboard {
 
     Timer timer;
     Timer stopTimer;
-    public void confirmUpload() throws IOException {
+    public void confirmUpload() throws IOException, InterruptedException {
+        sendFile(selectedFile);
         MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
         mediaView.fitWidthProperty().bind(upVid.widthProperty());
         mediaView.fitHeightProperty().bind(upVid.heightProperty());

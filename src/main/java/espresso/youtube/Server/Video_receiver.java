@@ -34,7 +34,7 @@ public class Video_receiver implements Runnable {
             int request_id = rootNode.path("request_id").asInt();
             System.out.println("[VIDEO RECEIVER] downloading video for request" + request_id);
 
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream("resources/"+owner_id+"/"+video_id+"."+data_type));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+video_id+"."+data_type));
             byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = in.read(buffer)) != -1) {

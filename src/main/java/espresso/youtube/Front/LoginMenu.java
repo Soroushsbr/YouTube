@@ -57,14 +57,11 @@ public class LoginMenu implements Initializable {
     private Parent root;
     private Stage stage;
     private Scene scene;
-    private Client client;
+    public static Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            this.client = new Client();
-            Handle_Server_Response handleServerResponse = new Handle_Server_Response(client.getClient(), client.requests);
-            Thread listener = new Thread(handleServerResponse);
-            listener.start();
+            client = new Client();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -164,7 +161,6 @@ public class LoginMenu implements Initializable {
             stage.setScene(scene);
             //set client for next stage
             MainPage mainPage = loader.load();
-            mainPage.setClient(client);
 
             stage.show();
         }catch (IOException ignored){

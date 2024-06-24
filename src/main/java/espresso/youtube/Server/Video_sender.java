@@ -20,6 +20,7 @@ public class Video_sender implements Runnable{
         this.in = new DataInputStream(client.getInputStream());
         this.out = new DataOutputStream(client.getOutputStream());
     }
+
     @Override
     public void run() {
         try {
@@ -39,7 +40,7 @@ public class Video_sender implements Runnable{
             serverResponse.setRequest_id(request_id);
             serverResponse.add_part("exist", true);
 
-            File mediaFile = new File("resources/"+owner_id+"/"+media_id+"."+data_type);
+            File mediaFile = new File("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+ media_id+"."+data_type);
             if(mediaFile.exists()){
                 serverResponse.set_part("exist", true);
                 out.writeUTF("1");
