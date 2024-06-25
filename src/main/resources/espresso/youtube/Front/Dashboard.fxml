@@ -88,7 +88,7 @@
          </content>
       </ScrollPane>
       <Rectangle fx:id="backgroundFade" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.44" stroke="BLACK" strokeType="INSIDE" visible="false" width="1280.0" />
-      <AnchorPane fx:id="createPane" layoutX="251.0" layoutY="63.0" prefHeight="549.0" prefWidth="778.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 10;" visible="false">
+      <AnchorPane fx:id="createPane" layoutX="251.0" layoutY="63.0" prefHeight="549.0" prefWidth="778.0" style="-fx-background-color: #1f1f1f; -fx-background-radius: 10;" styleClass="shadow" visible="false">
          <children>
             <AnchorPane fx:id="selectVidPane" layoutX="62.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" visible="false">
                <children>
@@ -135,51 +135,64 @@
             <Circle fill="#656565" layoutX="427.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
             <Circle fill="#656565" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
             <Circle fx:id="circle" fill="#3da5fe" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-            <AnchorPane fx:id="detailsPane" layoutX="112.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" style="-fx-background-color: #1f1f1f;" visible="false">
-               <children>
-                  <AnchorPane layoutX="378.0" layoutY="75.0" prefHeight="207.0" prefWidth="256.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" />
-                  <Text fill="WHITE" layoutX="23.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Details">
-                     <font>
-                        <Font name="Arial Bold" size="20.0" />
-                     </font>
-                  </Text>
-                  <TextField alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field" stylesheets="@Style/Dark/Dashboard.css">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <TextArea layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area" stylesheets="@Style/Dark/Dashboard.css">
-                     <font>
-                        <Font size="9.0" />
-                     </font>
-                  </TextArea>
-                  <VBox fx:id="videoPre" alignment="CENTER" layoutX="378.0" layoutY="58.0" prefHeight="161.0" prefWidth="256.0" style="-fx-background-color: black;" />
-                  <Label fx:id="fileName" layoutX="382.0" layoutY="233.0" prefHeight="31.0" prefWidth="248.0" text="File name:" textFill="WHITE">
-                     <font>
-                        <Font name="Arial Bold" size="14.0" />
-                     </font>
-                  </Label>
-                  <ComboBox accessibleRole="BUTTON" layoutX="23.0" layoutY="314.0" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Style/Dark/Dashboard.css">
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </ComboBox>
-                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="23.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Playlists">
-                     <font>
-                        <Font name="Arial Bold" size="15.0" />
-                     </font>
-                  </Text>
-                  <Text fill="#cccccc" layoutX="23.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add your video to one playlist to organise your content for viewers." />
-                  <Button layoutX="543.0" layoutY="352.0" mnemonicParsing="false" onAction="#confirmUpload" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Next">
-                     <font>
-                        <Font size="13.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-               </children>
-            </AnchorPane>
+            <ScrollPane fx:id="detailsPane" hbarPolicy="NEVER" hmax="0.0" layoutX="112.0" layoutY="84.0" prefWidth="657.0" style="-fx-background-color: transparent;" visible="false">
+               <content>
+                  <AnchorPane prefHeight="397.0" prefWidth="655.0" style="-fx-background-color: #1f1f1f;">
+                     <children>
+                        <AnchorPane layoutX="378.0" layoutY="75.0" prefHeight="207.0" prefWidth="256.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" />
+                        <Text fill="WHITE" layoutX="23.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Details">
+                           <font>
+                              <Font name="Arial Bold" size="20.0" />
+                           </font>
+                        </Text>
+                        <TextField alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field" stylesheets="@Style/Dark/Dashboard.css">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <TextArea layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area" stylesheets="@Style/Dark/Dashboard.css">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </TextArea>
+                        <VBox fx:id="videoPre" alignment="CENTER" layoutX="378.0" layoutY="58.0" prefHeight="161.0" prefWidth="256.0" style="-fx-background-color: black;" />
+                        <Label fx:id="fileName" layoutX="382.0" layoutY="233.0" prefHeight="31.0" prefWidth="248.0" text="File name:" textFill="WHITE">
+                           <font>
+                              <Font name="Arial Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox accessibleRole="BUTTON" layoutX="24.0" layoutY="497.0" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Style/Dark/Dashboard.css">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ComboBox>
+                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="24.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Playlists">
+                           <font>
+                              <Font name="Arial Bold" size="15.0" />
+                           </font>
+                        </Text>
+                        <Text fill="#cccccc" layoutX="24.0" layoutY="483.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add your video to one playlist to organise your content for viewers." />
+                        <Button layoutX="93.0" layoutY="348.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0" styleClass="upImage_svg">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Text fill="#656565" layoutX="75.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Upload file" />
+                        <Rectangle accessibleRole="BUTTON" arcHeight="5.0" arcWidth="5.0" fill="#cd9d9d00" height="95.0" layoutX="24.0" layoutY="321.0" onMouseClicked="#selectThumbnail" stroke="BLACK" strokeType="INSIDE" strokeWidth="12.0" styleClass="upImage" width="158.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Rectangle>
+                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="24.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thumbnail">
+                           <font>
+                              <Font name="Arial Bold" size="15.0" />
+                           </font>
+                        </Text>
+                        <Text fill="#cccccc" layoutX="24.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set a thumbnail that stands out and draws viewers' attention." />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
             <Button layoutX="337.0" layoutY="507.0" mnemonicParsing="false" onAction="#uploadVidScene" prefHeight="25.0" prefWidth="27.0" style="-fx-background-color: transparent;">
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -204,6 +217,14 @@
                   </Button>
                </children>
             </AnchorPane>
+            <Button fx:id="nextBtn" layoutX="681.0" layoutY="503.0" mnemonicParsing="false" onAction="#confirmUpload" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Next" visible="false">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
          </children>
       </AnchorPane>
    </children>

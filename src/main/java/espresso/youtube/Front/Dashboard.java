@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -42,7 +43,7 @@ public class Dashboard {
     @FXML
     AnchorPane selectVidPane;
     @FXML
-    AnchorPane detailsPane;
+    ScrollPane detailsPane;
     @FXML
     Circle circle;
     @FXML
@@ -59,6 +60,8 @@ public class Dashboard {
     Button doneBtn;
     @FXML
     Text uploadText;
+    @FXML
+    Button nextBtn;
     private File selectedFile;
 
     public void showUploadPane(){
@@ -97,6 +100,7 @@ public class Dashboard {
 
     public void selectFile(){
         uploadVidScene();
+        nextBtn.setVisible(true);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select MP4 File");
         fileChooser.getExtensionFilters().addAll(
@@ -106,6 +110,18 @@ public class Dashboard {
         if (selectedFile != null) {
             this.selectedFile =selectedFile;
             detailScene(selectedFile);
+        }
+    }
+
+    public void selectThumbnail(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a Thumbnail");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
+        );
+        File selectedThumbnail = fileChooser.showOpenDialog(new Stage());
+        if(selectedThumbnail != null){
+            //todo
         }
     }
 
@@ -125,6 +141,7 @@ public class Dashboard {
     Timer timer;
     Timer stopTimer;
     public void confirmUpload() throws IOException, InterruptedException {
+        nextBtn.setVisible(false);
         sendFile(selectedFile);
         MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
         mediaView.fitWidthProperty().bind(upVid.widthProperty());

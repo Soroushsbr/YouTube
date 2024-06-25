@@ -54,6 +54,7 @@ public class LoginMenu implements Initializable {
     TextField loginUsernameTF;
     @FXML
     PasswordField loginPasswordTF;
+
     private Parent root;
     private Stage stage;
     private Scene scene;
