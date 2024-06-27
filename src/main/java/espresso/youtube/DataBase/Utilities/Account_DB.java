@@ -157,6 +157,7 @@ public class Account_DB {
         if ((boolean)serverResponse.get_part("isValidUsername") && (boolean)serverResponse.get_part("isValidGmail")){
             save_account(username, password,gmail);
             serverResponse.add_part("isSuccessful", true);
+//            serverResponse.add_part("userID", (String)get_user_id);
         } else {
             serverResponse.add_part("isSuccessful", false);
         }
@@ -167,7 +168,44 @@ public class Account_DB {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
+//            serverResponse.add_part("userID", (String)get_user_id);
         return serverResponse;
+    }
+
+
+
+
+    //newww
+    public static UUID get_id_by_username(String username){
+        String query = "SELECT id FROM accounts WHERE username = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return (UUID) resultSet.getObject("id");
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting account ID by username", e);
+        }
+    }
+
+    public static String get_username_by_id(UUID id){
+        String query = "SELECT username FROM accounts WHERE id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("username");
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting account username by ID", e);
+        }
     }
     /////+++
     public static void main(String[] args) {
@@ -191,31 +229,27 @@ public class Account_DB {
 
 }
 
-
-//add comment like/dislike tables
-//create a default channel with name of user
-//watch later for each user
-//
-
-//post views
-//delete post, account, channel, comment?
-//understand code
-
-//give data to load post with comments and views, channel, profile, playlist
-
-//notif--> from channel and user, text, to a user?
-
-//change channel and playlist title
-//unsubscribe channel and playlist
-//like/dislike comment and post. check if user has already liked or disliked. remove like or dislike.
+//return user id for login, sign up, ... ?soroush
 
 
-//change everything?
-//write log with detail.
-//write comment with detail
+//!!!!! delete chennel---> posts and playlist posts--->> comments---->>> likes/dislikes
+
+//check user is owner of a post, playlist, and channel, and comment???
+
+//give data to load post with comments and views, channel, profile, playlist by their ID with json
+
+//notification????
+
+
+//number of channel/playlist subscribers? number of post views?
+// number of likes/dislikes of a post or comment.
+// number of posts in channel or playlist
+
+//change anything else?
 
 //check tables with schema
+//write list of methods to check
+//write log with detail
+//complete doc
+//write comment about what method does
 
-//like and dislike for both post and comment
-
-//view full table in sql shell
