@@ -8,10 +8,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Account {
+public class Account_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "1383";
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
@@ -267,20 +267,16 @@ public static void save_account(String username, String password, String gmail) 
         serverResponse.add_part("isValidUsername" , !check_username_exists(username));
         serverResponse.add_part("isValidGmail" , !check_gmail_exists(gmail) && check_gmail_validation(gmail));
 
-//        serverResponse.add_part("isValidGamil" , true);
-
         if ((boolean)serverResponse.get_part("isValidUsername") && (boolean)serverResponse.get_part("isValidGmail")){
 
             save_account(username, password,gmail);
 
             serverResponse.add_part("isSuccessful", true);
+
+            serverResponse.add_part("UserID", get_userID(username));
         } else {
             serverResponse.add_part("isSuccessful", false);
         }
-
-//        serverResponse.add_part("isValidUsername" , true);
-//        serverResponse.add_part("isValidGamil" , true);
-//        serverResponse.add_part("isSuccessful", true);
 
         return serverResponse;
     }
@@ -289,6 +285,9 @@ public static void save_account(String username, String password, String gmail) 
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
+        if((boolean)serverResponse.get_part("isSuccessful")){
+            serverResponse.add_part("UserID", get_userID(username));
+        }
         return serverResponse;
     }
 
@@ -301,8 +300,32 @@ public static void save_account(String username, String password, String gmail) 
     }
 
 
+    //-----soroush--------
+    public static String get_userID(String username){
+        String query = "SELECT id FROM accounts WHERE username = ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return ((UUID) resultSet.getObject("id")).toString();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Database error occurred", e);
+        }
+        return "";
+    }
 
 }
+
+
+
+
 
 
 //add comment like/dislike tables

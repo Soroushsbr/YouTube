@@ -32,7 +32,7 @@
                </cursor>
             </Button>
             <Pane layoutX="77.0" layoutY="14.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
-            <Button layoutX="64.0" layoutY="9.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/styleSheet.css">
+            <Button layoutX="64.0" layoutY="9.0" mnemonicParsing="false" onAction="#appendVideos" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

@@ -1,16 +1,12 @@
 package espresso.youtube.Front;
 
-import espresso.youtube.Client.Client;
-import javafx.animation.Animation;
+import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -23,16 +19,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import static espresso.youtube.Front.LoginMenu.client;
+
 public class Dashboard {
     private UUID channelID;
-    private Client client;
     @FXML
     Rectangle backgroundFade;
     @FXML
@@ -40,7 +36,7 @@ public class Dashboard {
     @FXML
     AnchorPane selectVidPane;
     @FXML
-    AnchorPane detailsPane;
+    ScrollPane detailsPane;
     @FXML
     Circle circle;
     @FXML
@@ -57,6 +53,14 @@ public class Dashboard {
     Button doneBtn;
     @FXML
     Text uploadText;
+    @FXML
+    Button nextBtn;
+    @FXML
+    TextField titleTF;
+    @FXML
+    TextArea descriptionTA;
+    private File selectedFile;
+
     public void showUploadPane(){
         detailsPane.setVisible(false);
         uploadingPane.setVisible(false);
@@ -76,8 +80,45 @@ public class Dashboard {
         doneBtn.setDisable(true);
     }
 
+    public void sendFile(File selectedFile) throws IOException, InterruptedException {
+        //todo: put this method in a thread
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                String title = titleTF.getText();
+                String description = descriptionTA.getText();
+                if(!title.isEmpty() && !description.isEmpty()){
+                    client.setReq_id();
+                    Client_video client_video = new Client_video(client.getOut());
+                    client_video.send_video_info(client.getUser_id(),title,description,"123", client.getReq_id());
+                    client_video.upload_media(selectedFile,client.getUser_id(),"mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
+
+                    while (true) {
+                        Thread.sleep(100);
+                        if (client.requests.get(client.getReq_id()) != null) {
+                            System.out.println(client.requests.get(client.getReq_id()).get_part("status"));
+                            break;
+                        } else
+                            System.out.println("waiting for response");
+                    }
+                }
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+        // to Interrupt the thread after the task done
+        //todo -> soroush : do this for every thread you have made
+        try{
+            thread.join();
+        }catch (InterruptedException e){
+            System.out.println("the video uploaded");
+        }
+    }
+
     public void selectFile(){
         uploadVidScene();
+        nextBtn.setVisible(true);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select MP4 File");
         fileChooser.getExtensionFilters().addAll(
@@ -85,7 +126,20 @@ public class Dashboard {
         );
         File selectedFile = fileChooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
+            this.selectedFile =selectedFile;
             detailScene(selectedFile);
+        }
+    }
+
+    public void selectThumbnail(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a Thumbnail");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
+        );
+        File selectedThumbnail = fileChooser.showOpenDialog(new Stage());
+        if(selectedThumbnail != null){
+            //todo
         }
     }
 
@@ -104,31 +158,34 @@ public class Dashboard {
 
     Timer timer;
     Timer stopTimer;
-    public void confirmUpload() throws IOException {
-        MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
-        mediaView.fitWidthProperty().bind(upVid.widthProperty());
-        mediaView.fitHeightProperty().bind(upVid.heightProperty());
-        upVid.getChildren().add(mediaView);
-        uploadingScene();
-        timer = new Timer(500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateProgressBar();
-            }
-        });
-        timer.start();
-        stopTimer = new Timer(11000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timer.stop();
-                progressBar.setVisible(false);
-                doneBtn.setDisable(false);
-                uploadText.setText("Uploaded Successfully.");
-            }
-        });
-        stopTimer.setRepeats(false);
-        stopTimer.start();
-
+    public void confirmUpload() throws IOException, InterruptedException {
+        sendFile(selectedFile);
+        if(!titleTF.getText().isEmpty() && !descriptionTA.getText().isEmpty()) {
+            nextBtn.setVisible(false);
+            MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
+            mediaView.fitWidthProperty().bind(upVid.widthProperty());
+            mediaView.fitHeightProperty().bind(upVid.heightProperty());
+            upVid.getChildren().add(mediaView);
+            uploadingScene();
+            timer = new Timer(500, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updateProgressBar();
+                }
+            });
+            timer.start();
+            stopTimer = new Timer(11000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timer.stop();
+                    progressBar.setVisible(false);
+                    doneBtn.setDisable(false);
+                    uploadText.setText("Uploaded Successfully.");
+                }
+            });
+            stopTimer.setRepeats(false);
+            stopTimer.start();
+        }
     }
     public void updateProgressBar(){
         progressBar.setProgress(progressBar.getProgress() + 0.05);

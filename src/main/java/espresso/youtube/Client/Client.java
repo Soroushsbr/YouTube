@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.UUID;
 
 // Client Class
 public class Client {
@@ -23,10 +24,10 @@ public class Client {
     public Client() throws IOException {
         client = new Socket(SERVER_IP, PORT);
         out = new DataOutputStream(client.getOutputStream());
-        System.out.println("[CLIENT] " + client.getInetAddress() + " connected to server.");
         Handle_Server_Response handleServerResponse = new Handle_Server_Response(client, requests);
         Thread listener = new Thread(handleServerResponse);
         listener.start();
+        System.out.println("[CLIENT] " + client.getInetAddress() + " connected to server.");
     }
 
     public DataOutputStream getOut(){
@@ -42,7 +43,7 @@ public class Client {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        Client client1 = new Client();
+//        Client client1 = new Client();
 
 //        Client_account client_account = new Client_account(client1.getOut());
 //        client_account.login("mobin", "1234", 100);
@@ -54,22 +55,22 @@ public class Client {
 //            }
 //            System.out.println("still running");
 //        }
-        while (true){
-            Thread.sleep(100);
-            if(client1.requests.get(0) != null)
-                break;
-        }
-
-        Client_video v = new Client_video(client1.getOut());
-        Client_video.get_media("1","d946a900-dbe6-498c-8038-119f13efeb89","mp4","video",(int)client1.requests.get(0).get_part("client_handler_id"), 1);
-        while (true){
-            Thread.sleep(100);
-            if(client1.requests.get(1) != null){
-                System.out.println(client1.requests.get(1).get_part("status"));
-                break;
-            } else
-                System.out.println("waiting for response");
-        }
+//        while (true){
+//            Thread.sleep(100);
+//            if(client1.requests.get(0) != null)
+//                break;
+//        }
+//
+//        Client_video v = new Client_video(client1.getOut());
+//        Client_video.get_media("1","d946a900-dbe6-498c-8038-119f13efeb89","mp4","video",(int)client1.requests.get(0).get_part("client_handler_id"), 1);
+//        while (true){
+//            Thread.sleep(100);
+//            if(client1.requests.get(1) != null){
+//                System.out.println(client1.requests.get(1).get_part("status"));
+//                break;
+//            } else
+//                System.out.println("waiting for response");
+//        }
 //        File file = new File("src/main/java/espresso/youtube/Client/video1.mp4");
 //        v.send_video_info("1","title","description","123",1);
 //        v.upload_media(file,"1","mp4","video",(int)client1.requests.get(0).get_part("client_handler_id"));
@@ -90,5 +91,13 @@ public class Client {
 
     public void setReq_id() {
         this.req_id++;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 }

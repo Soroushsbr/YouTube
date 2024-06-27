@@ -1,6 +1,8 @@
 package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
+import espresso.youtube.models.video.Client_video;
+import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -11,19 +13,30 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
+import static espresso.youtube.Front.LoginMenu.client;
 
 public class MainPage implements Initializable {
     @FXML
@@ -36,7 +49,6 @@ public class MainPage implements Initializable {
     Circle profile;
     @FXML
     ScrollPane dashboardPane;
-    private Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -55,9 +67,6 @@ public class MainPage implements Initializable {
         appendVideos();
     }
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
 
     //to show the notifications of user
     public void selectNotif(){
@@ -71,19 +80,82 @@ public class MainPage implements Initializable {
     //this method gets videos from server and show them to user
     public void appendVideos(){
         try {
-            HBox hBox = new HBox();
-            hBox.getChildren().clear();
-            for(int i = 0 ; i < 3; i++) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
-                AnchorPane videoPane = loader.load();
-//                this can remove the red line blow video
-//                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
-                hBox.getChildren().add(videoPane);
+
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            cv.get_videos_id(client.getReq_id());
+            //todo: put this in a thread
+            String videosID;
+            System.out.println("Waiting...");
+            while (true) {
+                if (client.requests.get(client.getReq_id()) != null) {
+                    videosID = (String) client.requests.get(client.getReq_id()).get_part("videos_id");
+                    break;
+                }
+                Thread.sleep(50);
             }
-            videosBox.getChildren().clear();
-            videosBox.getChildren().add(hBox);
+            ArrayList<String> idList = new ArrayList<>(Arrays.asList(videosID.split(", ")));
+            System.out.println("Done.");
+//            HBox hBox = new HBox();
+//            for(int i = 0 ; i < 2; i++) {
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
+//                AnchorPane videoPane = loader.load();
+//                String id = idList.get(i);
+//                System.out.println(id);
+//                ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
+////                mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
+////                mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
+////                ((VBox)videoPane.getChildren().get(0)).getChildren().add(mediaView);
+////                this can remove the red line blow video
+////                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
+//                hBox.getChildren().add(videoPane);
+//            }
+//            videosBox.getChildren().clear();
+//            videosBox.getChildren().add(hBox);
+
+            int i = 0;
+            while (i <idList.size()) {
+                HBox previewBox = new HBox();
+                previewBox.getChildren().clear();
+
+                for (int j = 0; j < 3; j++) {
+                    if (i < idList.size()) {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
+                        AnchorPane videoPane = loader.load();
+                        String id = idList.get(i);
+                        System.out.println(id);
+                        ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
+                        previewBox.getChildren().add(videoPane);
+                        i++;
+                    } else {
+                        // If the index is out of bounds, break the loop
+                        break;
+                    }
+                }
+
+                videosBox.getChildren().add(previewBox);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void switchToVideoPage(ActionEvent event ,String videoID){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
+            root = loader.load();
+            VideoPage videoPage = loader.getController();
+            videoPage.setVID(videoID);
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
         }
     }
 

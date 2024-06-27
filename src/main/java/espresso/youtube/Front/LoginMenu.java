@@ -54,17 +54,15 @@ public class LoginMenu implements Initializable {
     TextField loginUsernameTF;
     @FXML
     PasswordField loginPasswordTF;
+
     private Parent root;
     private Stage stage;
     private Scene scene;
-    private Client client;
+    public static Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            this.client = new Client();
-            Handle_Server_Response handleServerResponse = new Handle_Server_Response(client.getClient(), client.requests);
-            Thread listener = new Thread(handleServerResponse);
-            listener.start();
+            client = new Client();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -121,6 +119,7 @@ public class LoginMenu implements Initializable {
                 protected Boolean call() throws Exception {
                     Client_account client_account = new Client_account(client.getOut());
                     client.setReq_id();
+                    int req = client.getReq_id();
                     client_account.sign_up(username, password, gmail, client.getReq_id());
 
                     while (true) {
@@ -140,6 +139,8 @@ public class LoginMenu implements Initializable {
             task.setOnSucceeded(e -> {
                 if (task.getValue()) {
                     switchToMainPage(event, this.client);
+                    client.setUser_id((String) client.requests.get(client.getReq_id()).get_part("UserID"));
+                    System.out.println(client.getUser_id());
                 } else {
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
                         applyShakeEffect(singupgmailTF);
@@ -164,7 +165,6 @@ public class LoginMenu implements Initializable {
             stage.setScene(scene);
             //set client for next stage
             MainPage mainPage = loader.load();
-            mainPage.setClient(client);
 
             stage.show();
         }catch (IOException ignored){
@@ -191,12 +191,14 @@ public class LoginMenu implements Initializable {
                 protected Boolean call() throws Exception {
                     Client_account client_account = new Client_account(client.getOut());
                     client.setReq_id();
+                    //todo: save req id  before doing another thread
+                    int req = client.getReq_id();
                     client_account.login(username, password, client.getReq_id());
 
                     while (true) {
                         //checks for if the response is available or not
                         if (client.requests.get(client.getReq_id()) != null) {
-                            return (boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful");
+                            return (boolean) client.requests.get(req).get_part("isSuccessful");
                         }
                         Thread.sleep(50);
                     }
@@ -205,6 +207,8 @@ public class LoginMenu implements Initializable {
             //after the task done it goes for actions in stage
             task.setOnSucceeded(e -> {
                 if (task.getValue()) {
+                    client.setUser_id((String) client.requests.get(client.getReq_id()).get_part("UserID"));
+                    System.out.println(client.getUser_id());
                     switchToMainPage(event, client);
                 } else {
                     applyShakeEffect(loginUsernameTF);

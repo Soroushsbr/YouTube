@@ -1,31 +1,93 @@
 package espresso.youtube.DataBase.Utilities;
 
+import espresso.youtube.models.ServerResponse;
+
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
-public class Post {
+public class Post_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "1383";
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public static void add_post(UUID owner_id, String title, UUID channel_id, boolean is_public) {
-        UUID id = UUID.randomUUID();
+    public static void add_post(UUID id,UUID owner_id, String title, String description , UUID channel_id, boolean is_public) {
         try {
             Connection connection = create_connection();
-            String query = "INSERT INTO posts (id, name, owner_id, is_public,channel_id) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO posts (id, title , description, owner_id, is_public,channel_id) VALUES (?, ?, ?, ?, ? ,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setObject(1, id);
             preparedStatement.setString(2, title);
-            preparedStatement.setObject(3, owner_id);
-            preparedStatement.setBoolean(4, is_public);
-            preparedStatement.setObject(5, channel_id);
+            preparedStatement.setString(3 ,description);
+            preparedStatement.setObject(4, owner_id);
+            preparedStatement.setBoolean(5, is_public);
+            preparedStatement.setObject(6, channel_id);
             preparedStatement.executeUpdate();
             connection.close();
             preparedStatement.close();
         } catch (SQLException e) { throw new RuntimeException(e); }
+    }
+
+    public static ServerResponse get_post(UUID id, int request_id){
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        try{
+            Connection connection = create_connection();
+            String query ="SELECT * FROM posts WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setObject(1 , id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()){
+                serverResponse.add_part("title" , rs.getString("title"));
+                serverResponse.add_part("description" , rs.getString("description"));
+                serverResponse.add_part("owner_id" , rs.getString("owner_id"));
+            }
+            return serverResponse;
+        }catch (SQLException e){
+            System.out.println("Database error occurred.");
+        }
+        return null;
+    }
+
+    public static String get_ownerID(UUID id){
+        try{
+            Connection connection = create_connection();
+            String query = "SELECT owner_id FROM posts WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setObject(1  , id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()){
+                return ((UUID) rs.getObject("owner_id")).toString();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return " ";
+    }
+
+    public static ServerResponse get_all_posts(int request_id){
+        //todo: make an algorithm by using user id to recommend videos
+
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+
+        try{
+            Connection connection = create_connection();
+            String query = "SELECT id FROM posts";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            ArrayList<String> IDs = new ArrayList<>();
+            while (rs.next()){
+                IDs.add(((UUID) rs.getObject("id")).toString());
+            }
+            serverResponse.add_part("videos_id", String.join(", ", IDs));
+        }catch (SQLException e){
+            System.out.println("Database error occurred");
+        }
+        return serverResponse;
     }
 
     public static void delete_post(UUID post_id) {

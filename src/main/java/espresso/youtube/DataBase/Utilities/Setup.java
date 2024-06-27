@@ -10,13 +10,13 @@ public class Setup {
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "1383");
             statement = connection.createStatement();
             String[] queries = {
                     "CREATE TABLE IF NOT EXISTS accounts (id UUID PRIMARY KEY, username TEXT, gmail TEXT, password TEXT, darkmod BOOLEAN, profile_photo UUID, is_premium BOOLEAN)",
                     "CREATE TABLE IF NOT EXISTS channels (id UUID PRIMARY KEY, name TEXT, owner_id UUID, description TEXT)",
                     "CREATE TABLE IF NOT EXISTS playlists (id UUID PRIMARY KEY, name TEXT, owner_id UUID, is_public BOOLEAN)",
-                    "CREATE TABLE IF NOT EXISTS posts (id UUID PRIMARY KEY, title TEXT, owner_id UUID, channel_id UUID, is_public BOOLEAN)",
+                    "CREATE TABLE IF NOT EXISTS posts (id UUID PRIMARY KEY, title TEXT, description TEXT, owner_id UUID, channel_id UUID, is_public BOOLEAN)",
                     "CREATE TABLE IF NOT EXISTS playlist_posts (playlist_id UUID, post_id UUID)",
                     "CREATE TABLE IF NOT EXISTS channel_subscription (channel_id uuid, subscriber_id uuid)",
                     "CREATE TABLE IF NOT EXISTS playlist_subscription (playlist_id uuid, subscriber_id uuid)",
@@ -40,7 +40,7 @@ public class Setup {
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "123");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "1383");
             statement = connection.createStatement();
             String query = "CREATE DATABASE youtube;";
             statement.executeUpdate(query);
@@ -53,7 +53,7 @@ public class Setup {
         Connection connection = null;
         Statement statement = null;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "1383");
             statement = connection.createStatement();
             String[] queries = {
                     "DROP TABLE IF EXISTS accounts",
