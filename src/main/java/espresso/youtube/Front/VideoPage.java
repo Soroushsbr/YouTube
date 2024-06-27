@@ -60,15 +60,14 @@ public class VideoPage implements Initializable {
         //to set hover action to show video icons when mouse hovers it
         videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
         videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
+        Client_video cv = new Client_video(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
         Task<File> task = new Task<File>() {
             @Override
             protected File call() throws Exception {
 
-                File file = Client_video.get_media("1", videoID, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 1);
-//                Media media = new Media(file.toURI().toString());
-//                appendVideo(media, videoPane);
-//                leftVbox.getChildren().add(videoPane);
-                return file;
+                return Client_video.get_media(videoID, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 1);
             }
         };
         task.setOnSucceeded(e ->{

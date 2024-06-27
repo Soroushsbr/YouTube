@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -30,6 +31,8 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -77,28 +80,64 @@ public class MainPage implements Initializable {
     //this method gets videos from server and show them to user
     public void appendVideos(){
         try {
-            HBox hBox = new HBox();
-            hBox.getChildren().clear();
-//            File file = Client_video.get_media("1","d14521bf-3e3f-4b37-9a6e-be9a1848507f" ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id") , 1);
-//            Media media = new Media(file.toURI().toString());
-//            MediaPlayer mediaPlayer = new MediaPlayer(media);
-//            MediaView mediaView = new MediaView(mediaPlayer);
-            String id = "76750c4c-207a-4d07-8b2f-f3cd27c5d6e7";
-            for(int i = 0 ; i < 1; i++) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
-                AnchorPane videoPane = loader.load();
-                ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
 
-//                mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
-//                mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
-//                ((VBox)videoPane.getChildren().get(0)).getChildren().add(mediaView);
-//                this can remove the red line blow video
-//                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
-                hBox.getChildren().add(videoPane);
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            cv.get_videos_id(client.getReq_id());
+            //todo: put this in a thread
+            String videosID;
+            System.out.println("Waiting...");
+            while (true) {
+                if (client.requests.get(client.getReq_id()) != null) {
+                    videosID = (String) client.requests.get(client.getReq_id()).get_part("videos_id");
+                    break;
+                }
+                Thread.sleep(50);
             }
-            videosBox.getChildren().clear();
-            videosBox.getChildren().add(hBox);
+            ArrayList<String> idList = new ArrayList<>(Arrays.asList(videosID.split(", ")));
+            System.out.println("Done.");
+//            HBox hBox = new HBox();
+//            for(int i = 0 ; i < 2; i++) {
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
+//                AnchorPane videoPane = loader.load();
+//                String id = idList.get(i);
+//                System.out.println(id);
+//                ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
+////                mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
+////                mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
+////                ((VBox)videoPane.getChildren().get(0)).getChildren().add(mediaView);
+////                this can remove the red line blow video
+////                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
+//                hBox.getChildren().add(videoPane);
+//            }
+//            videosBox.getChildren().clear();
+//            videosBox.getChildren().add(hBox);
+
+            int i = 0;
+            while (i <idList.size()) {
+                HBox previewBox = new HBox();
+                previewBox.getChildren().clear();
+
+                for (int j = 0; j < 3; j++) {
+                    if (i < idList.size()) {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
+                        AnchorPane videoPane = loader.load();
+                        String id = idList.get(i);
+                        System.out.println(id);
+                        ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
+                        previewBox.getChildren().add(videoPane);
+                        i++;
+                    } else {
+                        // If the index is out of bounds, break the loop
+                        break;
+                    }
+                }
+
+                videosBox.getChildren().add(previewBox);
+            }
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

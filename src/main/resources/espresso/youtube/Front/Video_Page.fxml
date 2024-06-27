@@ -4,17 +4,13 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.VideoPage">
    <children>
@@ -22,166 +18,7 @@
          <content>
             <HBox prefHeight="651.0" prefWidth="1280.0" style="-fx-background-color: #0f0f0f;">
                <children>
-                  <VBox fx:id="leftVbox" alignment="TOP_CENTER" fillWidth="false" prefHeight="651.0" prefWidth="957.0">
-                     <children>
-                        <AnchorPane prefHeight="707.0" prefWidth="957.0" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/video_page.css">
-                           <children>
-                              <VBox alignment="CENTER" layoutX="19.0" layoutY="17.0" prefHeight="526.0" prefWidth="933.0" style="-fx-background-color: black;" />
-                              <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="534.0" layoutX="19.0" layoutY="13.0" stroke="#0f0f0f" strokeWidth="10.0" width="933.0" />
-                              <AnchorPane layoutX="19.0" layoutY="16.0" maxHeight="542.0" maxWidth="933.0" minHeight="542.0" minWidth="933.0" opacity="0.0" prefHeight="538.0" prefWidth="933.0" style="-fx-background-color: transparent;" stylesheets="@Style/Dark/video_page.css">
-                                 <children>
-                                    <Button layoutX="26.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="18.0" scaleX="0.9" scaleY="0.9" styleClass="play" stylesheets="@Style/Dark/video_page.css">
-                                       <font>
-                                          <Font size="10.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="80.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="nextVid" stylesheets="@Style/Dark/video_page.css">
-                                       <font>
-                                          <Font size="10.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="145.0" layoutY="494.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="23.0" scaleX="0.9" scaleY="0.9" styleClass="mute" stylesheets="@Style/Dark/video_page.css">
-                                       <font>
-                                          <Font size="10.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Label layoutX="288.0" layoutY="494.0" text="00:00/00:00" textFill="WHITE">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Button layoutX="772.0" layoutY="493.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" scaleX="0.9" scaleY="0.9" styleClass="speed" stylesheets="@Style/Dark/video_page.css">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Button layoutX="828.0" layoutY="495.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="30.0" scaleX="0.9" scaleY="0.9" styleClass="miniPlay" stylesheets="@Style/Dark/video_page.css">
-                                       <font>
-                                          <Font size="9.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Pane layoutX="884.0" layoutY="488.0" prefHeight="37.0" prefWidth="36.0" scaleX="0.8" scaleY="0.8">
-                                       <children>
-                                          <Pane layoutX="3.0" layoutY="3.0" prefHeight="12.0" prefWidth="12.0" styleClass="tpLfullscreen" stylesheets="@Style/Dark/video_page.css" />
-                                          <Pane layoutX="20.0" layoutY="3.0" prefHeight="12.0" prefWidth="12.0" styleClass="tpRfullscreen" stylesheets="@Style/Dark/video_page.css" />
-                                          <Pane layoutX="3.0" layoutY="20.0" prefHeight="12.0" prefWidth="12.0" styleClass="btLfullscreen" stylesheets="@Style/Dark/video_page.css" />
-                                          <Pane layoutX="20.0" layoutY="20.0" prefHeight="12.0" prefWidth="12.0" styleClass="btRfullscreen" stylesheets="@Style/Dark/video_page.css" />
-                                          <Button layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="33.0" prefWidth="39.0" text="Button">
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                       </children>
-                                    </Pane>
-                                    <Slider layoutX="26.0" layoutY="470.0" prefHeight="0.0" prefWidth="890.0" />
-                                    <Slider layoutX="191.0" layoutY="498.0" max="1.0" prefHeight="0.0" prefWidth="78.0" value="1.0" />
-                                    <AnchorPane layoutX="641.0" layoutY="497.0" opacity="0.0" prefHeight="15.0" prefWidth="120.0" visible="false">
-                                       <children>
-                                          <Slider layoutX="62.0" layoutY="1.0" max="2.0" min="0.25" nodeOrientation="RIGHT_TO_LEFT" prefHeight="14.0" prefWidth="56.0" value="1.0" />
-                                          <Label layoutX="-1.0" text="1.0x" textFill="WHITE">
-                                             <font>
-                                                <Font name="Arial Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <Button layoutX="36.0" layoutY="1.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="16.0" styleClass="refreshSpeed" stylesheets="@Style/Dark/video_page.css">
-                                             <font>
-                                                <Font size="7.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                       </children>
-                                    </AnchorPane>
-                                 </children>
-                              </AnchorPane>
-                              <Circle fill="WHITE" layoutX="50.0" layoutY="636.0" radius="21.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                              <Label layoutX="78.0" layoutY="614.0" text="Channel name" textFill="WHITE">
-                                 <font>
-                                    <Font name="System Bold" size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="78.0" layoutY="640.0" text="subs" textFill="#757575" />
-                              <Button layoutX="222.0" layoutY="620.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="96.0" style="-fx-background-color: white; -fx-background-radius: 20;" text="Subscribe">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                              <Text fill="WHITE" layoutX="29.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" wrappingWidth="879.13671875">
-                                 <font>
-                                    <Font name="Arial Bold" size="24.0" />
-                                 </font>
-                              </Text>
-                              <AnchorPane layoutX="555.0" layoutY="618.0" prefHeight="36.0" prefWidth="349.0">
-                                 <children>
-                                    <Button fx:id="likeBtn" layoutX="-9.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0" styleClass="likeBtn">
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <AnchorPane fx:id="like" disable="true" layoutX="10.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" styleClass="like" />
-                                    <Button fx:id="dislikeBtn" layoutX="78.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="56.0" styleClass="dislikeBtn">
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <AnchorPane fx:id="dislike" disable="true" layoutX="98.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="dislike" />
-                                    <Line endX="100.0" layoutX="-22.0" layoutY="11.0" startX="100.0" startY="16.0" stroke="WHITE" />
-                                    <Text disable="true" fill="WHITE" layoutX="43.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="likes">
-                                       <font>
-                                          <Font size="13.0" />
-                                       </font>
-                                    </Text>
-                                    <Button layoutX="148.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="106.0" styleClass="optionBtn">
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                    <Text disable="true" fill="WHITE" layoutX="182.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Download">
-                                       <font>
-                                          <Font name="Arial" size="12.0" />
-                                       </font>
-                                    </Text>
-                                    <AnchorPane fx:id="like1" disable="true" layoutX="159.0" layoutY="8.0" prefHeight="19.0" prefWidth="14.0" styleClass="download" />
-                                 </children>
-                              </AnchorPane>
-                              <Button fx:id="likeBtn1" layoutX="815.0" layoutY="618.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                              <Button layoutX="821.0" layoutY="618.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="87.0" styleClass="optionBtn">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                              <Text disable="true" fill="WHITE" layoutX="869.0" layoutY="641.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Save">
-                                 <font>
-                                    <Font name="Arial" size="12.0" />
-                                 </font>
-                              </Text>
-                              <AnchorPane fx:id="like2" disable="true" layoutX="835.0" layoutY="631.0" prefHeight="12.0" prefWidth="25.0" styleClass="save" />
-                           </children>
-                        </AnchorPane>
-                     </children></VBox>
+                  <VBox fx:id="leftVbox" alignment="TOP_CENTER" fillWidth="false" prefHeight="651.0" prefWidth="957.0" />
                   <VBox fx:id="rightBox" prefHeight="651.0" prefWidth="302.0" />
                </children>
             </HBox>

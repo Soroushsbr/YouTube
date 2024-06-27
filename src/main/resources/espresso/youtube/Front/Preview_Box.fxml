@@ -27,7 +27,7 @@
             </Button>
          </children>
       </AnchorPane>
-      <Label layoutX="58.0" layoutY="200.0" text="Description" textFill="WHITE">
+      <Label layoutX="58.0" layoutY="200.0" prefHeight="19.0" prefWidth="278.0" text="Title" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>

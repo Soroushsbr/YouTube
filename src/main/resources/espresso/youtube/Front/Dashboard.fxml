@@ -135,7 +135,7 @@
             <Circle fill="#656565" layoutX="427.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
             <Circle fill="#656565" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
             <Circle fx:id="circle" fill="#3da5fe" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-            <ScrollPane fx:id="detailsPane" hbarPolicy="NEVER" hmax="0.0" layoutX="112.0" layoutY="84.0" prefWidth="657.0" style="-fx-background-color: transparent;" visible="false">
+            <ScrollPane fx:id="detailsPane" hbarPolicy="NEVER" hmax="0.0" layoutX="112.0" layoutY="84.0" prefWidth="657.0" style="-fx-background-color: transparent;">
                <content>
                   <AnchorPane prefHeight="397.0" prefWidth="655.0" style="-fx-background-color: #1f1f1f;">
                      <children>
@@ -145,12 +145,12 @@
                               <Font name="Arial Bold" size="20.0" />
                            </font>
                         </Text>
-                        <TextField alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field" stylesheets="@Style/Dark/Dashboard.css">
+                        <TextField fx:id="titleTF" alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field" stylesheets="@Style/Dark/Dashboard.css">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </TextField>
-                        <TextArea layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area" stylesheets="@Style/Dark/Dashboard.css">
+                        <TextArea fx:id="descriptionTA" layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area" stylesheets="@Style/Dark/Dashboard.css">
                            <font>
                               <Font size="9.0" />
                            </font>

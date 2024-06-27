@@ -1,18 +1,12 @@
 package espresso.youtube.Front;
 
-import espresso.youtube.Client.Client;
 import espresso.youtube.models.video.Client_video;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -25,7 +19,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -62,6 +55,10 @@ public class Dashboard {
     Text uploadText;
     @FXML
     Button nextBtn;
+    @FXML
+    TextField titleTF;
+    @FXML
+    TextArea descriptionTA;
     private File selectedFile;
 
     public void showUploadPane(){
@@ -85,16 +82,37 @@ public class Dashboard {
 
     public void sendFile(File selectedFile) throws IOException, InterruptedException {
         //todo: put this method in a thread
-        Client_video client_video = new Client_video(client.getOut());
-        client_video.send_video_info("1","title","description","123",1);
-        client_video.upload_media(selectedFile,"1","mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
-        while (true) {
-            Thread.sleep(100);
-            if (client.requests.get(1) != null) {
-                System.out.println(client.requests.get(1).get_part("status"));
-                break;
-            } else
-                System.out.println("waiting for response");
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                String title = titleTF.getText();
+                String description = descriptionTA.getText();
+                if(!title.isEmpty() && !description.isEmpty()){
+                    client.setReq_id();
+                    Client_video client_video = new Client_video(client.getOut());
+                    client_video.send_video_info(client.getUser_id(),title,description,"123", client.getReq_id());
+                    client_video.upload_media(selectedFile,client.getUser_id(),"mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
+
+                    while (true) {
+                        Thread.sleep(100);
+                        if (client.requests.get(client.getReq_id()) != null) {
+                            System.out.println(client.requests.get(client.getReq_id()).get_part("status"));
+                            break;
+                        } else
+                            System.out.println("waiting for response");
+                    }
+                }
+                return null;
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+        // to Interrupt the thread after the task done
+        //todo -> soroush : do this for every thread you have made
+        try{
+            thread.join();
+        }catch (InterruptedException e){
+            System.out.println("the video uploaded");
         }
     }
 
@@ -141,32 +159,33 @@ public class Dashboard {
     Timer timer;
     Timer stopTimer;
     public void confirmUpload() throws IOException, InterruptedException {
-        nextBtn.setVisible(false);
         sendFile(selectedFile);
-        MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
-        mediaView.fitWidthProperty().bind(upVid.widthProperty());
-        mediaView.fitHeightProperty().bind(upVid.heightProperty());
-        upVid.getChildren().add(mediaView);
-        uploadingScene();
-        timer = new Timer(500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateProgressBar();
-            }
-        });
-        timer.start();
-        stopTimer = new Timer(11000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timer.stop();
-                progressBar.setVisible(false);
-                doneBtn.setDisable(false);
-                uploadText.setText("Uploaded Successfully.");
-            }
-        });
-        stopTimer.setRepeats(false);
-        stopTimer.start();
-
+        if(!titleTF.getText().isEmpty() && !descriptionTA.getText().isEmpty()) {
+            nextBtn.setVisible(false);
+            MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
+            mediaView.fitWidthProperty().bind(upVid.widthProperty());
+            mediaView.fitHeightProperty().bind(upVid.heightProperty());
+            upVid.getChildren().add(mediaView);
+            uploadingScene();
+            timer = new Timer(500, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updateProgressBar();
+                }
+            });
+            timer.start();
+            stopTimer = new Timer(11000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    timer.stop();
+                    progressBar.setVisible(false);
+                    doneBtn.setDisable(false);
+                    uploadText.setText("Uploaded Successfully.");
+                }
+            });
+            stopTimer.setRepeats(false);
+            stopTimer.start();
+        }
     }
     public void updateProgressBar(){
         progressBar.setProgress(progressBar.getProgress() + 0.05);

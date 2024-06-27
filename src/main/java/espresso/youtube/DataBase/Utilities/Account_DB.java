@@ -278,7 +278,6 @@ public static void save_account(String username, String password, String gmail) 
             serverResponse.add_part("isSuccessful", false);
         }
 
-
         return serverResponse;
     }
 
@@ -286,7 +285,7 @@ public static void save_account(String username, String password, String gmail) 
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
-        if(check_username_exists(username) && is_password_correct(username, password)){
+        if((boolean)serverResponse.get_part("isSuccessful")){
             serverResponse.add_part("UserID", get_userID(username));
         }
         return serverResponse;

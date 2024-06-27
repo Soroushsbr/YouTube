@@ -2,6 +2,7 @@ package espresso.youtube.models.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import espresso.youtube.DataBase.Utilities.Post_DB;
 
 import java.io.*;
 import java.net.Socket;
@@ -48,10 +49,12 @@ public class Client_video {
         send_request();
     }
 
-    public static File get_media(String owner_id, String media_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
+    public static File get_media(String media_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8001);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
         DataInputStream in = new DataInputStream(v.getInputStream());
+
+        String owner_id = Post_DB.get_ownerID(UUID.fromString(media_id));
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();
@@ -100,6 +103,18 @@ public class Client_video {
         video.setTitle(title);
         video.setDescription(description);
         video.setChannel_id(channel_id);
+    }
+    public void get_video_info(String videoID , int request_id){
+        video.setRequest_id(request_id);
+        video.setVideo_id(videoID);
+        video.setRequest("get_video_info");
+        send_request();
+    }
+
+    public void get_videos_id(int request_id){
+        video.setRequest_id(request_id);
+        video.setRequest("get_videos_id");
+        send_request();
     }
     private void send_request(){
         try {
