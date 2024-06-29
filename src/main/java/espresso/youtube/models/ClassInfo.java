@@ -1,7 +1,7 @@
 package espresso.youtube.models;
 
 public class ClassInfo {
-    public String className;
+    protected String className;
     public String request;
     private int request_id;
 
