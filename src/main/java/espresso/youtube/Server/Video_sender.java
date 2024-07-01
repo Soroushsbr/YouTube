@@ -2,6 +2,7 @@ package espresso.youtube.Server;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import espresso.youtube.DataBase.Utilities.Post_DB;
 import espresso.youtube.models.ServerResponse;
 import java.io.File;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Video_sender implements Runnable{
     private Socket client;
@@ -38,23 +40,25 @@ public class Video_sender implements Runnable{
             int request_id = rootNode.path("request_id").asInt();
             System.out.println("[VIDEO SENDER] request "+request_id+" received");
 
-            ServerResponse serverResponse = new ServerResponse();
-            serverResponse.add_part("status", "sending...");
-            serverResponse.setRequest_id(request_id);
-            serverResponse.add_part("exist", true);
-
             File mediaFile = new File("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+ media_id+"."+data_type);
             if(mediaFile.exists()){
-                serverResponse.set_part("exist", true);
                 out.writeUTF("1");
             } else {
-                serverResponse.set_part("exist", false);
+                ServerResponse serverResponse = new ServerResponse();
+                serverResponse.add_part("exist", false);
                 client_handlers.get(client_handler_id).send_video_response(serverResponse);
                 System.out.println("[VIDEO SENDER] media not found");
                 out.writeUTF("0");
                 return;
             }
 
+            // video exists, setting server response
+            ServerResponse serverResponse = Post_DB.get_post(UUID.fromString(media_id), request_id);// need to change
+            serverResponse.add_part("exist", true);
+            serverResponse.add_part("status", "sending");
+            client_handlers.get(client_handler_id).send_video_response(serverResponse);
+
+            // uploading media
             fin = new DataInputStream(new FileInputStream(mediaFile));
             byte[] buffer = new byte[4096];
             int bytesRead;

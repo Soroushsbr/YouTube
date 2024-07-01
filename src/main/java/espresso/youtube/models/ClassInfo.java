@@ -1,6 +1,6 @@
 package espresso.youtube.models;
 
-public class ClassInfo {
+public abstract class ClassInfo {
     protected String className;
     public String request;
     private int request_id;

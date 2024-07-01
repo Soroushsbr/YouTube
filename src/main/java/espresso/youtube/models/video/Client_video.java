@@ -44,7 +44,7 @@ public class Client_video {
         in.close();
         v.close();
 
-        System.out.println("[CLIENT] video uploaded");
+        System.out.println("[CLIENT] media uploaded");
         video.setVideo_id(uuid.toString());
         send_request();
     }
