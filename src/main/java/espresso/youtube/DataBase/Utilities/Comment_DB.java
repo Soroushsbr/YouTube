@@ -3,6 +3,8 @@ package espresso.youtube.DataBase.Utilities;
 import espresso.youtube.models.ServerResponse;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Comment_DB {
@@ -48,20 +50,6 @@ public class Comment_DB {
             System.out.println("Done");
         } catch (SQLException e) {
             throw new RuntimeException("Database error occurred while replying to a comment",e);
-        }
-    }
-
-    public static void delete_comment(UUID comment_id) {
-        System.out.println("Deleting comment "+comment_id+" ...");
-        String query = "DELETE FROM comments WHERE id = ?";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)){
-            connection.setAutoCommit(false);
-            preparedStatement.setObject(1, comment_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("Done");
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while deleting a comment",e);
         }
     }
 
@@ -220,7 +208,49 @@ public class Comment_DB {
         }
         return null;
     }
+
+    public static void delete_comment(UUID comment_id) {
+        ArrayList<String> queries = new ArrayList<>();
+        queries.add("UPDATE comments SET parent_comment_id = NULL WHERE parent_comment_id = ?");
+        queries.add("DELETE FROM comment_likes WHERE comment_id = ?");
+        queries.add("DELETE FROM comment_dislikes WHERE comment_id = ?");
+        queries.add("DELETE FROM comments WHERE id = ?");
+
+        try (Connection connection = create_connection()) {
+            connection.setAutoCommit(false);
+            for (String query : queries) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setObject(1, comment_id);
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw new RuntimeException("Database error occurred while deleting comment", e);
+                }
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while deleting comment", e);
+        }
+    }
+
+    public static List<UUID> get_all_comments_of_a_post(UUID post_id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT id FROM comments WHERE post_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, post_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID commentId = (UUID) resultSet.getObject("id");
+                    IDs.add(commentId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting all comments of a post", e);
+        }
+        return IDs;
+    }
     ///+++
+
 
     public static void main(String[] args) {
 

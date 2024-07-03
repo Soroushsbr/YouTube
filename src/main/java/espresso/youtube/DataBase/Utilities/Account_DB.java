@@ -4,6 +4,8 @@ import espresso.youtube.models.ServerResponse;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -273,38 +275,104 @@ public class Account_DB {
         }
         return null;
     }
+
+    public static void account_delete(UUID account_id) {
+        ArrayList<String> queries = new ArrayList<>();
+        queries.add("DELETE FROM post_likes WHERE user_id = ?");
+        queries.add("DELETE FROM post_dislikes WHERE user_id = ?");
+        queries.add("DELETE FROM comment_likes WHERE user_id = ?");
+        queries.add("DELETE FROM comment_dislikes WHERE user_id = ?");
+        queries.add("DELETE FROM comments WHERE owner_id = ?");
+        queries.add("DELETE FROM posts WHERE owner_id = ?");
+        queries.add("DELETE FROM playlists WHERE owner_id = ?");
+        queries.add("DELETE FROM channel_subscription WHERE subscriber_id = ?");
+        queries.add("DELETE FROM playlist_subscription WHERE subscriber_id = ?");
+        queries.add("DELETE FROM notifications WHERE user_id = ?");
+        queries.add("DELETE FROM views WHERE user_id = ?");
+        queries.add("DELETE FROM channels WHERE owner_id = ?");
+        queries.add("DELETE FROM accounts WHERE id = ?");
+
+        try (Connection connection = create_connection()) {
+            connection.setAutoCommit(false);
+            for(String query : queries ){
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+                    preparedStatement.setObject(1, account_id);
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw new RuntimeException("Database error occurred while deleting channel",e);
+                }
+            }
+            connection.commit();
+        } catch (SQLException e) {
+
+            throw new RuntimeException("Database error occurred while deleting account",e);
+        }
+    }
+
+    public static List<UUID> get_subscribed_channels(UUID user_Id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT channel_id FROM channel_subscription WHERE subscriber_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_Id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID channelId = (UUID) resultSet.getObject("channel_id");
+                    IDs.add(channelId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting subscribed channels of a user", e);
+        }
+        return IDs;
+    }
+
+    public static List<UUID> get_subscribed_playlists(UUID user_id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID playlistId = (UUID) resultSet.getObject("playlist_id");
+                    IDs.add(playlistId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting subscribed playlists of a user", e);
+        }
+        return IDs;
+    }
     /////+++
+
     public static void main(String[] args) {
 
     }
 }
 
 
-//correct posts with soroush
 //check user is owner of a post, playlist, and channel, and comment???
 
-//!!!!! delete channel---> posts and playlist posts--->> comments---->>> post likes/dislikes+ comment dislikes---->++channel subscription
-//delete playlist
-//delete post
-//delete comment
-//delete like/dislike
-//delete account
+//!!!!!!!!!!!!
+
 
 
 //give data to load post with comments and views, channel, profile, playlist mobin array in server response?
 
 //notification????
+//delete notifications??
 
+//give ids in search and get_all_posts
 
 //array returns:
-//return channels a user subscribed?
-//subscribers of a channel/playlist/
-//accounts that liked/disliked a post
-//accounts that
-//???
+//accounts that liked/disliked a post/comment????
+
+//get all posts?
+
+//watch history?
 
 //change anything else?
-
 
 //check tables with schema
 //write list of methods to check

@@ -1,8 +1,11 @@
 package espresso.youtube.DataBase.Utilities;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Channel_DB {
@@ -178,10 +181,70 @@ public class Channel_DB {
             }
             System.out.println("Done");
             return serverResponse;
-        }catch (SQLException e){
-            System.out.println("Database error occurred while getting channel info");
+        } catch (SQLException e){
+            throw new RuntimeException("Database error occurred while getting channel info",e);
         }
-        return null;
+    }
+
+    public static void delete_channel(UUID channel_id) {
+        ArrayList<String> queries = new ArrayList<>();
+        queries.add("DELETE FROM post_likes WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
+        queries.add("DELETE FROM post_dislikes WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
+        queries.add("DELETE FROM comment_likes WHERE comment_id IN (SELECT id FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?))");
+        queries.add("DELETE FROM comment_dislikes WHERE comment_id IN (SELECT id FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?))");
+        queries.add("DELETE FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
+        queries.add("DELETE FROM posts WHERE channel_id = ?");
+        queries.add("DELETE FROM channel_subscription WHERE channel_id = ?"); // Add this to handle channel subscriptions
+        queries.add("DELETE FROM channels WHERE id = ?");
+        try (Connection connection = create_connection()) {
+            connection.setAutoCommit(false);
+            for(String query : queries ){
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+                    preparedStatement.setObject(1, channel_id);
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw new RuntimeException("Database error occurred while deleting channel",e);
+                }
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while deleting channel",e);
+        }
+    }
+
+    public static List<UUID> get_channels_of_account(UUID account_id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT id FROM channels WHERE owner_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, account_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID channelId = (UUID) resultSet.getObject("id");
+                    IDs.add(channelId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting channels of an account", e);
+        }
+        return IDs;
+    }
+
+    public static List<UUID> get_subscribers(UUID channel_id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT subscriber_id FROM channel_subscription WHERE channel_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, channel_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID subscriberId = (UUID) resultSet.getObject("subscriber_id");
+                    IDs.add(subscriberId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting subscribers of a channel", e);
+        }
+        return IDs;
     }
     /////+++
 

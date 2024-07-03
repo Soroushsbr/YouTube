@@ -1,9 +1,11 @@
 package espresso.youtube.DataBase.Utilities;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Post_DB {
@@ -32,23 +34,6 @@ public class Post_DB {
             System.out.println("Done");
         } catch (SQLException e) {
             throw new RuntimeException("Database error occurred while adding a post",e);
-        }
-    }
-
-    public static void delete_post(UUID post_id) {
-        System.out.println("Deleting post "+post_id+" ...");
-        String query1 = "DELETE FROM posts WHERE id = ?";
-        String query2 = "DELETE FROM playlist_posts WHERE post_id = ?";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement1 = connection.prepareStatement(query1); PreparedStatement preparedStatement2 = connection.prepareStatement(query2)){
-            connection.setAutoCommit(false);
-            preparedStatement1.setObject(1, post_id);
-            preparedStatement1.executeUpdate();
-            preparedStatement2.setObject(1, post_id);
-            preparedStatement2.executeUpdate();
-            connection.commit();
-            System.out.println("Done");
-        } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while deleting a post",e);
         }
     }
 
@@ -324,7 +309,7 @@ public class Post_DB {
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
-        System.out.println("Getting info of post "+id+" ...");
+        System.out.println("Giving info of post "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query ="SELECT * FROM posts WHERE id = ?";
@@ -349,51 +334,36 @@ public class Post_DB {
         }
         return null;
     }
-    ///+++
 
+    public static void delete_post(UUID post_id) {
+        ArrayList<String> queries = new ArrayList<>();
+        queries.add("DELETE FROM post_likes WHERE post_id = ?");
+        queries.add("DELETE FROM post_dislikes WHERE post_id = ?");
+        queries.add("DELETE FROM comment_likes WHERE comment_id IN (SELECT id FROM comments WHERE post_id = ?)");
+        queries.add("DELETE FROM comment_dislikes WHERE comment_id IN (SELECT id FROM comments WHERE post_id = ?)");
+        queries.add("DELETE FROM comments WHERE post_id = ?");
+        queries.add("DELETE FROM playlist_posts WHERE post_id = ?");
+        queries.add("DELETE FROM posts WHERE id = ?");
 
+        try (Connection connection = create_connection()) {
+            connection.setAutoCommit(false);
+            for (String query : queries) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setObject(1, post_id);
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    connection.rollback();
+                    throw new RuntimeException("Database error occurred while deleting post", e);
+                }
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException("Database connection error occurred", e);
+        }
+    }
 
-
-
-    //soroush//
-//    public static ServerResponse get_post(UUID id, int request_id){
-//        ServerResponse serverResponse = new ServerResponse();
-//        serverResponse.setRequest_id(request_id);
-//        try{
-//            Connection connection = create_connection();
-//            String query ="SELECT * FROM posts WHERE id = ?";
-//            PreparedStatement preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setObject(1 , id);
-//            ResultSet rs = preparedStatement.executeQuery();
-//            if(rs.next()){
-//                serverResponse.add_part("title" , rs.getString("title"));
-//                serverResponse.add_part("description" , rs.getString("description"));
-//                serverResponse.add_part("owner_id" , rs.getString("owner_id"));
-//            }
-//            return serverResponse;
-//        }catch (SQLException e){
-//            System.out.println("Database error occurred.");
-//        }
-//        return null;
-//    }
-//
-//    public static String get_ownerID(UUID id){
-//        try{
-//            Connection connection = create_connection();
-//            String query = "SELECT owner_id FROM posts WHERE id = ?";
-//            PreparedStatement preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setObject(1  , id);
-//            ResultSet rs = preparedStatement.executeQuery();
-//            if(rs.next()){
-//                return ((UUID) rs.getObject("owner_id")).toString();
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return " ";
-//    }
-//
     public static ServerResponse get_all_posts(int request_id){
+        System.out.println("Giving IDs of all Posts...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query = "SELECT id FROM posts";
@@ -405,11 +375,80 @@ public class Post_DB {
                 }
             }
             serverResponse.add_part("videos_id", String.join(", ", IDs));
-        }catch (SQLException e){
-            System.out.println("Database error occurred");
+        } catch (SQLException e){
+            System.out.println("Database error occurred while giving IDs of all Posts");
         }
         return serverResponse;
     }
+
+    public static List<UUID> get_all_Posts_of_a_account(UUID account_id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT id FROM posts WHERE owner_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, account_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                UUID id = (UUID) resultSet.getObject("id");
+                IDs.add(id);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting all posts of a account", e);
+        }
+        return IDs;
+    }
+
+    public static List<UUID> get_all_posts_of_a_channel(UUID channel_id) {
+        List<UUID> IDs = new ArrayList<>();
+        String sql = "SELECT id FROM posts WHERE channel_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, channel_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID postId = (UUID) resultSet.getObject("id");
+                    IDs.add(postId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting all posts of a channel", e);
+        }
+        return IDs;
+    }
+
+    public static List<UUID> get_all_posts_of_a_playlist(UUID playlist_id) {
+        List<UUID> postIds = new ArrayList<>();
+        String sql = "SELECT post_id FROM playlist_posts WHERE playlist_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, playlist_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID postId = (UUID) resultSet.getObject("post_id");
+                    postIds.add(postId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting all posts of a playlist", e);
+        }
+        return postIds;
+    }
+
+    public static List<UUID> get_all_viewers_of_a_post(UUID post_id) {
+        List<UUID> viewerIds = new ArrayList<>();
+        String sql = "SELECT user_id FROM views WHERE post_id = ?";
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setObject(1, post_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    UUID userId = (UUID) resultSet.getObject("user_id");
+                    viewerIds.add(userId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error occurred while getting all viewers of a post", e);
+        }
+        return viewerIds;
+    }
+    ///+++
 
     public static void main(String[] args) {
 
