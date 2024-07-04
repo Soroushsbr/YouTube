@@ -3,6 +3,7 @@ package espresso.youtube.models.video;
 import espresso.youtube.DataBase.Utilities.Post_DB;
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
+import espresso.youtube.models.notification.Notification;
 
 import java.util.UUID;
 
@@ -27,6 +28,7 @@ public class Server_video extends Video {
 
         Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(), super.getDescription(), UUID.randomUUID(), true);
         serverResponse.add_part("status", "received");
+        //notification.upload_post();
         return serverResponse;
     }
     private ServerResponse send_video_info(){

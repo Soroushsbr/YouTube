@@ -46,7 +46,7 @@ public class Video_sender implements Runnable{
             } else {
                 ServerResponse serverResponse = new ServerResponse();
                 serverResponse.add_part("exist", false);
-                client_handlers.get(client_handler_id).send_video_response(serverResponse);
+                client_handlers.get(client_handler_id).send_response(serverResponse);
                 System.out.println("[VIDEO SENDER] media not found");
                 out.writeUTF("0");
                 return;
@@ -56,7 +56,7 @@ public class Video_sender implements Runnable{
             ServerResponse serverResponse = Post_DB.get_post(UUID.fromString(media_id), request_id);// need to change
             serverResponse.add_part("exist", true);
             serverResponse.add_part("status", "sending");
-            client_handlers.get(client_handler_id).send_video_response(serverResponse);
+            client_handlers.get(client_handler_id).send_response(serverResponse);
 
             // uploading media
             fin = new DataInputStream(new FileInputStream(mediaFile));
@@ -69,7 +69,7 @@ public class Video_sender implements Runnable{
             System.out.println("[VIDEO SENDER] media sent");
             
             serverResponse.set_part("status", "complete");
-            client_handlers.get(client_handler_id).send_video_response(serverResponse);
+            client_handlers.get(client_handler_id).send_response(serverResponse);
         } catch (IOException e){
             e.printStackTrace();
         } finally {

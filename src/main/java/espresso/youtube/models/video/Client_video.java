@@ -49,12 +49,10 @@ public class Client_video {
         send_request();
     }
 
-    public static File get_media(String media_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
+    public static File get_media(String media_id, String owner_id, String data_type, String type, int client_handler_id, int request_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8001);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
         DataInputStream in = new DataInputStream(v.getInputStream());
-
-        String owner_id = Post_DB.get_ownerID(UUID.fromString(media_id));
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();
