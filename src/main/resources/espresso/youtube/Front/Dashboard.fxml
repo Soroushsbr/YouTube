@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -26,13 +27,13 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <TextField layoutX="421.0" layoutY="17.0" prefHeight="41.0" prefWidth="396.0" promptText="  Search across your channel" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 10; -fx-border-width: 1; -fx-text-inner-color: white;">
+            <TextField layoutX="442.0" layoutY="18.0" prefHeight="41.0" prefWidth="396.0" promptText="  Search across your channel" style="-fx-background-color: transparent; -fx-border-color: white; -fx-border-radius: 10; -fx-border-width: 1; -fx-text-inner-color: white;">
                <font>
                   <Font size="13.0" />
                </font>
             </TextField>
             <Pane layoutX="77.0" layoutY="31.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
-            <Button layoutX="64.0" layoutY="26.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/styleSheet.css">
+            <Button layoutX="64.0" layoutY="26.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/styleSheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -42,12 +43,12 @@
                   <Font name="TradeGothic-BoldCondTwenty" size="24.0" />
                </font>
             </Label>
-            <Button layoutX="788.0" layoutY="30.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@Style/Dark/styleSheet.css">
+            <Button layoutX="809.0" layoutY="31.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" style="-fx-background-color: white;" styleClass="search" stylesheets="@Style/Dark/styleSheet.css">
                <font>
                   <Font size="1.0" />
                </font>
             </Button>
-            <Button layoutX="1081.0" layoutY="20.0" mnemonicParsing="false" onAction="#showUploadPane" prefHeight="38.0" prefWidth="111.0" style="-fx-background-radius: 100;" stylesheets="@Style/Dark/styleSheet.css">
+            <Button layoutX="1081.0" layoutY="20.0" mnemonicParsing="false" onAction="#showUploadPane" prefHeight="38.0" prefWidth="111.0" style="-fx-background-radius: 100; -fx-background-color: transparent;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -64,13 +65,21 @@
       </AnchorPane>
       <VBox alignment="TOP_CENTER" layoutY="87.0" prefHeight="633.0" prefWidth="263.0" style="-fx-background-color: #282828;">
          <children>
-            <AnchorPane prefHeight="24.0" prefWidth="263.0" />
-            <Circle fill="WHITE" radius="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <AnchorPane prefHeight="108.0" prefWidth="263.0">
+               <children>
+                  <Circle layoutX="132.0" layoutY="60.0" onMouseEntered="#hoverProfile" onMouseExited="#unhoverProfile" radius="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Circle>
+                  <AnchorPane fx:id="goChannelSvg" disable="true" layoutX="122.0" layoutY="50.0" opacity="0.0" prefHeight="21.0" prefWidth="20.0" styleClass="GOchannel_svg" />
+               </children>
+            </AnchorPane>
             <AnchorPane prefHeight="55.0" prefWidth="263.0">
                <children>
-                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="90.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your channel">
+                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="82.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your channel">
                      <font>
-                        <Font name="Arial Bold" size="13.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                   </Text>
                   <Text fill="#c6c6c6" fontSmoothingType="LCD" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel name" textAlignment="CENTER" wrappingWidth="263.0">
@@ -79,12 +88,113 @@
                      </font>
                   </Text>
                </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="         Dashboard">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="40.0" layoutY="16.0" prefHeight="20.0" prefWidth="20.0" styleClass="dashboard_svg" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="     Content">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane layoutX="40.0" layoutY="16.0" prefHeight="20.0" prefWidth="20.0" styleClass="content_svg" />
+                  <AnchorPane disable="true" layoutX="36.0" layoutY="20.0" prefHeight="20.0" prefWidth="20.0" styleClass="back_content_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="         Comments">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="40.0" layoutY="16.0" prefHeight="20.0" prefWidth="20.0" styleClass="comments_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="Earn">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="43.0" layoutY="15.0" prefHeight="20.0" prefWidth="14.0" styleClass="earn_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="   Audio">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="39.0" layoutY="15.0" prefHeight="23.0" prefWidth="23.0" styleClass="audio_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="                 Customisation">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="39.0" layoutY="15.0" prefHeight="23.0" prefWidth="23.0" styleClass="customisation_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" styleClass="side_button" text="   Setting">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="39.0" layoutY="14.0" prefHeight="23.0" prefWidth="23.0" styleClass="setting_svg" />
+               </children>
+               <VBox.margin>
+                  <Insets top="70.0" />
+               </VBox.margin>
             </AnchorPane>
          </children>
       </VBox>
       <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="263.0" layoutY="87.0" prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: transparent;" stylesheets="@Style/Dark/Dashboard.css">
          <content>
-            <VBox prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: #1f1f1f;" />
+            <VBox fx:id="box" prefHeight="633.0" prefWidth="1017.0" styleClass="dark_back" />
          </content>
       </ScrollPane>
       <Rectangle fx:id="backgroundFade" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.44" stroke="BLACK" strokeType="INSIDE" visible="false" width="1280.0" />
@@ -135,7 +245,7 @@
             <Circle fill="#656565" layoutX="427.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
             <Circle fill="#656565" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
             <Circle fx:id="circle" fill="#3da5fe" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-            <ScrollPane fx:id="detailsPane" hbarPolicy="NEVER" hmax="0.0" layoutX="112.0" layoutY="84.0" prefWidth="657.0" style="-fx-background-color: transparent;">
+            <ScrollPane fx:id="detailsPane" hbarPolicy="NEVER" hmax="0.0" layoutX="112.0" layoutY="84.0" prefWidth="657.0" style="-fx-background-color: transparent;" visible="false">
                <content>
                   <AnchorPane prefHeight="397.0" prefWidth="655.0" style="-fx-background-color: #1f1f1f;">
                      <children>
@@ -200,8 +310,8 @@
             </Button>
             <AnchorPane fx:id="uploadingPane" layoutX="112.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" style="-fx-background-color: #1f1f1f;" visible="false">
                <children>
-                  <VBox fx:id="upVid" alignment="CENTER" layoutX="149.0" layoutY="65.0" prefHeight="191.0" prefWidth="357.0" style="-fx-background-color: black;" />
-                  <ProgressBar fx:id="progressBar" layoutX="149.0" layoutY="65.0" prefHeight="191.0" prefWidth="357.0" progress="0.0" />
+                  <VBox fx:id="upVid" alignment="CENTER" layoutX="167.0" layoutY="65.0" prefHeight="191.0" prefWidth="321.0" />
+                  <ProgressBar fx:id="progressBar" layoutX="167.0" layoutY="66.0" prefHeight="191.0" prefWidth="321.0" progress="0.0" />
                   <Text fx:id="uploadText" fill="WHITE" layoutX="79.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Uploading..." textAlignment="CENTER" wrappingWidth="497.13671875">
                      <font>
                         <Font name="Arial Bold" size="22.0" />

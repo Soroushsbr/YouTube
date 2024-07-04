@@ -5,6 +5,7 @@ import espresso.youtube.models.video.Client_video;
 import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -96,26 +97,12 @@ public class MainPage implements Initializable {
             }
             ArrayList<String> idList = new ArrayList<>(Arrays.asList(videosID.split(", ")));
             System.out.println("Done.");
-//            HBox hBox = new HBox();
-//            for(int i = 0 ; i < 2; i++) {
-//                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
-//                AnchorPane videoPane = loader.load();
-//                String id = idList.get(i);
-//                System.out.println(id);
-//                ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
-////                mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
-////                mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
-////                ((VBox)videoPane.getChildren().get(0)).getChildren().add(mediaView);
-////                this can remove the red line blow video
-////                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
-//                hBox.getChildren().add(videoPane);
-//            }
-//            videosBox.getChildren().clear();
-//            videosBox.getChildren().add(hBox);
 
             int i = 0;
+            videosBox.getChildren().clear();
             while (i <idList.size()) {
                 HBox previewBox = new HBox();
+                previewBox.setSpacing(10);
                 previewBox.getChildren().clear();
 
                 for (int j = 0; j < 3; j++) {
@@ -123,8 +110,17 @@ public class MainPage implements Initializable {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                         AnchorPane videoPane = loader.load();
                         String id = idList.get(i);
-                        System.out.println(id);
-                        ((Button)((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(2)).setOnAction(event -> switchToVideoPage(event, id));
+//
+//                        File file = Client_video.get_media(id, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 100);
+//                        Media media = new Media(file.toURI().toString());
+//                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//                        MediaView mediaView = new MediaView(mediaPlayer);
+//                        mediaView.fitWidthProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).widthProperty());
+//                        mediaView.fitHeightProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).heightProperty());
+//                        ((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).getChildren().add(mediaView);
+                        ((Button)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,id));
+                        ((AnchorPane) videoPane.getChildren().get(4)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(4))));
+                        ((AnchorPane) videoPane.getChildren().get(4)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(4))));
                         previewBox.getChildren().add(videoPane);
                         i++;
                     } else {
@@ -141,6 +137,33 @@ public class MainPage implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    public void hoverPreview(AnchorPane pane){
+        Timeline tx = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleXProperty(), pane.getScaleX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleXProperty(), 1.04))
+        );
+        tx.play();
+        Timeline ty = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleYProperty(), pane.getScaleY())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleYProperty(), 1.04))
+        );
+        ty.play();
+    }
+
+    public void unhoverPreview(AnchorPane pane){
+        Timeline tx = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleXProperty(), pane.getScaleX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleXProperty(), 1))
+        );
+        tx.play();
+        Timeline ty = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleYProperty(), pane.getScaleY())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleYProperty(), 1))
+        );
+        ty.play();
+    }
+
 
     public void switchToVideoPage(ActionEvent event ,String videoID){
         Parent root;

@@ -5,7 +5,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -19,16 +25,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 import static espresso.youtube.Front.LoginMenu.client;
 
-public class Dashboard {
+public class Dashboard implements Initializable {
     private UUID channelID;
+    @FXML
+    VBox box;
     @FXML
     Rectangle backgroundFade;
     @FXML
@@ -59,6 +68,8 @@ public class Dashboard {
     TextField titleTF;
     @FXML
     TextArea descriptionTA;
+    @FXML
+    AnchorPane goChannelSvg;
     private File selectedFile;
 
     public void showUploadPane(){
@@ -73,8 +84,6 @@ public class Dashboard {
     public void hideUploadPane(){
         backgroundFade.setVisible(false);
         createPane.setVisible(false);
-        timer.stop();
-        stopTimer.stop();
         uploadText.setText("Uploading...");
         upVid.getChildren().clear();
         doneBtn.setDisable(true);
@@ -155,11 +164,9 @@ public class Dashboard {
         mediaView.fitHeightProperty().bind(videoPre.heightProperty());
         videoPre.getChildren().add(mediaView);
     }
-
-    Timer timer;
-    Timer stopTimer;
     public void confirmUpload() throws IOException, InterruptedException {
         sendFile(selectedFile);
+        upVid.getChildren().clear();
         if(!titleTF.getText().isEmpty() && !descriptionTA.getText().isEmpty()) {
             nextBtn.setVisible(false);
             MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
@@ -167,31 +174,52 @@ public class Dashboard {
             mediaView.fitHeightProperty().bind(upVid.heightProperty());
             upVid.getChildren().add(mediaView);
             uploadingScene();
-            timer = new Timer(500, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateProgressBar();
-                }
-            });
-            timer.start();
-            stopTimer = new Timer(11000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    timer.stop();
-                    progressBar.setVisible(false);
-                    doneBtn.setDisable(false);
-                    uploadText.setText("Uploaded Successfully.");
-                }
-            });
-            stopTimer.setRepeats(false);
-            stopTimer.start();
+            Timeline timelinePbar = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(progressBar.progressProperty(), 0)),
+                    new KeyFrame(Duration.seconds(5), new KeyValue(progressBar.progressProperty(), 1 ))
+            );
+            timelinePbar.play();
+            timelinePbar.setOnFinished(event -> upDone());
         }
     }
-    public void updateProgressBar(){
-        progressBar.setProgress(progressBar.getProgress() + 0.05);
 
+    public void upDone(){
+        uploadText.setText("Uploaded Successfully.");
+        doneBtn.setDisable(false);
+        progressBar.setVisible(false);
     }
+    public void switchToMainPage(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+
     //------------animation--------------------------------------------------------
+    public void hoverProfile(){
+        Timeline tGochannel = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(goChannelSvg.opacityProperty(), 0)),
+                new KeyFrame(Duration.seconds(0.1), new KeyValue(goChannelSvg.opacityProperty(), 1 ))
+        );
+        tGochannel.play();
+    }
+    public void unhoverProfile(){
+        Timeline tGochannel = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(goChannelSvg.opacityProperty(), 1)),
+                new KeyFrame(Duration.seconds(0.1), new KeyValue(goChannelSvg.opacityProperty(), 0 ))
+        );
+        tGochannel.play();
+    }
     public void uploadingScene(){
         Timeline timelineFadeVid = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(detailsPane.opacityProperty(), 1)),
@@ -286,4 +314,16 @@ public class Dashboard {
         );
         circleTransition.play();
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard_Customize.fxml"));
+            AnchorPane pane = loader.load();
+            box.getChildren().add(pane);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
