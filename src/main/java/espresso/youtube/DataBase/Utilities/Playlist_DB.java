@@ -1,5 +1,6 @@
 package espresso.youtube.DataBase.Utilities;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
 
 import java.sql.*;
@@ -15,8 +16,24 @@ public class Playlist_DB {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    public static void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
+        }
+    }
+
     public static void create_playlist(UUID owner_id, String title, boolean is_public, String description) {
-        System.out.println("Creating playlist as "+title+" for user "+owner_id+" ...");
+        System.out.println("[DATABASE] Creating playlist as "+title+" for user "+owner_id+" ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO playlists (id, title, owner_id, is_public, description) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -28,14 +45,14 @@ public class Playlist_DB {
             preparedStatement.setString(5, description);
             preparedStatement.executeUpdate();
            connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while creating playlist",e);
+            printSQLException(e);
         }
     }
 
     public static void make_playlist_public(UUID playlist_id) {
-        System.out.println("Making playlist "+playlist_id+" public ...");
+        System.out.println("[DATABASE] Making playlist "+playlist_id+" public ...");
         String query = "UPDATE playlists SET is_public = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -43,14 +60,14 @@ public class Playlist_DB {
             preparedStatement.setObject(2, playlist_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while making playlist public",e);
+            printSQLException(e);
         }
     }
 
     public static void make_playlist_private(UUID playlist_id) {
-        System.out.println("Making playlist "+playlist_id+" private ...");
+        System.out.println("[DATABASE] Making playlist "+playlist_id+" private ...");
         String query = "UPDATE playlists SET is_public = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -58,15 +75,15 @@ public class Playlist_DB {
             preparedStatement.setObject(2, playlist_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while making playlist private",e);
+            printSQLException(e);
         }
     }
 
     public static void change_playlist_title(UUID playlist_id, String title) {
         //check if user is owner of playlist??
-        System.out.println("Changing title of playlist "+playlist_id+" to "+title+" ...");
+        System.out.println("[DATABASE] Changing title of playlist "+playlist_id+" to "+title+" ...");
         String query = "UPDATE playlists SET title = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -74,15 +91,15 @@ public class Playlist_DB {
             preparedStatement.setObject(2, playlist_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while changing playlist title",e);
+            printSQLException(e);
         }
     }
 
     public static void change_playlist_description(UUID playlist_id, String description) {
         //check if user is owner of playlist??
-        System.out.println("Changing description of playlist "+playlist_id+" to "+description+" ...");
+        System.out.println("[DATABASE] Changing description of playlist "+playlist_id+" to "+description+" ...");
         String query = "UPDATE playlists SET description = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -90,15 +107,15 @@ public class Playlist_DB {
             preparedStatement.setObject(2, playlist_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while changing playlist description",e);
+            printSQLException(e);
         }
     }
 
     public static void subscribe_to_playlist(UUID playlist_id, UUID subscriber_id) {
         //check if playlist is public?
-        System.out.println("Subscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
+        System.out.println("[DATABASE] Subscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
         String query = "INSERT INTO playlist_subscription (playlist_id, subscriber_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -106,14 +123,14 @@ public class Playlist_DB {
             preparedStatement.setObject(2, subscriber_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while subscribing to playlist",e);
+            printSQLException(e);
         }
     }
 
     public static void unsubscribe_to_playlist(UUID playlist_id, UUID subscriber_id) {
-        System.out.println("Unsubscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
+        System.out.println("[DATABASE] Unsubscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
         String query = "DELETE FROM playlist_subscription WHERE playlist_id = ? AND subscriber_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -121,33 +138,33 @@ public class Playlist_DB {
             preparedStatement.setObject(2, subscriber_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while unsubscribing from playlist",e);
+            printSQLException(e);
         }
     }
 
     public static boolean check_if_user_subscribed(UUID playlist_id, UUID user_id) {
-        System.out.println("Checking if user "+user_id+" is subscribed to playlist "+playlist_id+" ...");
+        System.out.println("[DATABASE] Checking if user "+user_id+" is subscribed to playlist "+playlist_id+" ...");
         String query = "SELECT EXISTS (SELECT 1 FROM playlist_subscription WHERE playlist_id = ? AND subscriber_id = ? )";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, playlist_id);
             preparedStatement.setObject(2, user_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return resultSet.getBoolean(1);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking if user subscribed to playlist", e);
+            printSQLException(e);
         }
         return false;
     }
 
     public static void create_watch_later(UUID owner_id) {
         //!!!user shouldnt be able to change watch later title or make it public or add description
-        System.out.println("Creating watch later playlist for user "+owner_id+" ...");
+        System.out.println("[DATABASE] Creating watch later playlist for user "+owner_id+" ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO playlists (id, title, owner_id, is_public) VALUES (?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -160,7 +177,7 @@ public class Playlist_DB {
             connection.commit();
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while creating watch later playlist",e);
+            printSQLException(e);
         }
     }
 
@@ -176,8 +193,9 @@ public class Playlist_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred getting number of playlist subscribers",e);
+            printSQLException(e);
         }
+        return -1;
     }
 
     public static int number_of_posts(UUID playlist_id) {
@@ -192,13 +210,13 @@ public class Playlist_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred getting number of playlist posts",e);
+            printSQLException(e);
         }
+        return -1;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
-        System.out.println("Getting info of playlist "+id+" ...");
-        System.out.println("Getting info of playlist "+id+" ...");
+        System.out.println("[DATABASE] Getting info of playlist "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query ="SELECT * FROM playlists WHERE id = ?";
@@ -214,15 +232,16 @@ public class Playlist_DB {
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
                 }
             }
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
             return serverResponse;
         }catch (SQLException e){
-            System.out.println("Database error occurred while getting playlist info");
+            printSQLException(e);
         }
         return null;
     }
 
     public static void delete_playlist(UUID playlist_id) {
+        System.out.println("[DATABASE] Deleting playlist "+playlist_id+" ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM playlist_posts WHERE playlist_id = ?");
         queries.add("DELETE FROM playlist_subscription WHERE playlist_id = ?");
@@ -237,33 +256,37 @@ public class Playlist_DB {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     connection.rollback();
-                    throw new RuntimeException("Database error occurred while deleting playlist", e);
+                    printSQLException(e);
                 }
             }
-            connection.commit(); // Commit transaction
+            connection.commit();
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while deleting playlist", e);
+            printSQLException(e);
         }
     }
 
     public static List<UUID> get_playlists_of_account(UUID account_id) {
-        List<UUID> playlistIds = new ArrayList<>();
+        System.out.println("[DATABASE] Getting playlists of account "+account_id+" ...");
+        List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT id FROM playlists WHERE owner_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setObject(1, account_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     UUID playlistId = (UUID) resultSet.getObject("id");
-                    playlistIds.add(playlistId);
+                    IDs.add(playlistId);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting playlists of an account", e);
+            printSQLException(e);
         }
-        return playlistIds;
+        System.out.println("[DATABASE] Done");
+        return IDs;
     }
 
     public static List<UUID> get_subscribers(UUID playlist_id) {
+        System.out.println("[DATABASE] Getting subscribers of playlist "+playlist_id+" ...");
         List<UUID> subscriberIds = new ArrayList<>();
         String sql = "SELECT subscriber_id FROM playlist_subscription WHERE playlist_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -275,8 +298,9 @@ public class Playlist_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting subscribers of a playlist", e);
+            printSQLException(e);
         }
+        System.out.println("[DATABASE] Done");
         return subscriberIds;
     }
     ///+++

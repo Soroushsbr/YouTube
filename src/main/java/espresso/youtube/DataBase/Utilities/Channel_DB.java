@@ -16,8 +16,24 @@ public class Channel_DB {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    public static void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
+        }
+    }
+
     public static void create_channel(UUID owner_id, String title, String description) {
-        System.out.println("Creating channel as " + title + " ...");
+        System.out.println("[DATABASE] Creating channel ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO channels (id, title, owner_id, description) VALUES (?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -28,14 +44,14 @@ public class Channel_DB {
             preparedStatement.setString(4, description);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while creating channel",e);
+            printSQLException(e);
         }
     }
 
     public static void subscribe_to_channel(UUID channel_id, UUID subscriber_id) {
-        System.out.println("Subscribing user " + subscriber_id + "to channel "+channel_id + " ...");
+        System.out.println("[DATABASE] Subscribing user " + subscriber_id + "to channel "+channel_id + " ...");
         String query = "INSERT INTO channel_subscription (channel_id, subscriber_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -43,14 +59,14 @@ public class Channel_DB {
             preparedStatement.setObject(2, subscriber_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while subscribing to channel",e);
+            printSQLException(e);
         }
     }
 
     public static void create_user_default_channel(UUID user_id) {
-        System.out.println("Creating default channel of user " + user_id + " ...");
+        System.out.println("[DATABASE] Creating default channel of user " + user_id + " ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO channels (id, title, owner_id) VALUES (?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -60,32 +76,32 @@ public class Channel_DB {
             preparedStatement.setObject(3, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while creating user default channel",e);
+            printSQLException(e);
         }
     }
 
     public static boolean check_if_user_subscribed(UUID channel_id, UUID user_id) {
-        System.out.println("Checking if user " + user_id + " is subscribed to channel "+channel_id+" ...");
+        System.out.println("[DATABASE] Checking if user " + user_id + " is subscribed to channel "+channel_id+" ...");
         String query = "SELECT EXISTS (SELECT 1 FROM channel_subscription WHERE channel_id = ? AND subscriber_id = ? )";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, channel_id);
             preparedStatement.setObject(2, user_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return resultSet.getBoolean(1);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking if user subscribed to channel", e);
+            printSQLException(e);
         }
         return false;
     }
 
     public static void unsubscribe_to_channel(UUID channel_id, UUID subscriber_id) {
-        System.out.println("Unsubscribing user " + subscriber_id + "from channel "+channel_id + " ...");
+        System.out.println("[DATABASE] Unsubscribing user " + subscriber_id + "from channel "+channel_id + " ...");
         String query = "DELETE FROM channel_subscription WHERE channel_id = ? AND subscriber_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -93,15 +109,15 @@ public class Channel_DB {
             preparedStatement.setObject(2, subscriber_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while unsubscribing from channel",e);
+            printSQLException(e);
         }
     }
 
     public static void change_channel_title(UUID channel_id, String title) {
         //check if user is owner of channel??
-        System.out.println("Changing title of channel " + channel_id + "to "+title + " ...");
+        System.out.println("[DATABASE] Changing title of channel " + channel_id + "to "+title + " ...");
         String query = "UPDATE channels SET title = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -109,15 +125,15 @@ public class Channel_DB {
             preparedStatement.setObject(2, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while changing channel title",e);
+            printSQLException(e);
         }
     }
 
     public static void change_channel_description(UUID channel_id, String description) {
         //check if user is owner of channel??
-        System.out.println("Changing description of channel " + channel_id + "to "+description + " ...");
+        System.out.println("[DATABASE] Changing description of channel " + channel_id + "to "+description + " ...");
         String query = "UPDATE channels SET description = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -125,9 +141,9 @@ public class Channel_DB {
             preparedStatement.setObject(2, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while changing channel description",e);
+            printSQLException(e);
         }
     }
 
@@ -143,8 +159,9 @@ public class Channel_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred getting number of channel subscribers",e);
+            printSQLException(e);
         }
+        return -1;
     }
 
     public static int number_of_posts(UUID channel_id) {
@@ -159,12 +176,13 @@ public class Channel_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred getting number of channel posts",e);
+            printSQLException(e);
         }
+        return -1;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
-        System.out.println("Getting info of channel "+id+" ...");
+        System.out.println("[DATABASE] Getting info of channel "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query ="SELECT * FROM channels WHERE id = ?";
@@ -179,14 +197,16 @@ public class Channel_DB {
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
                 }
             }
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
             return serverResponse;
         } catch (SQLException e){
-            throw new RuntimeException("Database error occurred while getting channel info",e);
+            printSQLException(e);
         }
+        return null;
     }
 
     public static void delete_channel(UUID channel_id) {
+        System.out.println("[DATABASE] Deleting channel "+channel_id+" ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
         queries.add("DELETE FROM post_dislikes WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
@@ -204,16 +224,18 @@ public class Channel_DB {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     connection.rollback();
-                    throw new RuntimeException("Database error occurred while deleting channel",e);
+                    printSQLException(e);
                 }
             }
             connection.commit();
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while deleting channel",e);
+            printSQLException(e);
         }
     }
 
     public static List<UUID> get_channels_of_account(UUID account_id) {
+        System.out.println("[DATABASE] Getting channels of user "+account_id+" ...");
         List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT id FROM channels WHERE owner_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -225,12 +247,14 @@ public class Channel_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting channels of an account", e);
+            printSQLException(e);
         }
+        System.out.println("[DATABASE] Done");
         return IDs;
     }
 
     public static List<UUID> get_subscribers(UUID channel_id) {
+        System.out.println("[DATABASE] Getting subscribers of channel "+channel_id+" ...");
         List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT subscriber_id FROM channel_subscription WHERE channel_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -242,8 +266,9 @@ public class Channel_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting subscribers of a channel", e);
+            printSQLException(e);
         }
+        System.out.println("[DATABASE] Done");
         return IDs;
     }
     /////+++

@@ -15,8 +15,24 @@ public class Comment_DB {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    public static void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
+        }
+    }
+
     public static void add_comment(UUID owner_id, UUID post_id, String content) {
-        System.out.println("Adding comment to post "+post_id+" ...");
+        System.out.println("[DATABASE] Adding comment to post "+post_id+" ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO comments (id, owner_id, content, post_id, parent_comment_id) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -28,14 +44,14 @@ public class Comment_DB {
             preparedStatement.setNull(5, Types.OTHER);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while adding a comment",e);
+            printSQLException(e);
         }
     }
 
     public static void reply_to_comment(UUID owner_id, UUID post_id, String content, UUID parent_comment_id) {
-        System.out.println("Replying to comment "+parent_comment_id+" ...");
+        System.out.println("[DATABASE] Replying to comment "+parent_comment_id+" ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO comments (id, owner_id, content, post_id, parent_comment_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -47,14 +63,14 @@ public class Comment_DB {
             preparedStatement.setObject(5, parent_comment_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while replying to a comment",e);
+            printSQLException(e);
         }
     }
 
     public static void like_comment(UUID comment_id, UUID user_id) {
-        System.out.println("User "+user_id+" is liking comment "+comment_id+" ...");
+        System.out.println("[DATABASE] User "+user_id+" is liking comment "+comment_id+" ...");
         String query = "INSERT INTO comment_likes (comment_id, user_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -62,14 +78,14 @@ public class Comment_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while liking a comment",e);
+            printSQLException(e);
         }
     }
 
     public static void dislike_comment(UUID comment_id, UUID user_id) {
-        System.out.println("User "+user_id+" is disliking comment "+comment_id+" ...");
+        System.out.println("[DATABASE] User "+user_id+" is disliking comment "+comment_id+" ...");
         String query = "INSERT INTO comment_dislikes (comment_id, user_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -77,14 +93,14 @@ public class Comment_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while disliking a comment",e);
+            printSQLException(e);
         }
     }
 
     public static boolean check_user_likes_comment(UUID comment_id, UUID user_id) {
-        System.out.println("Check if user "+user_id+" has liked comment "+comment_id+" ...");
+        System.out.println("[DATABASE] Check if user "+user_id+" has liked comment "+comment_id+" ...");
         String query = "SELECT EXISTS (SELECT 1 FROM comment_likes WHERE user_id = ? AND comment_id = ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setObject(1, user_id);
@@ -94,17 +110,18 @@ public class Comment_DB {
                     System.out.println("Done");
                     return resultSet.getBoolean(1);
                 } else {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return false;
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking if user liked a comment",e);
+            printSQLException(e);
         }
+        return false;
     }
 
     public static boolean check_user_dislikes_comment(UUID comment_id, UUID user_id) {
-        System.out.println("Check if user "+user_id+" has disliked comment "+comment_id+" ...");
+        System.out.println("[DATABASE] Check if user "+user_id+" has disliked comment "+comment_id+" ...");
         String query = "SELECT EXISTS (SELECT 1 FROM comment_dislikes WHERE user_id = ? AND comment_id = ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setObject(1, user_id);
@@ -114,17 +131,18 @@ public class Comment_DB {
                     System.out.println("Done");
                     return resultSet.getBoolean(1);
                 } else {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return false;
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking if user disliked a comment",e);
+            printSQLException(e);
         }
+        return false;
     }
 
     public static void remove_user_like_from_comment(UUID comment_id, UUID user_id) {
-        System.out.println("Removing user "+user_id+" like from comment "+comment_id+" ...");
+        System.out.println("[DATABASE] Removing user "+user_id+" like from comment "+comment_id+" ...");
         String query = "DELETE FROM comment_likes WHERE user_id = ? AND comment_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -132,14 +150,14 @@ public class Comment_DB {
             preparedStatement.setObject(2, comment_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while removing user like from a comment",e);
+            printSQLException(e);
         }
     }
 
     public static void remove_user_dislike_from_comment(UUID comment_id, UUID user_id) {
-        System.out.println("Removing user "+user_id+" dislike from comment "+comment_id+" ...");
+        System.out.println("[DATABASE] Removing user "+user_id+" dislike from comment "+comment_id+" ...");
         String query = "DELETE FROM comment_dislikes WHERE user_id = ? AND comment_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -147,8 +165,9 @@ public class Comment_DB {
             preparedStatement.setObject(2, comment_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while removing user dislike from a comment",e);
+            printSQLException(e);
         }
     }
 
@@ -164,8 +183,9 @@ public class Comment_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred getting number of comment likes",e);
+            printSQLException(e);
         }
+        return -1;
     }
 
     public static int number_of_dislikes(UUID comment_id) {
@@ -180,12 +200,13 @@ public class Comment_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred getting number of comment dislikes",e);
+            printSQLException(e);
         }
+        return -1;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
-        System.out.println("Getting info of comment "+id+" ...");
+        System.out.println("[DATABASE] Getting info of comment "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query ="SELECT * FROM comments WHERE id = ?";
@@ -201,15 +222,16 @@ public class Comment_DB {
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
                 }
             }
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
             return serverResponse;
-        }catch (SQLException e){
-            System.out.println("Database error occurred while getting comment info");
+        } catch (SQLException e){
+            printSQLException(e);
         }
         return null;
     }
 
     public static void delete_comment(UUID comment_id) {
+        System.out.println("[DATABASE] Deleting comment "+comment_id+" ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("UPDATE comments SET parent_comment_id = NULL WHERE parent_comment_id = ?");
         queries.add("DELETE FROM comment_likes WHERE comment_id = ?");
@@ -224,16 +246,18 @@ public class Comment_DB {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     connection.rollback();
-                    throw new RuntimeException("Database error occurred while deleting comment", e);
+                    printSQLException(e);
                 }
             }
             connection.commit();
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while deleting comment", e);
+            printSQLException(e);
         }
     }
 
     public static List<UUID> get_all_comments_of_a_post(UUID post_id) {
+        System.out.println("[DATABASE] Getting all comments of post "+post_id+" ...");
         List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT id FROM comments WHERE post_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -245,8 +269,9 @@ public class Comment_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting all comments of a post", e);
+            printSQLException(e);
         }
+        System.out.println("[DATABASE] Done");
         return IDs;
     }
     ///+++

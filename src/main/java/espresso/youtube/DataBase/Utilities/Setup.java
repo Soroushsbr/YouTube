@@ -6,19 +6,35 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Setup {
+
+    public static void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
+        }
+    }
     public static void create_database() {
-        System.out.println("Creating youtube database...");
+        System.out.println("[DATABASE] Creating youtube database...");
         String query = "CREATE DATABASE youtube;";
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/postgres", "postgres", "123");Statement statement = connection.createStatement()){
             statement.executeUpdate(query);
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Error occurred while creating database",e);
+            printSQLException(e);
         }
     }
 
     public static void create_tables() {
-        System.out.println("Creating database tables...");
+        System.out.println("[DATABASE] Creating database tables...");
         String[] queries = {
                 "CREATE TABLE IF NOT EXISTS accounts (id UUID PRIMARY KEY, username TEXT, gmail TEXT, password TEXT, dark_mode BOOLEAN, is_premium BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS channels (id UUID PRIMARY KEY, title TEXT, owner_id UUID, description TEXT, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
@@ -42,14 +58,14 @@ public class Setup {
                 statement.executeUpdate(query);
             }
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while creating database tables",e);
+            printSQLException(e);
         }
     }
 
     public static void restart_tables() {
-        System.out.println("Restarting database tables...");
+        System.out.println("[DATABASE] Restarting database tables...");
         System.out.println("Deleting database tables...");
         String[] queries = {
                 "DROP TABLE IF EXISTS accounts",
@@ -71,9 +87,9 @@ public class Setup {
             for (String query : queries)
                 statement.executeUpdate(query);
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while removing database tables",e);
+            printSQLException(e);
         }
         create_tables();
     }

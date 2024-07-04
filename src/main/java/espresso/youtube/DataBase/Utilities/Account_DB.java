@@ -19,43 +19,59 @@ public class Account_DB {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    public static void printSQLException(SQLException ex) {
+        for (Throwable e : ex) {
+            if (e instanceof SQLException) {
+                e.printStackTrace(System.err);
+                System.err.println("SQLState: " + ((SQLException) e).getSQLState());
+                System.err.println("Error Code: " + ((SQLException) e).getErrorCode());
+                System.err.println("Message: " + e.getMessage());
+                Throwable t = ex.getCause();
+                while (t != null) {
+                    System.out.println("Cause: " + t);
+                    t = t.getCause();
+                }
+            }
+        }
+    }
+
     public static boolean check_gmail_exists(String gmail) {
-        System.out.println("Checking if " + gmail + " exists...");
+        System.out.println("[DATABASE] Checking if " + gmail + " exists... ");
         String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE gmail = ?)";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, gmail);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return resultSet.getBoolean(1);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking gmail existence", e);
+            printSQLException(e);
         }
         return false;
     }
 
     public static boolean check_gmail_validation(String gmail) {
-        System.out.println("Checking if "+ gmail + " is a valid gmail...");
+        System.out.println("[DATABASE] Checking if "+ gmail + " is a valid gmail... ");
         String regex = "^[\\w.+-]+@gmail\\.com$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(gmail);
-        System.out.println("Done");
+        System.out.println("[DATABASE] Done");
         return matcher.matches();
     }
 
     public static String hash_password(String password) {
-        System.out.println("Hashing password...");
+        System.out.println("[DATABASE] Hashing password... ");
         String salt = BCrypt.gensalt(11);
         String hashed_password;
         hashed_password = BCrypt.hashpw(password, salt);
-        System.out.println("Done");
+        System.out.println("[DATABASE] Done");
         return(hashed_password);
     }
 
     public static void save_account(String username, String password, String gmail) {
-        System.out.println("Saving account of user "+username+" ...");
+        System.out.println("[DATABASE] Saving account of user "+username+" ...");
         Channel_DB.create_user_default_channel(get_id_by_username(username));
         Playlist_DB.create_watch_later(get_id_by_username(username));
         UUID uuid = UUID.randomUUID();
@@ -74,47 +90,47 @@ public class Account_DB {
             preparedStatement.setBoolean(6, isPremium);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while saving user account",e);
+            printSQLException(e);
         }
     }
 
     public static boolean is_password_correct(String username, String password) {
-        System.out.println("Checking if password is correct...");
+        System.out.println("[DATABASE] Checking if password is correct... ");
         String query = "SELECT password FROM users WHERE username = ?";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return BCrypt.checkpw(password, resultSet.getString("password"));
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking if the password is correct",e);
+            printSQLException(e);
         }
         return false;
     }
     public static boolean check_username_exists(String username) {
-        System.out.println("Checking if username of " + username + " exists...");
+        System.out.println("[DATABASE] Checking if " + username + " username exists...");
         String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ?)";
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    System.out.println("Done");
+                    System.out.println("[DATABASE] Done");
                     return resultSet.getBoolean(1);
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while checking username existence", e);
+            printSQLException(e);
         }
         return false;
     }
 
     public static void make_user_premium(UUID user_id) {
-        System.out.println("Making user " + user_id + " premium...");
+        System.out.println("[DATABASE] Making " + user_id + " user premium...");
         String query = "UPDATE accounts SET is_premium = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -122,14 +138,14 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while making user premium",e);
+            printSQLException(e);
         }
     }
 
     public static void remove_premium_of_user(UUID user_id) {
-        System.out.println("Removing premium of user " + user_id + " ...");
+        System.out.println("[DATABASE] Removing premium of user " + user_id + " ...");
         String query = "UPDATE accounts SET is_premium = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -137,14 +153,14 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while making user premium",e);
+            printSQLException(e);
         }
     }
 
     public static void change_dark_mode(UUID user_id, boolean dark_mode) {
-        System.out.println("Changing dark mode of user " + user_id + " ...");
+        System.out.println("[DATABASE] Changing dark mode of user " + user_id + " ...");
         String query = "UPDATE accounts SET dark_mode = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -152,14 +168,14 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while changing user dark mode",e);
+            printSQLException(e);
         }
     }
 
     public static void change_password(UUID user_id, String password) {
-        System.out.println("Changing password of user " + user_id + " ...");
+        System.out.println("[DATABASE] Changing password of user " + user_id + " ...");
         password = hash_password(password);
         String query = "UPDATE accounts SET password = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
@@ -168,14 +184,14 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while changing password",e);
+            printSQLException(e);
         }
     }
 
     public static void add_notification(UUID user_id, String content) {
-        System.out.println("Sending notification for user " + user_id + " ...");
+        System.out.println("[DATABASE] Sending notification for user " + user_id + " ...");
         String query = "INSERT INTO notifications (user_id, content) VALUES (?, ?)";
         try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             connection.setAutoCommit(false);
@@ -183,14 +199,14 @@ public class Account_DB {
             preparedStatement.setString(2, content);
             preparedStatement.executeUpdate();
             connection.commit();
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while adding notification",e);
+            printSQLException(e);
         }
     }
 
     public static ServerResponse sign_up(String username, String password, String gmail, int request_id) {
-        System.out.println("Signing up for user " + username + " ...");
+        System.out.println("[DATABASE] Signing up for user " + username + " ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         serverResponse.add_part("isValidUsername" , !check_username_exists(username));
@@ -202,19 +218,19 @@ public class Account_DB {
         } else {
             serverResponse.add_part("isSuccessful", false);
         }
-        System.out.println("Done");
+        System.out.println("[DATABASE] Done");
         return serverResponse;
     }
 
     public static ServerResponse login(String username , String password, int request_id){
-        System.out.println("User " + username + " is logging in ...");
+        System.out.println("[DATABASE] User " + username + " is logging in ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
         if((boolean)serverResponse.get_part("isSuccessful")){
             serverResponse.add_part("userID", Objects.requireNonNull(get_id_by_username(username)).toString());
         }
-        System.out.println("Done");
+        System.out.println("[DATABASE] Done");
         return serverResponse;
     }
 
@@ -230,8 +246,9 @@ public class Account_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting account ID by username", e);
+            printSQLException(e);
         }
+        return null;
     }
 
     public static String get_username_by_id(UUID id){
@@ -246,12 +263,13 @@ public class Account_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting account username by ID", e);
+            printSQLException(e);
         }
+        return null;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
-        System.out.println("Getting info of account " + id + " ...");
+        System.out.println("[DATABASE] Getting info of account " + id + " ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query ="SELECT * FROM accounts WHERE id = ?";
@@ -268,15 +286,16 @@ public class Account_DB {
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
                 }
             }
-            System.out.println("Done");
+            System.out.println("[DATABASE] Done");
             return serverResponse;
         }catch (SQLException e){
-            System.out.println("Database error occurred while getting account info");
+            printSQLException(e);
         }
         return null;
     }
 
     public static void account_delete(UUID account_id) {
+        System.out.println("[DATABASE] Deleting account " + account_id + " ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE user_id = ?");
         queries.add("DELETE FROM post_dislikes WHERE user_id = ?");
@@ -300,21 +319,22 @@ public class Account_DB {
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     connection.rollback();
-                    throw new RuntimeException("Database error occurred while deleting channel",e);
+                    printSQLException(e);
                 }
             }
             connection.commit();
+            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
-
-            throw new RuntimeException("Database error occurred while deleting account",e);
+            printSQLException(e);
         }
     }
 
-    public static List<UUID> get_subscribed_channels(UUID user_Id) {
+    public static List<UUID> get_subscribed_channels(UUID user_id) {
+        System.out.println("[DATABASE] Getting subscribed channels of user " + user_id + " ...");
         List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT channel_id FROM channel_subscription WHERE subscriber_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, user_Id);
+            preparedStatement.setObject(1, user_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     UUID channelId = (UUID) resultSet.getObject("channel_id");
@@ -322,12 +342,14 @@ public class Account_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting subscribed channels of a user", e);
+            printSQLException(e);
         }
+        System.out.println("[DATABASE] Done");
         return IDs;
     }
 
     public static List<UUID> get_subscribed_playlists(UUID user_id) {
+        System.out.println("[DATABASE] Getting subscribed playlists of user " + user_id + " ...");
         List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
@@ -340,8 +362,9 @@ public class Account_DB {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error occurred while getting subscribed playlists of a user", e);
+            printSQLException(e);
         }
+        System.out.println("[DATABASE] Done");
         return IDs;
     }
     /////+++
@@ -351,6 +374,8 @@ public class Account_DB {
     }
 }
 
+//printSQLException(e)
+//[DATABASE]
 
 //check user is owner of a post, playlist, and channel, and comment???
 
