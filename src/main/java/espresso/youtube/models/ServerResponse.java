@@ -15,6 +15,11 @@ import java.util.HashMap;
 
 public class ServerResponse {
 //------------------ jackson informations -------------------
+    @JsonProperty("response_type")
+    private String response_type;// notification, ordinary, serverInfo
+    public ServerResponse(){
+        this.response_type = "ordinary";
+    }
     @JsonProperty("response_part")
     private HashMap<String, Object> response_parts = new HashMap<>();
     @JsonProperty("request_id")
@@ -26,7 +31,7 @@ public class ServerResponse {
     @JsonProperty("comments_list")
     private ArrayList<Comment> comments_list;
     @JsonProperty("notifications_list")
-    private ArrayList<Notification> notifications_list;
+    private ArrayList<Notification> notifications_list = new ArrayList<>();
     @JsonProperty("playlists_list")
     private ArrayList<Playlist> playlists_list;
     @JsonProperty("videos_list")
@@ -82,6 +87,9 @@ public class ServerResponse {
     public ArrayList<Video> getVideos_list() {
         return videos_list;
     }
+    public String getResponse_type() {
+        return response_type;
+    }
 
 //------------------------ setters -----------------------------
 
@@ -108,5 +116,8 @@ public class ServerResponse {
     }
     public void setVideos_list(ArrayList<Video> videos_list) {
         this.videos_list = videos_list;
+    }
+    public void setResponse_type(String response_type) {
+        this.response_type = response_type;
     }
 }

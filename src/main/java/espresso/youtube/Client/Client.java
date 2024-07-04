@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -20,7 +21,6 @@ public class Client {
     private Socket client;
     private DataOutputStream out;
     public HashMap<Integer, ServerResponse> requests = new HashMap<>();
-
     public Client() throws IOException {
         client = new Socket(SERVER_IP, PORT);
         out = new DataOutputStream(client.getOutputStream());

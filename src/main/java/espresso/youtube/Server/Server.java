@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +36,7 @@ class Client_part implements Runnable {
     private static final int PORT = 8000;
     private static ArrayList<Socket> clients = new ArrayList<>();
     private ArrayList<Client_Handler> client_handlers = new ArrayList<>();
+    private HashMap<String, Client_Handler> online_clients = new HashMap<>();
     private static ExecutorService pool = Executors.newFixedThreadPool(4);
     @Override
     public void run() {
@@ -44,10 +47,13 @@ class Client_part implements Runnable {
             while (true) {
                 Socket client = listener.accept();
                 System.out.println("[CLIENT PART] Connected to client: " + client.getInetAddress());
-                Client_Handler client_thread = new Client_Handler(client, client_handlers.size());
+
+                String random_key = UUID.randomUUID().toString();
+                Client_Handler client_thread = new Client_Handler(client, client_handlers.size(), online_clients, random_key);
                 client_handlers.add(client_thread);
                 clients.add(client);
                 pool.execute(client_thread);
+                online_clients.put(random_key, client_thread);
             }
         } catch (IOException e) {
             e.printStackTrace();

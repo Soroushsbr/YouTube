@@ -23,10 +23,15 @@ public class Handle_Server_Response implements Runnable {
                 jsonString = this.in.readUTF();
                 ServerResponse serverResponse = new ServerResponse();
                 serverResponse.update_request(jsonString);
-                if(requests.get(serverResponse.getRequest_id()) == null)
-                    requests.put(serverResponse.getRequest_id(), serverResponse);
-                else
-                    requests.replace(serverResponse.getRequest_id(), serverResponse);
+
+                if(serverResponse.getResponse_type().equals("notification")){
+                    System.out.println("new notification received with title : "+serverResponse.get_part("title"));
+                } else {
+                    if(requests.get(serverResponse.getRequest_id()) == null)
+                        requests.put(serverResponse.getRequest_id(), serverResponse);
+                    else
+                        requests.replace(serverResponse.getRequest_id(), serverResponse);
+                }
                 System.out.println("[CLIENT] response " + serverResponse.getRequest_id() + " received");
             }
         } catch (IOException e) {
