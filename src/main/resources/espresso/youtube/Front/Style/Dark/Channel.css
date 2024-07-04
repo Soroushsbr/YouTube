@@ -1,0 +1,65 @@
+.background{
+    -fx-background-color:  #0f0f0f;
+}
+.prof{
+    -fx-stroke: transparent;
+    -fx-fill: black;
+}
+
+.prof:hover{
+    -fx-stroke: white;
+    -fx-filll: black;
+}
+
+.prof_svg{
+    -fx-background-color: white;
+    -fx-shape: "M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,8c-2.21,0-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4 S14.21,8,12,8L12,8z M14.59,4l2,2H21v12H3V6h4.41l2-2H14.59 M15,3H9L7,5H2v14h20V5h-5L15,3L15,3z";
+}
+
+.top_button{
+    -fx-background-color: transparent;
+}
+.top_button:hover{
+    -fx-background-color: #272727;
+    -fx-background-radius: 10;
+}
+.top_button:focused{
+    -fx-background-color: #272727;
+    -fx-background-radius: 10;
+}
+
+.channel_button{
+    -fx-background-color: transparent;
+    -fx-text-fill: #868686;
+}
+.channel_button:focused{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent white transparent;
+    -fx-text-fill: white;
+}
+.channel_button:hover{
+    -fx-border-color: transparent transparent #868686 transparent;
+}
+
+.bottom_line{
+    -fx-stroke: #868686;
+}
+
+.text_color{
+    -fx-fill: white;
+}
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #aaaaaa;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: #0f0f0f;
+}
+
+.scroll-bar:vertical > .increment-button,
+.scroll-bar:vertical > .decrement-button {
+    -fx-background-color:  #0f0f0f;
+    -fx-border-color: #0f0f0f;
+    -fx-border-width: 3;
+    -fx-padding: -2;
+}

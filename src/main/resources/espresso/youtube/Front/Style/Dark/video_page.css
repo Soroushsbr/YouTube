@@ -1,9 +1,11 @@
 .button{
     -fx-background-color: transparent;
+    -fx-text-fill: white;
 }
 .button:hover{
     -fx-background-color: #272727;
     -fx-background-radius: 10;
+    -fx-text-fill: white;
 }
 .scroll-bar:vertical .thumb {
     -fx-background-color: #aaaaaa;
@@ -27,6 +29,43 @@
     -fx-border-color: #0f0f0f;
     -fx-border-width: 3;
     -fx-padding: -2;
+}
+.text-area{
+    -fx-background-color:  #0f0f0f;
+    -fx-font-size: 15;
+    -fx-border-color:#0f0f0f #0f0f0f white #0f0f0f;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+    -fx-control-inner-background: #0f0f0f;
+    -fx-prompt-text-fill: #ccc;
+    -fx-font-family: Arial, sans-serif;
+}
+.coloredBtn{
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-text-fill: black;
+}
+
+.coloredBtn:hover{
+    -fx-background-color: #cacaca;
+    -fx-background-radius: 20;
+    -fx-text-fill: black;
+}
+
+.prof{
+    -fx-stroke: transparent;
+    -fx-fill: black;
+}
+
+.prof:hover{
+    -fx-stroke: white;
+    -fx-filll: black;
+}
+
+.coloredText{
+    -fx-font-family: Roboto;
+    -fx-fill: white;
 }
 
 
@@ -146,6 +185,11 @@
 .save{
     -fx-background-color: white;
     -fx-shape: "M22 13h-4v4h-2v-4h-4v-2h4V7h2v4h4v2zm-8-6H2v1h12V7zM2 12h8v-1H2v1zm0 4h8v-1H2v1z";
+}
+
+.description_back{
+    -fx-background-radius: 10;
+    -fx-background-color: #272727;
 }
 .commentLike{
     -fx-background-color:  transparent;

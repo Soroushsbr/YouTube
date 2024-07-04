@@ -1,25 +1,34 @@
 package espresso.youtube.Front;
 
+import espresso.youtube.Client.Client;
 import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -32,34 +41,26 @@ import java.util.UUID;
 import static espresso.youtube.Front.LoginMenu.client;
 
 public class VideoPage implements Initializable {
+    String videoID;
     @FXML
     VBox leftVbox;
-    String videoID;
+    @FXML
+    AnchorPane actionPane;
+    @FXML
+    ImageView loading;
+    @FXML
+    VBox videoBox;
+    @FXML
+    TextArea addCommentArea;
+    @FXML
+    HBox addCommentBox;
+    private MediaPlayer mediaPlayer;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        try {
-////            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
-////            AnchorPane videoPane = loader.load();
-////            //to set hover action to show video icons when mouse hovers it
-////            videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
-////            videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
-////            System.out.println(videoID);
-////            File file = Client_video.get_media("1",videoID ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id") , 1);
-////            Media media = new Media(file.toURI().toString());
-////            appendVideo(media , videoPane);
-////            leftVbox.getChildren().add(videoPane);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
+        initializeTextarea(addCommentArea , addCommentBox);
     }
     public void setVID(String videoID) throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Box.fxml"));
-        AnchorPane videoPane = loader.load();
         //to set hover action to show video icons when mouse hovers it
-        videoPane.getChildren().get(2).setOnMouseEntered(event -> hoverVideo((AnchorPane)videoPane.getChildren().get(2)));
-        videoPane.getChildren().get(2).setOnMouseExited(event -> unhoverVideo((AnchorPane)videoPane.getChildren().get(2)));
         Client_video cv = new Client_video(client.getOut());
         client.setReq_id();
         int req = client.getReq_id();
@@ -67,30 +68,29 @@ public class VideoPage implements Initializable {
             @Override
             protected File call() throws Exception {
 
-                return Client_video.get_media(videoID, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 1);
+                return Client_video.get_media(videoID, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), req);
             }
         };
         task.setOnSucceeded(e ->{
             Media media = new Media(task.getValue().toURI().toString());
-            ((ImageView) videoPane.getChildren().get(13)).setVisible(false);
-            appendVideo(media , videoPane);
+            loading.setVisible(false);
+            appendVideo(media , actionPane);
         });
-        leftVbox.getChildren().add(videoPane);
         new Thread(task).start();
 
     }
 
-    public void hoverVideo(AnchorPane videoPane){
+    public void hoverVideo(){
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(videoPane.opacityProperty(), 0)),
-                new KeyFrame(Duration.seconds(0.1), new KeyValue(videoPane.opacityProperty(), 1 ))
+                new KeyFrame(Duration.ZERO, new KeyValue(actionPane.opacityProperty(), 0)),
+                new KeyFrame(Duration.seconds(0.1), new KeyValue(actionPane.opacityProperty(), 1 ))
         );
         timeline.play();
     }
-    public void unhoverVideo(AnchorPane videoPane){
+    public void unhoverVideo(){
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(videoPane.opacityProperty(), 1)),
-                new KeyFrame(Duration.seconds(0.1), new KeyValue(videoPane.opacityProperty(), 0 ))
+                new KeyFrame(Duration.ZERO, new KeyValue(actionPane.opacityProperty(), 1)),
+                new KeyFrame(Duration.seconds(0.1), new KeyValue(actionPane.opacityProperty(), 0 ))
         );
         timeline.play();
     }
@@ -116,22 +116,22 @@ public class VideoPage implements Initializable {
 
     //this method place the video and plays it(this needs the video from database)
     public void appendVideo(Media media, AnchorPane videoPane){
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = new MediaPlayer(media);
         MediaView mediaView = new MediaView(mediaPlayer);
         //make the video to be middle of vbox
-        mediaView.fitWidthProperty().bind(((VBox)videoPane.getChildren().get(0)).widthProperty());
-        mediaView.fitHeightProperty().bind(((VBox)videoPane.getChildren().get(0)).heightProperty());
+        mediaView.fitWidthProperty().bind(videoBox.widthProperty());
+        mediaView.fitHeightProperty().bind(videoBox.heightProperty());
         //---give buttons actions---
-        ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(0)).setOnAction(event -> pause(mediaPlayer , (Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(0)));
-        ((Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(8)).setOnMouseDragged(event -> setVolume(mediaPlayer , (Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(8)));
-        ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(2)).setOnAction(event -> mute(mediaPlayer , (Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(2)));
-        ((Button)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(4)).setOnAction(event -> showSpeed((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)));
-        ((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0).setOnMouseDragged(event -> setSpeed(mediaPlayer , (Slider)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0), (Label) ((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(1)));
-        ((Button)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(2)).setOnAction(event -> refSpeed((Slider)((AnchorPane)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(9)).getChildren().get(0)));
+        ((Button)(actionPane).getChildren().get(0)).setOnAction(event -> pause(mediaPlayer , (Button)(actionPane).getChildren().get(0)));
+        ((Slider)(actionPane).getChildren().get(8)).setOnMouseDragged(event -> setVolume(mediaPlayer , (Slider)(actionPane).getChildren().get(8)));
+        ((Button)(actionPane).getChildren().get(2)).setOnAction(event -> mute(mediaPlayer , (Button)(actionPane).getChildren().get(2)));
+        ((Button)(actionPane).getChildren().get(4)).setOnAction(event -> showSpeed((AnchorPane)(actionPane).getChildren().get(9)));
+        ((AnchorPane)(actionPane).getChildren().get(9)).getChildren().get(0).setOnMouseDragged(event -> setSpeed(mediaPlayer , (Slider)((AnchorPane)(actionPane).getChildren().get(9)).getChildren().get(0), (Label) ((AnchorPane)(actionPane).getChildren().get(9)).getChildren().get(1)));
+        ((Button)((AnchorPane)(actionPane).getChildren().get(9)).getChildren().get(2)).setOnAction(event -> refSpeed((Slider)((AnchorPane)(actionPane).getChildren().get(9)).getChildren().get(0)));
 
-        setProgress(mediaPlayer , ((Slider)((AnchorPane)videoPane.getChildren().get(2)).getChildren().get(7)));
+        setProgress(mediaPlayer , ((Slider)(actionPane).getChildren().get(7)));
         //--------------------------
-        ((VBox) videoPane.getChildren().get(0)).getChildren().add(mediaView);
+        videoBox.getChildren().add(mediaView);
     }
 
 
@@ -226,9 +226,62 @@ public class VideoPage implements Initializable {
         );
     }
 
+    public void initializeTextarea(TextArea textArea , HBox hbox){
+        textArea.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            // Check if the user pressed the Enter key
+            if (event.getCode() == KeyCode.ENTER) {
+                // Update the HBox's height to match the text area's height
+                hbox.setPrefHeight(hbox.getPrefHeight() + 21.0);
+            }
+        });
+
+//        textArea.heightProperty().addListener(new ChangeListener<Number>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+//                // Update the HBox's height to match the text area's height
+//                hbox.setPrefHeight(50.0 + newValue.doubleValue());
+//            }
+//        });
+
+    }
+
     public void addComment() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
-        HBox commentBox = loader.load();
+        VBox commentBox = loader.load();
+//        ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText("hello \n bye");
         leftVbox.getChildren().add(commentBox);
+    }
+    public void switchToDashboard(ActionEvent event){
+        mediaPlayer.stop();
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void switchToMainPage(ActionEvent event){
+        mediaPlayer.stop();
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
     }
 }

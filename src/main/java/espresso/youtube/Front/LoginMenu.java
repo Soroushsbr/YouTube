@@ -164,7 +164,6 @@ public class LoginMenu implements Initializable {
             scene = new Scene(root);
             stage.setScene(scene);
             //set client for next stage
-            MainPage mainPage = loader.load();
 
             stage.show();
         }catch (IOException ignored){
