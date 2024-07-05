@@ -12,14 +12,29 @@ public class Server_video extends Video {
     public ServerResponse handle_request() {
         if (request.equals("send_video_info")) {
             return insert_video_info();
-        }else if(request.equals("get_video_info")){
+        } else if(request.equals("get_video_info")) {
             return send_video_info();
-        }else if(request.equals("get_videos_id")){
+        } else if(request.equals("get_videos_id")) {
             return send_videos_id();
+        } else if(request.equals("change_channel_photo")) {
+            return change_channel_photo();
+        } else if(request.equals("change_profile_photo")) {
+            return change_profile_photo();
+        } else if(request.equals("change_thumbnail")) {
+            return change_thumbnail();
+
         }
         return null;
     }
-
+    private ServerResponse change_thumbnail(){
+        return null;
+    }
+    private ServerResponse change_profile_photo(){
+        return null;
+    }
+    private ServerResponse change_channel_photo(){
+        return null;
+    }
     private ServerResponse insert_video_info(){
         System.out.println(super.getTitle());
 

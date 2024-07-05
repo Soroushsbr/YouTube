@@ -52,8 +52,7 @@ public class Video_sender implements Runnable{
                 return;
             }
 
-            // video exists, setting server response
-            ServerResponse serverResponse = Post_DB.get_post(UUID.fromString(media_id), request_id);// need to change
+            ServerResponse serverResponse = new ServerResponse();
             serverResponse.add_part("exist", true);
             serverResponse.add_part("status", "sending");
             client_handlers.get(client_handler_id).send_response(serverResponse);

@@ -99,7 +99,7 @@ public class Dashboard implements Initializable {
                 if(!title.isEmpty() && !description.isEmpty()){
                     client.setReq_id();
                     Client_video client_video = new Client_video(client.getOut());
-                    client_video.send_video_info(client.getUser_id(),title,description,"123", client.getReq_id());
+                    client_video.send_video_info(client.getUser_id(),title,description,"123", "mp4", client.getReq_id());
                     client_video.upload_media(selectedFile,client.getUser_id(),"mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
 
                     while (true) {

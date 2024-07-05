@@ -94,18 +94,37 @@ public class Client_video {
 
         return tempFile;
     }
-    public void send_video_info(String owner_id, String title, String description, String channel_id, int request_id){
+    public void send_video_info(String owner_id, String title, String description, String channel_id, String data_type, int request_id){// data type added
         video.setRequest("send_video_info");
         video.setRequest_id(request_id);
         video.setOwner_id(owner_id);
         video.setTitle(title);
         video.setDescription(description);
         video.setChannel_id(channel_id);
+        video.setData_type(data_type);
+    }
+    public void change_channel_photo(String channel_id, String data_type, int request_id){
+        video.setRequest("change_channel_photo");
+        video.setRequest_id(request_id);
+        video.setChannel_id(channel_id);
+        video.setData_type(data_type);
+    }
+    public void change_profile_photo(String user_id, String data_type, int request_id){
+        video.setRequest("change_profile_photo");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setData_type(data_type);
+    }
+    public void change_thumbnail(String video_id, String data_type, int request_id){
+        video.setRequest("change_thumbnail");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        video.setData_type(data_type);
     }
     public void get_video_info(String videoID , int request_id){
+        video.setRequest("get_video_info");
         video.setRequest_id(request_id);
         video.setVideo_id(videoID);
-        video.setRequest("get_video_info");
         send_request();
     }
 
