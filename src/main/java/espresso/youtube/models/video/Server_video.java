@@ -24,10 +24,25 @@ public class Server_video extends Video {
             return change_thumbnail();
         } else if(request.equals("change_playlist_photo")) {
             return change_playlist_photo();
+        } else if(request.equals("search")) {
+            return search();
+        } else if(request.equals("like")) {
+            return like();
+        } else if(request.equals("dislike")) {
+            return dislike();
         }
         return null;
     }
 
+    private ServerResponse dislike(){
+        return null;
+    }
+    private ServerResponse like(){
+        return null;
+    }
+    private ServerResponse search(){
+        return null;
+    }
     private ServerResponse change_playlist_photo(){
         return null;
     }

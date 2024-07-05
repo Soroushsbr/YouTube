@@ -26,6 +26,27 @@ public class Client_video {
         video.setVideo_id(video_id);
         send_request();
     }
+    public void search(String text, int request_id){
+        video.setRequest("search");
+        video.setRequest_id(request_id);
+        video.setTitle(text);
+        send_request();
+    }
+    public void like(String video_id, String user_id, int request_id){
+        video.setRequest("like");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void dislike(String video_id, String user_id, int request_id){
+        video.setRequest("dislike");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+
     public void upload_media(File mediaFile, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8002);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
