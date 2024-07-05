@@ -1,24 +1,43 @@
 package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
+import espresso.youtube.models.video.Client_video;
+import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
+import static espresso.youtube.Front.LoginMenu.client;
 
 public class MainPage implements Initializable {
     @FXML
@@ -31,7 +50,6 @@ public class MainPage implements Initializable {
     Circle profile;
     @FXML
     ScrollPane dashboardPane;
-    private Client client;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -50,9 +68,6 @@ public class MainPage implements Initializable {
         appendVideos();
     }
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
 
     //to show the notifications of user
     public void selectNotif(){
@@ -66,19 +81,104 @@ public class MainPage implements Initializable {
     //this method gets videos from server and show them to user
     public void appendVideos(){
         try {
-            HBox hBox = new HBox();
-            hBox.getChildren().clear();
-            for(int i = 0 ; i < 3; i++) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
-                AnchorPane videoPane = loader.load();
-//                this can remove the red line blow video
-//                (((AnchorPane) videoPane.getChildren().get(1)).getChildren().get(1)).setVisible(false);
-                hBox.getChildren().add(videoPane);
+
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            cv.get_videos_id(client.getReq_id());
+            //todo: put this in a thread
+            String videosID;
+            System.out.println("Waiting...");
+            while (true) {
+                if (client.requests.get(client.getReq_id()) != null) {
+                    videosID = (String) client.requests.get(client.getReq_id()).get_part("videos_id");
+                    break;
+                }
+                Thread.sleep(50);
             }
+            ArrayList<String> idList = new ArrayList<>(Arrays.asList(videosID.split(", ")));
+            System.out.println("Done.");
+
+            int i = 0;
             videosBox.getChildren().clear();
-            videosBox.getChildren().add(hBox);
+            while (i <idList.size()) {
+                HBox previewBox = new HBox();
+                previewBox.setSpacing(10);
+                previewBox.getChildren().clear();
+
+                for (int j = 0; j < 3; j++) {
+                    if (i < idList.size()) {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
+                        AnchorPane videoPane = loader.load();
+                        String id = idList.get(i);
+//
+//                        File file = Client_video.get_media(id, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 100);
+//                        Media media = new Media(file.toURI().toString());
+//                        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//                        MediaView mediaView = new MediaView(mediaPlayer);
+//                        mediaView.fitWidthProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).widthProperty());
+//                        mediaView.fitHeightProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).heightProperty());
+//                        ((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).getChildren().add(mediaView);
+                        ((Button)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,id));
+                        ((AnchorPane) videoPane.getChildren().get(4)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(4))));
+                        ((AnchorPane) videoPane.getChildren().get(4)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(4))));
+                        previewBox.getChildren().add(videoPane);
+                        i++;
+                    } else {
+                        // If the index is out of bounds, break the loop
+                        break;
+                    }
+                }
+
+                videosBox.getChildren().add(previewBox);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void hoverPreview(AnchorPane pane){
+        Timeline tx = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleXProperty(), pane.getScaleX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleXProperty(), 1.04))
+        );
+        tx.play();
+        Timeline ty = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleYProperty(), pane.getScaleY())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleYProperty(), 1.04))
+        );
+        ty.play();
+    }
+
+    public void unhoverPreview(AnchorPane pane){
+        Timeline tx = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleXProperty(), pane.getScaleX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleXProperty(), 1))
+        );
+        tx.play();
+        Timeline ty = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(pane.scaleYProperty(), pane.getScaleY())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(pane.scaleYProperty(), 1))
+        );
+        ty.play();
+    }
+
+
+    public void switchToVideoPage(ActionEvent event ,String videoID){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
+            root = loader.load();
+            VideoPage videoPage = loader.getController();
+            videoPage.setVID(videoID);
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
         }
     }
 
@@ -97,6 +197,22 @@ public class MainPage implements Initializable {
                     new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), 0))
             );
             timeline.play();
+        }
+    }
+
+    public void switchToDashboard(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        }catch (IOException ignored){
         }
     }
 

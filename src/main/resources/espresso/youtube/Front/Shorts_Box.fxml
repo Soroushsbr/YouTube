@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="650.0" prefWidth="1023.0" styleClass="back" stylesheets="@Style/Dark/Shorts.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="290.0" layoutY="9.0" prefHeight="627.0" prefWidth="375.0" style="-fx-background-color: black;" />
+      <Rectangle arcHeight="40.0" arcWidth="40.0" fill="#ffffff00" height="637.0" layoutX="289.0" layoutY="4.0" stroke="BLACK" strokeWidth="10.0" styleClass="rect_border" width="375.0" />
+      <AnchorPane layoutX="299.0" layoutY="16.0" prefHeight="618.0" prefWidth="358.0">
+         <children>
+            <AnchorPane layoutX="97.0" layoutY="226.0" prefHeight="167.0" prefWidth="164.0" visible="false">
+               <children>
+                  <Circle layoutX="82.0" layoutY="84.0" opacity="0.27" radius="60.0" stroke="BLACK" strokeType="INSIDE" />
+                  <AnchorPane layoutX="43.0" layoutY="44.0" prefHeight="79.0" prefWidth="79.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="667.0" layoutY="303.0">
+         <children>
+            <Button layoutX="11.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" style="-fx-background-radius: 100;" styleClass="darkBtn" />
+            <Button layoutX="11.0" layoutY="77.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" style="-fx-background-radius: 100;" styleClass="darkBtn" />
+            <Button layoutX="11.0" layoutY="154.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="45.0" style="-fx-background-radius: 100;" styleClass="darkBtn" />
+            <AnchorPane disable="true" layoutX="24.0" layoutY="12.0" prefHeight="20.0" prefWidth="20.0" styleClass="like" />
+            <AnchorPane disable="true" layoutX="23.0" layoutY="91.0" prefHeight="20.0" prefWidth="20.0" styleClass="dislike" />
+            <AnchorPane disable="true" layoutX="24.0" layoutY="167.0" prefHeight="20.0" prefWidth="20.0" styleClass="comment" />
+            <Text layoutX="17.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Likes">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+            </Text>
+            <Text layoutX="12.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Dislike">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+            </Text>
+            <Text layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Comments">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

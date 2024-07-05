@@ -4,68 +4,66 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="255.0" prefWidth="429.0" style="-fx-background-color: #0f0f0f;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="255.0" prefWidth="366.0" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/styleSheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="18.0" layoutY="16.0" prefHeight="181.0" prefWidth="336.0" style="-fx-background-color: black;" />
-      <AnchorPane layoutX="18.0" layoutY="16.0" prefHeight="161.0" prefWidth="328.0" style="-fx-background-color: black;">
-         <children>
-            <Label layoutX="300.0" layoutY="158.0" text="00:00" textFill="WHITE">
-               <font>
-                  <Font size="9.0" />
-               </font>
-            </Label>
-            <Line endX="267.0" layoutX="65.0" layoutY="178.0" startX="-61.0" stroke="RED" strokeWidth="4.0" />
-            <Button layoutY="-1.0" mnemonicParsing="false" opacity="0.42" prefHeight="181.0" prefWidth="334.0" styleClass="select_video" stylesheets="@styleSheet.css">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-         </children>
-      </AnchorPane>
-      <Label layoutX="58.0" layoutY="200.0" text="Description" textFill="WHITE">
+      <Label layoutX="64.0" layoutY="200.0" prefHeight="19.0" prefWidth="278.0" styleClass="colored_text" text="Title" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="58.0" layoutY="222.0" text="Username" textFill="#5b5b5b">
+      <Label layoutX="64.0" layoutY="218.0" text="Username" textFill="#5b5b5b">
          <font>
-            <Font size="9.0" />
+            <Font size="11.0" />
          </font>
       </Label>
-      <Label layoutX="58.0" layoutY="232.0" text="Views ● Time" textFill="#5b5b5b">
+      <Label layoutX="64.0" layoutY="232.0" text="Views ● Time" textFill="#5b5b5b">
          <font>
-            <Font size="9.0" />
+            <Font name="Arial" size="11.0" />
          </font>
       </Label>
-      <Button layoutX="28.0" layoutY="203.0" mnemonicParsing="false" prefHeight="19.0" prefWidth="20.0" style="-fx-background-color: white; -fx-background-radius: 1000;">
-         <font>
-            <Font size="9.0" />
-         </font>
-      </Button>
-      <Rectangle arcHeight="30.0" arcWidth="30.0" disable="true" fill="#1f93ff00" height="183.0" layoutX="18.0" layoutY="15.0" stroke="#0f0f0f" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="4.0" width="339.0" />
-      <Label layoutX="351.0" layoutY="10.0" prefHeight="12.0" prefWidth="13.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" textFill="#222222">
-         <font>
-            <Font size="7.0" />
-         </font>
-      </Label>
-      <Label layoutX="6.0" layoutY="10.0" prefHeight="6.0" prefWidth="18.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" textFill="#222222">
-         <font>
-            <Font size="7.0" />
-         </font>
-      </Label>
-      <Label layoutX="351.0" layoutY="194.0" prefHeight="11.0" prefWidth="13.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" textFill="#222222">
-         <font>
-            <Font size="7.0" />
-         </font>
-      </Label>
-      <Label layoutX="10.0" layoutY="192.0" prefHeight="11.0" prefWidth="13.0" style="-fx-background-color: #0f0f0f;" textFill="#222222">
-         <font>
-            <Font size="7.0" />
-         </font>
-      </Label>
+      <Circle fill="DODGERBLUE" layoutX="40.0" layoutY="220.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" styleClass="prof" />
+      <AnchorPane layoutX="24.0" layoutY="16.0" prefHeight="161.0" prefWidth="328.0">
+         <children>
+            <VBox alignment="CENTER" prefHeight="181.0" prefWidth="321.0" style="-fx-background-color: black;" />
+            <Label layoutX="288.0" layoutY="158.0" text="00:00" textFill="WHITE">
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </Label>
+            <Line endX="250.0" layoutX="65.0" layoutY="179.0" startX="-61.0" stroke="RED" strokeWidth="4.0" />
+            <Button layoutY="-1.0" mnemonicParsing="false" opacity="0.0" prefHeight="181.0" prefWidth="321.0" styleClass="select_video" stylesheets="@Style/Dark/styleSheet.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="-9.0" layoutY="174.0" prefHeight="11.0" prefWidth="13.0" style="-fx-background-color: #0f0f0f;" textFill="#222222">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </Label>
+            <Label layoutX="314.0" layoutY="-8.0" prefHeight="12.0" prefWidth="13.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" textFill="#222222">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </Label>
+            <Label layoutX="316.0" layoutY="177.0" prefHeight="11.0" prefWidth="13.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" textFill="#222222">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </Label>
+            <Label layoutX="-12.0" layoutY="-4.0" prefHeight="6.0" prefWidth="18.0" style="-fx-background-color: #0f0f0f; -fx-background-radius: 10;" textFill="#222222">
+               <font>
+                  <Font size="7.0" />
+               </font>
+            </Label>
+            <Rectangle arcHeight="30.0" arcWidth="30.0" disable="true" fill="#1f93ff00" height="183.0" stroke="#0f0f0f" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeWidth="4.0" width="323.0" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

@@ -130,6 +130,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        return false;
     }
 
     public static boolean check_user_dislikes_post(UUID post_id, UUID user_id) {
@@ -149,6 +150,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        return false;
     }
 
     public static void remove_user_like_from_post(UUID post_id, UUID user_id) {
@@ -274,6 +276,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        return -1;
     }
 
     public static int number_of_likes(UUID post_id) {
@@ -290,6 +293,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        return -1;
     }
 
     public static int number_of_dislikes(UUID post_id) {
@@ -306,6 +310,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        return -1;
     }
 
     public static int number_of_comments(UUID post_id) {
@@ -322,6 +327,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        return -1;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
