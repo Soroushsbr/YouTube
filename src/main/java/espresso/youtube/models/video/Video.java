@@ -9,6 +9,8 @@ public class Video extends ClassInfo {
     private String channel_id;
     private String video_id;
     private String owner_id;
+    private String data_type;
+    private int views, n_likes;
     public Video(){
         super.className = "video";
     }
@@ -29,6 +31,16 @@ public class Video extends ClassInfo {
     public void setOwner_id(String owner_id) {
         this.owner_id = owner_id;
     }
+    public void setData_type(String data_type) {
+        this.data_type = data_type;
+    }
+    public void setViews(int views) {
+        this.views = views;
+    }
+    public void setN_likes(int n_likes) {
+        this.n_likes = n_likes;
+    }
+
     //------------------ getters -----------------------
     public String getTitle() {
         return title;
@@ -45,5 +57,13 @@ public class Video extends ClassInfo {
     public String getOwner_id() {
         return owner_id;
     }
-
+    public String getData_type() {
+        return data_type;
+    }
+    public int getViews() {
+        return views;
+    }
+    public int getN_likes() {
+        return n_likes;
+    }
 }

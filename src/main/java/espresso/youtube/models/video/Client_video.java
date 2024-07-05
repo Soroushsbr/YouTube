@@ -17,6 +17,36 @@ public class Client_video {
     public Client_video(DataOutputStream out){
         this.out = out;
     }
+
+    public void change_video_info(String video_id, String new_title, String new_description, int request_id){
+        video.setRequest("change_video_info");
+        video.setRequest_id(request_id);
+        video.setTitle(new_title);
+        video.setDescription(new_description);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void search(String text, int request_id){
+        video.setRequest("search");
+        video.setRequest_id(request_id);
+        video.setTitle(text);
+        send_request();
+    }
+    public void like(String video_id, String user_id, int request_id){
+        video.setRequest("like");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void dislike(String video_id, String user_id, int request_id){
+        video.setRequest("dislike");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+
     public void upload_media(File mediaFile, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8002);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
@@ -94,18 +124,43 @@ public class Client_video {
 
         return tempFile;
     }
-    public void send_video_info(String owner_id, String title, String description, String channel_id, int request_id){
+    public void send_video_info(String owner_id, String title, String description, String channel_id, String data_type, int request_id){// data type added
         video.setRequest("send_video_info");
         video.setRequest_id(request_id);
         video.setOwner_id(owner_id);
         video.setTitle(title);
         video.setDescription(description);
         video.setChannel_id(channel_id);
+        video.setData_type(data_type);
+    }
+    public void change_channel_photo(String channel_id, String data_type, int request_id){
+        video.setRequest("change_channel_photo");
+        video.setRequest_id(request_id);
+        video.setChannel_id(channel_id);
+        video.setData_type(data_type);
+    }
+    public void change_profile_photo(String user_id, String data_type, int request_id){
+        video.setRequest("change_profile_photo");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setData_type(data_type);
+    }
+    public void change_thumbnail(String video_id, String data_type, int request_id){
+        video.setRequest("change_thumbnail");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        video.setData_type(data_type);
+    }
+    public void change_playlist_photo(String video_id, String data_type, int request_id){
+        video.setRequest("change_playlist_photo");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        video.setData_type(data_type);
     }
     public void get_video_info(String videoID , int request_id){
+        video.setRequest("get_video_info");
         video.setRequest_id(request_id);
         video.setVideo_id(videoID);
-        video.setRequest("get_video_info");
         send_request();
     }
 

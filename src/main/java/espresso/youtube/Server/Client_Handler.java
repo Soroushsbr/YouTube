@@ -5,8 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Server_account;
+import espresso.youtube.models.channel.Server_channel;
+import espresso.youtube.models.comment.Server_comment;
 import espresso.youtube.models.notification.Notification;
 import espresso.youtube.models.notification.Server_notification;
+import espresso.youtube.models.playlist.Server_playlist;
 import espresso.youtube.models.video.Server_video;
 
 import java.io.DataInputStream;
@@ -69,6 +72,18 @@ public class Client_Handler implements Runnable {
                     Server_video server_video = mapper.readValue(jsonString, Server_video.class);
                     server_video.setNotification(notification);
                     serverResponse = server_video.handle_request();
+                }else if(className.equals("channel")){
+                    Server_channel server_channel = mapper.readValue(jsonString, Server_channel.class);
+                    server_channel.setNotification(notification);
+                    serverResponse = server_channel.handle_request();
+                }else if(className.equals("comment")){
+                    Server_comment server_comment = mapper.readValue(jsonString, Server_comment.class);
+                    server_comment.setNotification(notification);
+                    serverResponse = server_comment.handle_request();
+                }else if(className.equals("playlist")){
+                    Server_playlist server_playlist = mapper.readValue(jsonString, Server_playlist.class);
+                    server_playlist.setNotification(notification);
+                    serverResponse = server_playlist.handle_request();
                 }
 
 
