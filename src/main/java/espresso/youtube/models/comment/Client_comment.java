@@ -15,6 +15,41 @@ public class Client_comment {
         this.out = out;
     }
 
+    public void put_comment(String message, String post_id, int request_id){
+        comment.setRequest("put_comment");
+        comment.setRequest_id(request_id);
+        comment.setMessage(message);
+        comment.setPost_id(post_id);
+        send_request();
+    }
+    public void reply_comment(String message, String post_id, String comment_id, int request_id){
+        comment.setRequest("reply_comment");
+        comment.setRequest_id(request_id);
+        comment.setMessage(message);
+        comment.setPost_id(post_id);
+        comment.setComment_id(comment_id);
+        send_request();
+    }
+    public void edit_comment(String new_message, String comment_id, int request_id){
+        comment.setRequest("edit_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setMessage(new_message);
+        send_request();
+    }
+    public void delete_comment(String comment_id, int request_id){
+        comment.setRequest("delete_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        send_request();
+    }
+    public void load_comments(String post_id, int request_id){
+        comment.setRequest("load_comments");
+        comment.setRequest_id(request_id);
+        comment.setPost_id(post_id);
+        send_request();
+    }
+
 
     private void send_request(){
         try {
@@ -23,10 +58,8 @@ public class Client_comment {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } finally {
-            erase_info();
+            comment = new Comment();
         }
-    }
-    private void erase_info(){
     }
 
 }
