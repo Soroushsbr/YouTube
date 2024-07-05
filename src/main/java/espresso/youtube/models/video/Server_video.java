@@ -22,8 +22,13 @@ public class Server_video extends Video {
             return change_profile_photo();
         } else if(request.equals("change_thumbnail")) {
             return change_thumbnail();
-
+        } else if(request.equals("change_playlist_photo")) {
+            return change_playlist_photo();
         }
+        return null;
+    }
+
+    private ServerResponse change_playlist_photo(){
         return null;
     }
     private ServerResponse change_thumbnail(){

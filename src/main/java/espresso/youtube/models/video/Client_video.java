@@ -130,6 +130,12 @@ public class Client_video {
         video.setVideo_id(video_id);
         video.setData_type(data_type);
     }
+    public void change_playlist_photo(String video_id, String data_type, int request_id){
+        video.setRequest("change_playlist_photo");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        video.setData_type(data_type);
+    }
     public void get_video_info(String videoID , int request_id){
         video.setRequest("get_video_info");
         video.setRequest_id(request_id);
