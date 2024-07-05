@@ -17,6 +17,15 @@ public class Client_video {
     public Client_video(DataOutputStream out){
         this.out = out;
     }
+
+    public void change_video_info(String video_id, String new_title, String new_description, int request_id){
+        video.setRequest("change_video_info");
+        video.setRequest_id(request_id);
+        video.setTitle(new_title);
+        video.setDescription(new_description);
+        video.setVideo_id(video_id);
+        send_request();
+    }
     public void upload_media(File mediaFile, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8002);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());

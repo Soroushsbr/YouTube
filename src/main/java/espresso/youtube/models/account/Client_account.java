@@ -31,6 +31,34 @@ public class Client_account {
         account.setGmail(email);
         send_request();
     }
+    public void change_name(String new_name, String user_id, int request_id){
+        account.setRequest("change_name");
+        account.setRequest_id(request_id);
+        account.setName(new_name);
+        account.setId(user_id);
+        send_request();
+    }
+    public void change_email(String new_email, String user_id, int request_id){
+        account.setRequest("change_email");
+        account.setRequest_id(request_id);
+        account.setGmail(new_email);
+        account.setId(user_id);
+        send_request();
+    }
+    public void change_password(String new_password, String user_id, int request_id){
+        account.setRequest("change_password");
+        account.setRequest_id(request_id);
+        account.setPassword(new_password);
+        account.setId(user_id);
+        send_request();
+    }
+    public void change_username(String new_username, String user_id, int request_id){
+        account.setRequest("change_username");
+        account.setRequest_id(request_id);
+        account.setUsername(new_username);
+        account.setId(user_id);
+        send_request();
+    }
 
     private void send_request(){
         try {
@@ -39,15 +67,7 @@ public class Client_account {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } finally {
-            erase_info();
+            account = new Account();
         }
     }
-    private void erase_info(){
-        account.setRequest(null);
-        account.setUsername(null);
-        account.setPassword(null);
-        account.setId("");
-        account.setName(null);
-    }
-
 }

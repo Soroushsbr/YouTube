@@ -12,10 +12,30 @@ public class Server_account extends Account {
             return login();
         } else if (request.equals("sign_up")) {
             return sign_up();
+        } else if (request.equals("change_name")) {
+            return sign_up();
+        } else if (request.equals("change_email")) {
+            return sign_up();
+        } else if (request.equals("change_password")) {
+            return sign_up();
+        } else if (request.equals("change_username")) {
+            return sign_up();
         }
         return null;
     }
 
+    private ServerResponse change_name(){
+        return null;
+    }
+    private ServerResponse change_email(){
+        return null;
+    }
+    private ServerResponse change_password(){
+        return null;
+    }
+    private ServerResponse change_username(){
+        return null;
+    }
     private ServerResponse login() {
         System.out.println("[SERVER] : user wants to login");
         System.out.println("username : " + super.getUsername());
