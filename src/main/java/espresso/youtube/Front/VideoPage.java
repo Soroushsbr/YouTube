@@ -1,7 +1,8 @@
 package espresso.youtube.Front;
 
-import espresso.youtube.Client.Client;
+
 import espresso.youtube.models.video.Client_video;
+import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -16,20 +17,19 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -39,11 +39,19 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import static espresso.youtube.Front.LoginMenu.client;
+import static espresso.youtube.Front.LoginMenu.darkmode;
 
 public class VideoPage implements Initializable {
-    String videoID;
+    private MediaPlayer mediaPlayer;
+    private Video video;
+    @FXML
+    AnchorPane parent;
     @FXML
     VBox leftVbox;
+    @FXML
+    AnchorPane guidePane;
+    @FXML
+    Rectangle backWindow;
     @FXML
     AnchorPane actionPane;
     @FXML
@@ -53,13 +61,74 @@ public class VideoPage implements Initializable {
     @FXML
     TextArea addCommentArea;
     @FXML
-    HBox addCommentBox;
-    private MediaPlayer mediaPlayer;
+    VBox addCommentBox;
+    @FXML
+    Text descriptionTxt;
+    @FXML
+    Text titleTxt;
+    @FXML
+    Button commentBtn;
+    @FXML
+    AnchorPane profPane;
+    @FXML
+    AnchorPane notifPane;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeTextarea(addCommentArea , addCommentBox);
+        appendTheme();
     }
-    public void setVID(String videoID) throws IOException {
+    public void selectNotif(){
+        profPane.setVisible(false);
+        if(notifPane.isVisible()){
+            notifPane.setVisible(false);
+        }else {
+            notifPane.setVisible(true);
+        }
+    }
+
+    public void selectProf(){
+        notifPane.setVisible(false);
+        if(profPane.isVisible()){
+            profPane.setVisible(false);
+        }else {
+            profPane.setVisible(true);
+        }
+    }
+
+    public void logout(ActionEvent event){
+        client.setUser_id("");
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login_Menu.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+
+    public void changeTheme(){
+        darkmode = !darkmode;
+        appendTheme();
+        profPane.setVisible(false);
+    }
+    public void appendTheme(){
+        //todo: database changes
+        if(darkmode){
+            parent.getStylesheets().clear();
+            parent.getStylesheets().add(this.getClass().getResource("Style/Dark/Video.css").toExternalForm());
+        }else{
+            parent.getStylesheets().clear();
+            parent.getStylesheets().add(this.getClass().getResource("Style/Light/Video.css").toExternalForm());
+        }
+    }
+    public void setVID(Video video) throws IOException {
+        this.video = video;
         //to set hover action to show video icons when mouse hovers it
         Client_video cv = new Client_video(client.getOut());
         client.setReq_id();
@@ -67,8 +136,7 @@ public class VideoPage implements Initializable {
         Task<File> task = new Task<File>() {
             @Override
             protected File call() throws Exception {
-
-                return Client_video.get_media(videoID, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), req);
+                return Client_video.get_media(video.getVideo_id(), video.getOwner_id() ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), req);
             }
         };
         task.setOnSucceeded(e ->{
@@ -78,6 +146,8 @@ public class VideoPage implements Initializable {
         });
         new Thread(task).start();
 
+        titleTxt.setText(video.getTitle());
+        descriptionTxt.setText(video.getDescription());
     }
 
     public void hoverVideo(){
@@ -94,25 +164,7 @@ public class VideoPage implements Initializable {
         );
         timeline.play();
     }
-    @FXML
-    ScrollPane dashboardPane;
-    public void showDash(){
-        if(dashboardPane.isVisible()){
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(dashboardPane.layoutXProperty(), dashboardPane.getLayoutX())),
-                    new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), -200))
-            );
-            timeline.play();
-            timeline.setOnFinished(event -> dashboardPane.setVisible(false));
-        }else {
-            dashboardPane.setVisible(true);
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(dashboardPane.layoutXProperty(), dashboardPane.getLayoutX())),
-                    new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), 0))
-            );
-            timeline.play();
-        }
-    }
+
 
     //this method place the video and plays it(this needs the video from database)
     public void appendVideo(Media media, AnchorPane videoPane){
@@ -226,26 +278,48 @@ public class VideoPage implements Initializable {
         );
     }
 
-    public void initializeTextarea(TextArea textArea , HBox hbox){
-        textArea.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            // Check if the user pressed the Enter key
-            if (event.getCode() == KeyCode.ENTER) {
-                // Update the HBox's height to match the text area's height
-                hbox.setPrefHeight(hbox.getPrefHeight() + 21.0);
+    public void initializeTextarea(TextArea textArea , VBox vbox){
+        textArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                // Enable button if TextArea is not empty, disable otherwise
+                commentBtn.setDisable(newValue.trim().isEmpty());
+            }
+        });
+        textArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                adjustVBoxHeight(textArea , vbox);
             }
         });
 
-//        textArea.heightProperty().addListener(new ChangeListener<Number>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//                // Update the HBox's height to match the text area's height
-//                hbox.setPrefHeight(50.0 + newValue.doubleValue());
-//            }
-//        });
-
     }
 
-    public void addComment() throws IOException {
+    private void adjustVBoxHeight(TextArea textArea , VBox vbox) {
+        // Calculate preferred height based on text content
+        double prefHeight = computeTextHeight(textArea.getText(), textArea.getFont(), textArea.getWidth());
+
+        // Set VBox preferred height to accommodate TextArea
+        vbox.setPrefHeight(prefHeight + 20);
+    }
+
+    private double computeTextHeight(String text, javafx.scene.text.Font font, double width) {
+        // Helper method to compute text height based on font and content
+        javafx.scene.text.Text helper = new javafx.scene.text.Text();
+        helper.setFont(font);
+        helper.setText(text);
+        helper.setWrappingWidth(width);
+        return helper.getLayoutBounds().getHeight();
+    }
+    public void openEmoji(){
+    }
+    public void addComment(){
+        String content = addCommentArea.getText();
+    }
+    public void cancelComment(){
+        addCommentArea.clear();
+    }
+    public void appendComments() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
         VBox commentBox = loader.load();
 //        ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText("hello \n bye");
@@ -266,6 +340,23 @@ public class VideoPage implements Initializable {
             stage.show();
         }catch (IOException ignored){
         }
+    }
+    public void showGuide(){
+        backWindow.setVisible(true);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(guidePane.layoutXProperty(), guidePane.getLayoutX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(guidePane.layoutXProperty(), 0))
+        );
+        timeline.play();
+    }
+
+    public void hideGuide(){
+        backWindow.setVisible(false);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(guidePane.layoutXProperty(), guidePane.getLayoutX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(guidePane.layoutXProperty(), -200))
+        );
+        timeline.play();
     }
     public void switchToMainPage(ActionEvent event){
         mediaPlayer.stop();

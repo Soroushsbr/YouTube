@@ -1,6 +1,10 @@
 .youtube_logo {
     -fx-shape : "M219.044,391.269916 L219.0425,377.687742 L232.0115,384.502244 L219.044,391.269916 Z M247.52,375.334163 C247.52,375.334163 247.0505,372.003199 245.612,370.536366 C243.7865,368.610299 241.7405,368.601235 240.803,368.489448 C234.086,368 224.0105,368 224.0105,368 L223.9895,368 C223.9895,368 213.914,368 207.197,368.489448 C206.258,368.601235 204.2135,368.610299 202.3865,370.536366 C200.948,372.003199 200.48,375.334163 200.48,375.334163 C200.48,375.334163 200,379.246723 200,383.157773 L200,386.82561 C200,390.73817 200.48,394.64922 200.48,394.64922 C200.48,394.64922 200.948,397.980184 202.3865,399.447016 C204.2135,401.373084 206.612,401.312658 207.68,401.513574 C211.52,401.885191 224,402 224,402 C224,402 234.086,401.984894 240.803,401.495446 C241.7405,401.382148 243.7865,401.373084 245.612,399.447016 C247.0505,397.980184 247.52,394.64922 247.52,394.64922 C247.52,394.64922 248,390.73817 248,386.82561 L248,383.157773 C248,379.246723 247.52,375.334163 247.52,375.334163 L247.52,375.334163 Z";
 }
+.youtube_text{
+    -fx-fill: white;
+    -fx-font-family: "Roboto Condensed";
+}
 
 .back{
     -fx-background-color: #0f0f0f;
@@ -20,20 +24,17 @@
 }
 .button{
     -fx-background-color: transparent;
+    -fx-text-fill: white;
 }
 .button:hover{
     -fx-background-color: #272727;
     -fx-background-radius: 10;
+    -fx-text-fill: white;
 }
 .prof{
     -fx-stroke: transparent;
     -fx-fill: black;
 }
-@keyframes scaleOnHover {
-
-}
-
-
 
 .prof:hover{
     -fx-stroke: white;
@@ -46,6 +47,31 @@
 .dashboard {
     -fx-background-color: white;
     -fx-shape: "M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z";
+}
+
+.searchBar{
+    -fx-background-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color: #414141;
+    -fx-border-radius: 20 0 0 20;
+    -fx-padding: 10;
+    -fx-text-inner-color: white;
+}
+.searchBar:hover{
+    -fx-background-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color: white;
+    -fx-border-radius: 20 0 0 20;
+    -fx-padding: 10;
+    -fx-text-inner-color: white;
+}
+.searchBar:focused{
+    -fx-background-color: transparent;
+    -fx-border-width: 1;
+    -fx-border-color: #2424ff;
+    -fx-border-radius: 20 0 0 20;
+    -fx-padding: 10;
+    -fx-text-inner-color: white;
 }
 .scroll-bar:vertical .thumb {
     -fx-background-color: #aaaaaa;
@@ -79,7 +105,18 @@
 .scroll-bar:horizontal .track {
     -fx-background-color: #0f0f0f;
 }
-
+.logout{
+    -fx-background-color: white;
+    -fx-shape: "M20 3v18H8v-1h11V4H8V3h12zm-8.9 12.1.7.7 4.4-4.4L11.8 7l-.7.7 3.1 3.1H3v1h11.3l-3.2 3.3z";
+}
+.theme{
+    -fx-background-color: white;
+    -fx-shape: "M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z";
+}
+.setting{
+    -fx-background-color: white;
+    -fx-shape: "M12 9.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5m0-1c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zM13.22 3l.55 2.2.13.51.5.18c.61.23 1.19.56 1.72.98l.4.32.5-.14 2.17-.62 1.22 2.11-1.63 1.59-.37.36.08.51c.05.32.08.64.08.98s-.03.66-.08.98l-.08.51.37.36 1.63 1.59-1.22 2.11-2.17-.62-.5-.14-.4.32c-.53.43-1.11.76-1.72.98l-.5.18-.13.51-.55 2.24h-2.44l-.55-2.2-.13-.51-.5-.18c-.6-.23-1.18-.56-1.72-.99l-.4-.32-.5.14-2.17.62-1.21-2.12 1.63-1.59.37-.36-.08-.51c-.05-.32-.08-.65-.08-.98s.03-.66.08-.98l.08-.51-.37-.36L3.6 8.56l1.22-2.11 2.17.62.5.14.4-.32c.53-.44 1.11-.77 1.72-.99l.5-.18.13-.51.54-2.21h2.44M14 2h-4l-.74 2.96c-.73.27-1.4.66-2 1.14l-2.92-.83-2 3.46 2.19 2.13c-.06.37-.09.75-.09 1.14s.03.77.09 1.14l-2.19 2.13 2 3.46 2.92-.83c.6.48 1.27.87 2 1.14L10 22h4l.74-2.96c.73-.27 1.4-.66 2-1.14l2.92.83 2-3.46-2.19-2.13c.06-.37.09-.75.09-1.14s-.03-.77-.09-1.14l2.19-2.13-2-3.46-2.92.83c-.6-.48-1.27-.87-2-1.14L14 2z";
+}
 .create {
     -fx-background-color: white;
     -fx-shape: "M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z";
@@ -138,5 +175,58 @@
     -fx-background-color: transparent ;
 }
 
+.search_button{
+    -fx-border-color:#414141 ;
+    -fx-background-color: #272727;
+    -fx-background-radius: 0 20 20 0;
+    -fx-border-radius: 0 20 20 0;
+    -fx-cursor: hand;
+}
+.search_button:hover{
+    -fx-border-color:#414141 ;
+    -fx-background-color: #272727;
+    -fx-background-radius: 0 20 20 0;
+    -fx-border-radius: 0 20 20 0;
+    -fx-cursor: hand;
+}
+.playlist_background{
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-color: #737390;
+}
 
+.login_Button{
+    -fx-background-color: transparent;
+    -fx-border-radius: 10;
+    -fx-border-color: white;
+    -fx-border-width: 1.5;
+}
+.login_Button:hover{
+    -fx-background-color: white;
+    -fx-border-radius: 10;
+    -fx-border-color: white;
+    -fx-border-width: 1.5;
+    -fx-text-fill: red;
+}
+.login_Fields{
+    -fx-border-radius: 20;
+    -fx-background-color: transparent;
+    -fx-border-width: 1.5;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
+.login_Fields:hover{
+    -fx-border-color: #dbc6f1;
+    -fx-background-color: rgba(255, 255, 255, 0.01);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-border-width: 1.5;
+}
+.login_Fields:focused{
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.8), 10, 0, 0, 0);
+    -fx-border-width: 2;
+    -fx-border-color: #dbc6f1;
+    -fx-background-color: rgba(255, 255, 255, 0.01);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+}
 

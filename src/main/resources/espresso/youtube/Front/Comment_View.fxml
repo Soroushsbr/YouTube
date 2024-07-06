@@ -11,17 +11,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<VBox fillWidth="false" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/video_page.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fillWidth="false" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/Video.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox focusTraversable="true" stylesheets="@Style/Dark/video_page.css">
+      <HBox focusTraversable="true" stylesheets="@Style/Dark/Video.css">
          <children>
             <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" HBox.hgrow="ALWAYS">
                <children>
-                  <AnchorPane prefHeight="13.0" prefWidth="85.0" />
                   <Circle fill="WHITE" radius="20.0" stroke="WHITE" strokeType="INSIDE" styleClass="prof">
                      <VBox.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="20.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </Circle>
                </children>

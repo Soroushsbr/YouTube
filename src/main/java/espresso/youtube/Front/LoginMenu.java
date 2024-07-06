@@ -59,6 +59,7 @@ public class LoginMenu implements Initializable {
     private Stage stage;
     private Scene scene;
     public static Client client;
+    public static boolean darkmode;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -113,6 +114,7 @@ public class LoginMenu implements Initializable {
             applyShakeEffect(singupPasswordTF);
         }
         if(!username.isEmpty() && !gmail.isEmpty() && !password.isEmpty()) {
+            darkmode = true;
             //here it validate the data from database without lag
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
@@ -156,19 +158,6 @@ public class LoginMenu implements Initializable {
     }
 
 
-    public void switchToMainPage(ActionEvent event, Client client){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
-            root = loader.load();
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
-            //set client for next stage
-
-            stage.show();
-        }catch (IOException ignored){
-        }
-    }
 
 
     public void logIn(ActionEvent event) {
@@ -185,6 +174,7 @@ public class LoginMenu implements Initializable {
 
         //checks for if the user can log in or not
         if(!username.isEmpty() && !password.isEmpty()) {
+            darkmode = true;
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
@@ -216,6 +206,19 @@ public class LoginMenu implements Initializable {
             });
 
             new Thread(task).start();
+        }
+    }
+    public void switchToMainPage(ActionEvent event, Client client){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
         }
     }
 
@@ -297,5 +300,4 @@ public class LoginMenu implements Initializable {
             changeOption.setText("Sign Up");
         }
     }
-    //todo: make animation for when user input the wrong pass or name.
 }
