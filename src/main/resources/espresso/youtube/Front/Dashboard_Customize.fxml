@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="803.0" prefWidth="1019.0" styleClass="dark_back" stylesheets="@Style/Dark/Dashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.DashCustom">
+<AnchorPane prefHeight="803.0" prefWidth="1019.0" styleClass="dark2_back" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.DashCustom">
    <children>
       <Line endX="916.0" layoutX="101.0" layoutY="62.0" startX="-100.0" stroke="#909090" strokeWidth="0.5" />
       <Button layoutX="14.0" layoutY="23.0" mnemonicParsing="false" onAction="#showBrand" prefHeight="39.0" prefWidth="106.0" styleClass="topBtn" text="Branding">
@@ -50,7 +50,7 @@
                         <Font name="Roboto Bold" size="12.0" />
                      </font>
                   </Text>
-                  <VBox alignment="CENTER" layoutX="23.0" layoutY="56.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark2_back">
+                  <VBox alignment="CENTER" layoutX="23.0" layoutY="56.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
                      <children>
                         <Circle radius="73.0" stroke="#ae4646" strokeType="INSIDE" strokeWidth="0.0" />
                      </children>
@@ -79,7 +79,7 @@
                         <Font name="Roboto Bold" size="12.0" />
                      </font>
                   </Text>
-                  <VBox alignment="CENTER" layoutX="23.0" layoutY="62.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark2_back">
+                  <VBox alignment="CENTER" layoutX="23.0" layoutY="62.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
                      <children>
                         <ImageView fitHeight="165.0" fitWidth="291.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -115,9 +115,9 @@
                         <Font name="Roboto Bold" size="12.0" />
                      </font>
                   </Text>
-                  <VBox alignment="CENTER" layoutX="23.0" layoutY="59.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark2_back">
+                  <VBox alignment="CENTER" layoutX="23.0" layoutY="59.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
                      <children>
-                        <ImageView fitHeight="170.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="170.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true" styleClass="dark_back">
                            <image>
                               <Image url="@Images/watermark.png" />
                            </image>

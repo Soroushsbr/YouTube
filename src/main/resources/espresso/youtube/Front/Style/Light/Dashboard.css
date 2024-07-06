@@ -1,31 +1,33 @@
 .button{
     -fx-background-color: transparent;
     -fx-background-radius: 10;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 .button:hover{
-    -fx-background-color: #101010;
+    -fx-background-color: #f2f2f2;
     -fx-background-radius: 10;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
+}
+.shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(44, 44, 44, 0.8), 10, 0, 0, 0);
 }
 .logout{
-    -fx-background-color: white;
+    -fx-background-color: black;
     -fx-shape: "M20 3v18H8v-1h11V4H8V3h12zm-8.9 12.1.7.7 4.4-4.4L11.8 7l-.7.7 3.1 3.1H3v1h11.3l-3.2 3.3z";
 }
 .theme{
-    -fx-background-color: white;
+    -fx-background-color: black;
     -fx-shape: "M12 22C10.93 22 9.86998 21.83 8.83998 21.48L7.41998 21.01L8.83998 20.54C12.53 19.31 15 15.88 15 12C15 8.12 12.53 4.69 8.83998 3.47L7.41998 2.99L8.83998 2.52C9.86998 2.17 10.93 2 12 2C17.51 2 22 6.49 22 12C22 17.51 17.51 22 12 22ZM10.58 20.89C11.05 20.96 11.53 21 12 21C16.96 21 21 16.96 21 12C21 7.04 16.96 3 12 3C11.53 3 11.05 3.04 10.58 3.11C13.88 4.81 16 8.21 16 12C16 15.79 13.88 19.19 10.58 20.89Z";
 }
 .setting{
-    -fx-background-color: white;
-    -fx-shape: "M12 9.5c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5-2.5-1.12-2.5-2.5 1.12-2.5 2.5-2.5m0-1c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zM13.22 3l.55 2.2.13.51.5.18c.61.23 1.19.56 1.72.98l.4.32.5-.14 2.17-.62 1.22 2.11-1.63 1.59-.37.36.08.51c.05.32.08.64.08.98s-.03.66-.08.98l-.08.51.37.36 1.63 1.59-1.22 2.11-2.17-.62-.5-.14-.4.32c-.53.43-1.11.76-1.72.98l-.5.18-.13.51-.55 2.24h-2.44l-.55-2.2-.13-.51-.5-.18c-.6-.23-1.18-.56-1.72-.99l-.4-.32-.5.14-2.17.62-1.21-2.12 1.63-1.59.37-.36-.08-.51c-.05-.32-.08-.65-.08-.98s.03-.66.08-.98l.08-.51-.37-.36L3.6 8.56l1.22-2.11 2.17.62.5.14.4-.32c.53-.44 1.11-.77 1.72-.99l.5-.18.13-.51.54-2.21h2.44M14 2h-4l-.74 2.96c-.73.27-1.4.66-2 1.14l-2.92-.83-2 3.46 2.19 2.13c-.06.37-.09.75-.09 1.14s.03.77.09 1.14l-2.19 2.13 2 3.46 2.92-.83c.6.48 1.27.87 2 1.14L10 22h4l.74-2.96c.73-.27 1.4-.66 2-1.14l2.92.83 2-3.46-2.19-2.13c.06-.37.09-.75.09-1.14s-.03-.77-.09-1.14l2.19-2.13-2-3.46-2.92.83c-.6-.48-1.27-.87-2-1.14L14 2z";
+    -fx-background-color: black;
 }
 .create {
-    -fx-background-color: white;
+    -fx-background-color: black;
     -fx-shape: "M14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2zm3-7H3v12h14v-6.39l4 1.83V8.56l-4 1.83V6m1-1v3.83L22 7v8l-4-1.83V19H2V5h16z";
 }
 .dashboard {
-    -fx-background-color: white;
+    -fx-background-color: black;
     -fx-shape: "M 5 8 A 2.0002 2.0002 0 1 0 5 12 L 45 12 A 2.0002 2.0002 0 1 0 45 8 L 5 8 z M 5 23 A 2.0002 2.0002 0 1 0 5 27 L 45 27 A 2.0002 2.0002 0 1 0 45 23 L 5 23 z M 5 38 A 2.0002 2.0002 0 1 0 5 42 L 45 42 A 2.0002 2.0002 0 1 0 45 38 L 5 38 z";
 }
 .upload{
@@ -37,100 +39,121 @@
     -fx-background-color: #909090;
     -fx-shape: "M12.7,12l6.6,6.6l-0.7,0.7L12,12.7l-6.6,6.6l-0.7-0.7l6.6-6.6L4.6,5.4l0.7-0.7l6.6,6.6l6.6-6.6l0.7,0.7L12.7,12z";
 }
-.scroll-bar:vertical .thumb {
-    -fx-background-color: #aaaaaa;
-}
+
 .shadow{
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 20, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(55, 55, 55, 0.8), 10, 0, 0, 0);
 }
 .colored_text{
-    -fx-fill: #d0d0d0;
+    -fx-fill: #9e9e9e;
     -fx-line-spacing: 5;
 }
 .dark_back{
-    -fx-background-color:  #282828;
+    -fx-background-color: #ededed;
 }
 .dark2_back{
-    -fx-background-color:  #1f1f1f;
+    -fx-background-color:  white;
 }
 
 .search{
-    -fx-background-color: white;
+    -fx-background-color: black;
     -fx-shape: "M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z";
 }
 .GOchannel_svg{
     -fx-shape: "M21,21H3V3h9v1H4v16h16v-8h1V21z M15,3v1h4.32l-8.03,8.03L12,12.74l8-8V9h1V3H15z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .dashboard_svg{
     -fx-shape: "M10 16V20H4V16H10ZM11 15H3V21H11V15ZM20 4V8H14V4H20ZM21 3H13V9H21V3ZM3 3V13H11V3H3ZM10 12H4V4H10V12ZM13 11V21H21V11H13ZM20 20H14V12H20V20Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .content_svg{
     -fx-shape: "M6 2.99982V17.9998H21V2.99982H6ZM11 13.9998V6.99982L17 10.4998L11 13.9998Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .back_content_svg{
     -fx-shape: "M4 5.99982H3V20.9998H18V19.9998H4V5.99982Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .comments_svg{
     -fx-shape: "M8 7H16V9H8V7ZM8 13H13V11H8V13ZM5 3V16H15H15.41L15.7 16.29L19 19.59V3H5ZM4 2H20V22L15 17H4V2Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .earn_svg{
     -fx-shape: "M8 7V10C8 10.55 8.45 11 9 11H15C16.1 11 17 11.9 17 13V17C17 18.1 16.1 19 15 19H13V21H11V19H7V18H15C15.55 18 16 17.55 16 17V13C16 12.45 15.55 12 15 12H9C7.9 12 7 11.1 7 10V7C7 5.9 7.9 5 9 5H11V3H13V5H17V6H9C8.45 6 8 6.45 8 7Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .audio_svg{
     -fx-shape: "M16 6L16 8L14 8L14 13C14 14.1 13.1 15 12 15C10.9 15 10 14.1 10 13C10 11.9 10.9 11 12 11C12.37 11 12.7 11.11 13 11.28L13 6L16 6ZM18 20L4 20L4 6L3 6L3 21L18 21L18 20ZM21 3L6 3L6 18L21 18L21 3ZM7 4L20 4L20 17L7 17L7 4Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 
 .customisation_svg{
     -fx-shape: "M8.81 6.03L10.91 7.21L9.74 5.1L10.91 3L8.81 4.18L6.71 3L7.89 5.1L6.71 7.2L8.81 6.03ZM18.9 14.26L16.8 13.08L17.98 15.18L16.8 17.28L18.9 16.1L21 17.28L19.82 15.18L21 13.08L18.9 14.26ZM21 3L18.9 4.18L16.8 3L17.98 5.1L16.8 7.2L18.9 6.02L21 7.2L19.82 5.1L21 3ZM17.14 10.02L14 6.85L3 17.85L6.15 21L17.14 10.02ZM13.72 12.06L11.94 10.28L13.99 8.23L15.77 10.01L13.72 12.06Z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 .setting_svg{
-    -fx-background-color: white;
+    -fx-background-color: black;
     -fx-shape: "M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,8c-2.21,0-4,1.79-4,4s1.79,4,4,4s4-1.79,4-4 S14.21,8,12,8L12,8z M13.22,3l0.55,2.2l0.13,0.51l0.5,0.18c0.61,0.23,1.19,0.56,1.72,0.98l0.4,0.32l0.5-0.14l2.17-0.62l1.22,2.11 l-1.63,1.59l-0.37,0.36l0.08,0.51c0.05,0.32,0.08,0.64,0.08,0.98s-0.03,0.66-0.08,0.98l-0.08,0.51l0.37,0.36l1.63,1.59l-1.22,2.11 l-2.17-0.62l-0.5-0.14l-0.4,0.32c-0.53,0.43-1.11,0.76-1.72,0.98l-0.5,0.18l-0.13,0.51L13.22,21h-2.44l-0.55-2.2l-0.13-0.51 l-0.5-0.18C9,17.88,8.42,17.55,7.88,17.12l-0.4-0.32l-0.5,0.14l-2.17,0.62L3.6,15.44l1.63-1.59l0.37-0.36l-0.08-0.51 C5.47,12.66,5.44,12.33,5.44,12s0.03-0.66,0.08-0.98l0.08-0.51l-0.37-0.36L3.6,8.56l1.22-2.11l2.17,0.62l0.5,0.14l0.4-0.32 C8.42,6.45,9,6.12,9.61,5.9l0.5-0.18l0.13-0.51L10.78,3H13.22 M14,2h-4L9.26,4.96c-0.73,0.27-1.4,0.66-2,1.14L4.34,5.27l-2,3.46 l2.19,2.13C4.47,11.23,4.44,11.61,4.44,12s0.03,0.77,0.09,1.14l-2.19,2.13l2,3.46l2.92-0.83c0.6,0.48,1.27,0.87,2,1.14L10,22h4 l0.74-2.96c0.73-0.27,1.4-0.66,2-1.14l2.92,0.83l2-3.46l-2.19-2.13c0.06-0.37,0.09-0.75,0.09-1.14s-0.03-0.77-0.09-1.14l2.19-2.13 l-2-3.46L16.74,6.1c-0.6-0.48-1.27-0.87-2-1.14L14,2L14,2z";
 }
 
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #aaaaaa;
+}
+
 .scroll-bar:vertical .track {
-    -fx-background-color: #0f0f0f;
+    -fx-background-color: white;
 }
 
 .scroll-bar:vertical > .increment-button,
 .scroll-bar:vertical > .decrement-button {
-    -fx-background-color:  #0f0f0f;
-    -fx-border-color: #0f0f0f;
+    -fx-background-color:  white;
+    -fx-border-color: white;
     -fx-border-width: 3;
     -fx-padding: -2;
 }
 
 .scroll-bar:horizontal > .increment-button,
 .scroll-bar:horizontal > .decrement-button {
-    -fx-background-color:  #0f0f0f;
-    -fx-border-color: #0f0f0f;
+    -fx-background-color:  white;
+    -fx-border-color: white;
     -fx-border-width: 3;
     -fx-padding: -2;
 }
+
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #aaaaaa;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: #0f0f0f;
+}
 .text-field {
-    -fx-background-color:  #1f1f1f;
+    -fx-background-color:  white;
     -fx-border-color:  #4d4d4d;
     -fx-font-size: 15;
     -fx-border-radius: 3;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-padding: 5;
     -fx-font-family: Arial, sans-serif;
 }
 .text-field:hover {
-    -fx-background-color:  #1f1f1f;
-    -fx-border-color: white;
+    -fx-background-color:  white;
+    -fx-border-color: black;
     -fx-font-size: 15;
     -fx-border-radius: 3;
     -fx-border-width: 1;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
+    -fx-padding: 5;
+    -fx-font-family: Arial, sans-serif;
+}
+.text-field:focused{
+    -fx-background-color:  white;
+    -fx-border-color:  black;
+    -fx-font-size: 15;
+    -fx-border-radius: 3;
+    -fx-border-width: 1.5;
+    -fx-text-fill: black;
     -fx-padding: 5;
     -fx-font-family: Arial, sans-serif;
 }
@@ -143,36 +166,26 @@
     -fx-stroke: white;
     -fx-filll: black;
 }
-.text-field:focused{
-    -fx-background-color:  #1f1f1f;
-    -fx-border-color:  white;
-    -fx-font-size: 15;
-    -fx-border-radius: 3;
-    -fx-border-width: 1.5;
-    -fx-text-fill: white;
-    -fx-padding: 5;
-    -fx-font-family: Arial, sans-serif;
-}
 .text-area{
-    -fx-background-color:  #1f1f1f;
+    -fx-background-color:  white;
     -fx-font-size: 15;
     -fx-border-color: #4d4d4d;
     -fx-border-radius: 3;
-    -fx-text-fill: white;
-    -fx-control-inner-background:  #1f1f1f;
+    -fx-text-fill: black;
+    -fx-control-inner-background:  white;
     -fx-prompt-text-fill: #ccc;
     -fx-font-family: Arial, sans-serif;
 }
 .combo-box {
-    -fx-background-color: #2b2b2b;
+    -fx-background-color: white;
     -fx-border-color: #4d4d4d;
     -fx-border-radius: 5;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-padding: 5px;
 }
 
 .combo-box .arrow {
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 
 .combo-box .arrow-button {
@@ -180,23 +193,9 @@
 }
 
 .combo-box .list-cell {
-    -fx-background-color: #2b2b2b;
-    -fx-text-fill: white;
+    -fx-background-color: white;
+    -fx-text-fill: black;
 }
-/*.radio-background{*/
-/*    -fx-background-color: transparent;*/
-/*    -fx-border-radius: 10;*/
-/*    -fx-border-color: white;*/
-/*}*/
-/*.radio-button .radio{*/
-/*    -fx-background-color: transparent;*/
-/*    -fx-border-color: white;*/
-/*    -fx-border-radius: 100;*/
-/*    -fx-border-width: 1.5;*/
-/*}*/
-/*.radio-button:selected .radio .dot{*/
-/*    -fx-background-color: white;*/
-/*}*/
 .progress-bar > .track {
     -fx-background-color: transparent;
     -fx-text-box-border: transparent;
@@ -211,7 +210,7 @@
 }
 .upImage_svg{
     -fx-shape: "M14,13.6l2.8,3.4h-5.4l0.3-0.4L14,13.6 M8.9,14.7l1.2,1.9l0.3,0.4H7.1L8.9,14.7 M14,12l-3,4l-2-3l-4,5h14L14,12L14,12z M21,7h-2v2h-2V7h-2V5h2V3h2v2h2V7z M13,4v6v1h1h6v9H4V4H13 M14,3H3v18h18V10h-7V3L14,3z";
-    -fx-background-color: white;
+    -fx-background-color: black;
 }
 
 /* Customize the progress bar itself */
@@ -220,7 +219,7 @@
     -fx-opacity: 0.45;
     -fx-background-color: black;
     -fx-background-insets: 0, 1, 2;
-    -fx-padding: 0.416667em; /* Adjust as needed */
+    -fx-padding: 0.416667em;
 }
 
 .topBtn{
@@ -229,41 +228,42 @@
 }
 .topBtn:hover{
     -fx-background-color: transparent;
-    -fx-text-fill: white;
+    -fx-text-fill: black;
 }
 
 .lightBtn{
-    -fx-background-color: #3a3a3a;
-    -fx-text-fill: white;
+    -fx-background-color: #f2f2f2;
+    -fx-text-fill: black;
 }
 .lightBtn:hover{
-    -fx-background-color: #4f4f4f;
-    -fx-text-fill: white;
+    -fx-background-color: #dedede;
+    -fx-text-fill: black;
 }
 .colored2_text{
-    -fx-fill: white;
+    -fx-fill: black;
+    -fx-text-fill: black;
 }
 .search_field{
-    -fx-background-color: #151515;
+    -fx-background-color: #f2f2f2;
     -fx-background-radius: 20;
     -fx-border-color: transparent;
-    -fx-inner-text-color: white;
+    -fx-inner-text-color: black;
     -fx-padding: 10;
 }
 .search_field:hover{
-    -fx-background-color: #151515;
+    -fx-background-color: #f2f2f2;
     -fx-background-radius: 20;
-    -fx-border-color: white;
+    -fx-border-color: black;
     -fx-border-radius: 20;
-    -fx-inner-text-color: white;
+    -fx-inner-text-color: black;
     -fx-padding: 10;
 }
 .search_field:focused{
-    -fx-background-color: #151515;
+    -fx-background-color: #f2f2f2;
     -fx-background-radius: 20;
-    -fx-border-color: white;
+    -fx-border-color: black;
     -fx-border-radius: 20;
     -fx-border-width: 1.5;
-    -fx-inner-text-color: white;
+    -fx-inner-text-color: black;
     -fx-padding: 10;
 }

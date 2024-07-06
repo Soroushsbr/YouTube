@@ -26,6 +26,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,8 +39,11 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import static espresso.youtube.Front.LoginMenu.client;
+import static espresso.youtube.Front.LoginMenu.darkmode;
 
 public class MainPage implements Initializable {
+    @FXML
+    AnchorPane parent;
     @FXML
     VBox leftSideBox;
     @FXML
@@ -49,19 +53,18 @@ public class MainPage implements Initializable {
     @FXML
     Circle profile;
     @FXML
-    ScrollPane dashboardPane;
+    AnchorPane guidePane;
+    @FXML
+    Rectangle backWindow;
+    @FXML
+    AnchorPane profPane;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("homeVbox.fxml"));
-            AnchorPane homePane = loader.load();
-            leftSideBox.getChildren().clear();
-            leftSideBox.getChildren().add(homePane);
-            //here it sets the user profile picture
-            //I put a random picture to see if it's working
             //todo: replace the test image with the actual image
             ImagePattern pattern = new ImagePattern(new Image(getClass().getResource("Images/test.jpg").openStream()));
             profile.setFill(pattern);
+            appendTheme();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,46 +73,38 @@ public class MainPage implements Initializable {
 
 
     //to show the notifications of user
-    public void selectNotif(){
-        if(notifPane.isVisible()){
-            notifPane.setVisible(false);
-        }else {
-            notifPane.setVisible(true);
-        }
-    }
 
     //this method gets videos from server and show them to user
     public void appendVideos(){
         try {
-
             Client_video cv = new Client_video(client.getOut());
             client.setReq_id();
-            cv.get_videos_id(client.getReq_id());
+
             //todo: put this in a thread
-            String videosID;
+
             System.out.println("Waiting...");
+            cv.get_videos(client.getReq_id());
+            ArrayList<Video> videos ;
+
             while (true) {
                 if (client.requests.get(client.getReq_id()) != null) {
-                    videosID = (String) client.requests.get(client.getReq_id()).get_part("videos_id");
+                    videos = client.requests.get(client.getReq_id()).getVideos_list();
                     break;
                 }
                 Thread.sleep(50);
             }
-            ArrayList<String> idList = new ArrayList<>(Arrays.asList(videosID.split(", ")));
             System.out.println("Done.");
 
             int i = 0;
             videosBox.getChildren().clear();
-            while (i <idList.size()) {
+            while (i <videos.size()) {
                 HBox previewBox = new HBox();
                 previewBox.setSpacing(10);
                 previewBox.getChildren().clear();
-
                 for (int j = 0; j < 3; j++) {
-                    if (i < idList.size()) {
+                    if (i < videos.size()) {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                         AnchorPane videoPane = loader.load();
-                        String id = idList.get(i);
 //
 //                        File file = Client_video.get_media(id, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 100);
 //                        Media media = new Media(file.toURI().toString());
@@ -118,13 +113,14 @@ public class MainPage implements Initializable {
 //                        mediaView.fitWidthProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).widthProperty());
 //                        mediaView.fitHeightProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).heightProperty());
 //                        ((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).getChildren().add(mediaView);
-                        ((Button)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,id));
-                        ((AnchorPane) videoPane.getChildren().get(4)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(4))));
-                        ((AnchorPane) videoPane.getChildren().get(4)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(4))));
+                        int finalI = i;
+                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(0)).setText(videos.get(finalI).getTitle());
+                        ((Button)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,videos.get(finalI)));
+                        ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
+                        ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
                         previewBox.getChildren().add(videoPane);
                         i++;
                     } else {
-                        // If the index is out of bounds, break the loop
                         break;
                     }
                 }
@@ -135,6 +131,57 @@ public class MainPage implements Initializable {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
+        }
+    }
+    public void selectNotif(){
+        profPane.setVisible(false);
+        if(notifPane.isVisible()){
+            notifPane.setVisible(false);
+        }else {
+            notifPane.setVisible(true);
+        }
+    }
+
+    public void selectProf(){
+        notifPane.setVisible(false);
+        if(profPane.isVisible()){
+            profPane.setVisible(false);
+        }else {
+            profPane.setVisible(true);
+        }
+    }
+
+    public void logout(ActionEvent event){
+        client.setUser_id("");
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login_Menu.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+
+    public void changeTheme(){
+        darkmode = !darkmode;
+        appendTheme();
+        profPane.setVisible(false);
+    }
+
+    public void appendTheme(){
+        //todo: database changes
+        if(darkmode){
+            parent.getStylesheets().clear();
+            parent.getStylesheets().add(this.getClass().getResource("Style/Dark/Main.css").toExternalForm());
+        }else{
+            parent.getStylesheets().clear();
+            parent.getStylesheets().add(this.getClass().getResource("Style/Light/Main.css").toExternalForm());
         }
     }
 
@@ -165,7 +212,7 @@ public class MainPage implements Initializable {
     }
 
 
-    public void switchToVideoPage(ActionEvent event ,String videoID){
+    public void switchToVideoPage(ActionEvent event ,Video video){
         Parent root;
         Stage stage;
         Scene scene;
@@ -173,7 +220,7 @@ public class MainPage implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
             root = loader.load();
             VideoPage videoPage = loader.getController();
-            videoPage.setVID(videoID);
+            videoPage.setVID(video);
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
@@ -182,22 +229,22 @@ public class MainPage implements Initializable {
         }
     }
 
-    public void showDash(){
-        if(dashboardPane.isVisible()){
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(dashboardPane.layoutXProperty(), dashboardPane.getLayoutX())),
-                    new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), -200))
-            );
-            timeline.play();
-            timeline.setOnFinished(event -> dashboardPane.setVisible(false));
-        }else {
-            dashboardPane.setVisible(true);
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(dashboardPane.layoutXProperty(), dashboardPane.getLayoutX())),
-                    new KeyFrame(Duration.seconds(0.2), new KeyValue(dashboardPane.layoutXProperty(), 0))
-            );
-            timeline.play();
-        }
+    public void showGuide(){
+        backWindow.setVisible(true);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(guidePane.layoutXProperty(), guidePane.getLayoutX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(guidePane.layoutXProperty(), 0))
+        );
+        timeline.play();
+    }
+
+    public void hideGuide(){
+        backWindow.setVisible(false);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(guidePane.layoutXProperty(), guidePane.getLayoutX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(guidePane.layoutXProperty(), -200))
+        );
+        timeline.play();
     }
 
     public void switchToDashboard(ActionEvent event){
