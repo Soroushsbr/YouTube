@@ -1,6 +1,7 @@
 package espresso.youtube.models.channel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import espresso.youtube.models.account.Account;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,18 +16,60 @@ public class Client_channel {
         this.out = out;
     }
 
+    public void create_channel(String owner_id, String name, String description, int request_id){
+        channel.setRequest("create_channel");
+        channel.setRequest_id(request_id);
+        channel.setOwner_id(owner_id);
+        channel.setName(name);
+        channel.setDescription(description);
+        send_request();
+    }
+    public void check_if_user_subscribed(String user_id, String channel_id, int request_id){
+        channel.setRequest("check_if_user_subscribed");
+        channel.setRequest_id(request_id);
+        channel.setOwner_id(user_id);
+        channel.setId(channel_id);
+        send_request();
+    }
+    public void number_of_subscribers(String channel_id, int request_id){
+        channel.setRequest("number_of_subscribers");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        send_request();
+    }
+    public void get_info(String channel_id, int request_id){
+        channel.setRequest("get_info");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        send_request();
+    }
+    public void delete_channel(String channel_id, int request_id){
+        channel.setRequest("delete_channel");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        send_request();
+    }
+    public void get_channels_of_account(String user_id, int request_id){
+        channel.setRequest("get_channels_of_account");
+        channel.setRequest_id(request_id);
+        channel.setOwner_id(user_id);
+        send_request();
+    }
+
     public void subscribe(String channel_id, String user_id, int request_id){
         channel.setRequest("subscribe");
         channel.setRequest_id(request_id);
         channel.setId(channel_id);
-        channel.getSubscriber_id().add(user_id);
+        channel.getFollowers().add(new Account());
+        channel.getFollowers().get(0).setId(user_id);
         send_request();
     }
     public void unsubscribe(String channel_id, String user_id, int request_id){
         channel.setRequest("unsubscribe");
         channel.setRequest_id(request_id);
         channel.setId(channel_id);
-        channel.getSubscriber_id().add(user_id);
+        channel.getFollowers().add(new Account());
+        channel.getFollowers().get(0).setId(user_id);
         send_request();
     }
     public void get_subscribers(String channel_id, int request_id){

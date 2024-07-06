@@ -15,38 +15,88 @@ public class Client_comment {
         this.out = out;
     }
 
-    public void put_comment(String message, String post_id, int request_id){
+    public void put_comment(String message, String user_id, String post_id, int request_id){
         comment.setRequest("put_comment");
         comment.setRequest_id(request_id);
         comment.setMessage(message);
+        comment.setUser_id(user_id);
         comment.setPost_id(post_id);
         send_request();
     }
-    public void reply_comment(String message, String post_id, String comment_id, int request_id){
+    public void reply_comment(String message, String user_id, String post_id, String comment_id, int request_id){
         comment.setRequest("reply_comment");
         comment.setRequest_id(request_id);
         comment.setMessage(message);
         comment.setPost_id(post_id);
+        comment.setUser_id(user_id);
         comment.setComment_id(comment_id);
         send_request();
     }
-    public void edit_comment(String new_message, String comment_id, int request_id){
+    public void edit_comment(String new_message, String user_id, String comment_id, int request_id){
         comment.setRequest("edit_comment");
         comment.setRequest_id(request_id);
         comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
         comment.setMessage(new_message);
         send_request();
     }
-    public void delete_comment(String comment_id, int request_id){
+    public void delete_comment(String comment_id, String user_id, int request_id){
         comment.setRequest("delete_comment");
         comment.setRequest_id(request_id);
         comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
         send_request();
     }
     public void load_comments(String post_id, int request_id){
         comment.setRequest("load_comments");
         comment.setRequest_id(request_id);
         comment.setPost_id(post_id);
+        send_request();
+    }
+    public void like_comment(String comment_id, String user_id, int request_id){
+        comment.setRequest("like_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
+        send_request();
+    }
+    public void dislike_comment(String comment_id, String user_id, int request_id){
+        comment.setRequest("dislike_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
+        send_request();
+    }
+    public void check_user_likes_comment(String comment_id, String user_id, int request_id){
+        comment.setRequest("check_user_likes_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
+        send_request();
+    }
+    public void check_user_dislikes_comment(String comment_id, String user_id, int request_id){
+        comment.setRequest("check_user_dislikes_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
+        send_request();
+    }
+    public void number_of_likes(String comment_id, int request_id){
+        comment.setRequest("number_of_likes");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        send_request();
+    }
+    public void number_of_dislikes(String comment_id, int request_id){
+        comment.setRequest("number_of_dislikes");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        send_request();
+    }
+    public void get_info(String comment_id, int request_id){
+        comment.setRequest("get_info");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
         send_request();
     }
 

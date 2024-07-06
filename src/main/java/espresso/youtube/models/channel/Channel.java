@@ -1,6 +1,7 @@
 package espresso.youtube.models.channel;
 
 import espresso.youtube.models.ClassInfo;
+import espresso.youtube.models.account.Account;
 
 import java.util.ArrayList;
 
@@ -8,8 +9,9 @@ public class Channel extends ClassInfo {
     private String id;
     private String name;
     private String owner_id;
-    private ArrayList<String> subscriber_id = new ArrayList<>();
+    private ArrayList<Account> followers = new ArrayList<>();
     private String description;
+    private int n_posts;
     public Channel(){
         super.className = "channel";
     }
@@ -28,11 +30,13 @@ public class Channel extends ClassInfo {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setSubscriber_id(ArrayList<String> subscriber_id) {
-        this.subscriber_id = subscriber_id;
+    public void setFollowers(ArrayList<Account> followers) {
+        this.followers = followers;
+    }
+    public void setN_posts(int n_posts) {
+        this.n_posts = n_posts;
     }
     //------------------ getters -----------------------
-
     public String getId() {
         return id;
     }
@@ -45,7 +49,10 @@ public class Channel extends ClassInfo {
     public String getDescription() {
         return description;
     }
-    public ArrayList<String> getSubscriber_id() {
-        return subscriber_id;
+    public ArrayList<Account> getFollowers() {
+        return followers;
+    }
+    public int getN_posts() {
+        return n_posts;
     }
 }

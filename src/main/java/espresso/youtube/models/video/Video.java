@@ -2,15 +2,16 @@ package espresso.youtube.models.video;
 
 
 import espresso.youtube.models.ClassInfo;
+import espresso.youtube.models.channel.Channel;
 
 public class Video extends ClassInfo {
     private String title;
     private String description;
-    private String channel_id;
+    private Channel channel = new Channel();
     private String video_id;
     private String owner_id;
     private String data_type;
-    private int views, n_likes;
+    private int views, n_likes, length, n_comments;
     public Video(){
         super.className = "video";
     }
@@ -21,9 +22,6 @@ public class Video extends ClassInfo {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-    public void setChannel_id(String channel_id) {
-        this.channel_id = channel_id;
     }
     public void setVideo_id(String video_id) {
         this.video_id = video_id;
@@ -40,6 +38,15 @@ public class Video extends ClassInfo {
     public void setN_likes(int n_likes) {
         this.n_likes = n_likes;
     }
+    public void setLength(int length) {
+        this.length = length;
+    }
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+    public void setN_comments(int n_comments) {
+        this.n_comments = n_comments;
+    }
 
     //------------------ getters -----------------------
     public String getTitle() {
@@ -47,9 +54,6 @@ public class Video extends ClassInfo {
     }
     public String getDescription() {
         return description;
-    }
-    public String getChannel_id() {
-        return channel_id;
     }
     public String getVideo_id() {
         return video_id;
@@ -65,5 +69,14 @@ public class Video extends ClassInfo {
     }
     public int getN_likes() {
         return n_likes;
+    }
+    public int getLength() {
+        return length;
+    }
+    public Channel getChannel() {
+        return channel;
+    }
+    public int getN_comments() {
+        return n_comments;
     }
 }

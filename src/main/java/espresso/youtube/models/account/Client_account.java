@@ -15,6 +15,48 @@ public class Client_account {
         this.out = out;
     }
 
+    public void make_user_premium(String user_id, int request_id){
+        account.setRequest("make_user_premium");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
+    public void remove_premium_of_user(String user_id, int request_id){
+        account.setRequest("remove_premium_of_user");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
+    public void change_dark_mode(String user_id, int request_id){
+        account.setRequest("change_dark_mode");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
+    public void get_username_by_id(String user_id, int request_id){
+        account.setRequest("get_username_by_id");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
+    public void get_info(String user_id, int request_id){
+        account.setRequest("get_info");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
+    public void account_delete(String user_id, int request_id){
+        account.setRequest("account_delete");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
+    public void get_subscribed_channels(String user_id, int request_id){
+        account.setRequest("get_subscribed_channels");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
     public void login(String username, String password, int request_id){
         account.setRequest("login");
         account.setRequest_id(request_id);

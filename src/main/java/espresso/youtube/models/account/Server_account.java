@@ -18,12 +18,41 @@ public class Server_account extends Account {
             return sign_up();
         } else if (request.equals("change_password")) {
             return sign_up();
+        } else if (request.equals("make_user_premium")) {
+            return sign_up();
+        } else if (request.equals("remove_premium_of_user")) {
+            return sign_up();
+        } else if (request.equals("change_dark_mode")) {
+            return sign_up();
+        } else if (request.equals("get_username_by_id")) {
+            return sign_up();
+        } else if (request.equals("get_info")) {
+            return sign_up();
+        } else if (request.equals("get_subscribed_channels")) {
+            return sign_up();
         } else if (request.equals("change_username")) {
             return sign_up();
         }
         return null;
     }
-
+    private ServerResponse make_user_premium(){
+        return null;
+    }
+    private ServerResponse remove_premium_of_user(){
+        return null;
+    }
+    private ServerResponse change_dark_mode(){
+        return null;
+    }
+    private ServerResponse get_username_by_id(){
+        return null;
+    }
+    private ServerResponse get_info(){
+        return null;
+    }
+    private ServerResponse get_subscribed_channels(){
+        return null;
+    }
     private ServerResponse change_name(){
         return null;
     }

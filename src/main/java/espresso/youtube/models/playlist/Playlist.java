@@ -6,8 +6,9 @@ import espresso.youtube.models.video.Video;
 import java.util.ArrayList;
 
 public class Playlist extends ClassInfo {
-    private String title, description, channel_id, id;
-    private ArrayList<String> video_ids = new ArrayList<>();
+    private String title, description, channel_id, channel_name, id, user_id;
+    private int n_posts;
+    private ArrayList<Video> videos = new ArrayList<>();
     public Playlist(){
         super.className = "playlist";
     }
@@ -22,11 +23,20 @@ public class Playlist extends ClassInfo {
     public void setChannel_id(String channel_id) {
         this.channel_id = channel_id;
     }
-    public void setVideo_ids(ArrayList<String> video_ids) {
-        this.video_ids = video_ids;
-    }
     public void setId(String id) {
         this.id = id;
+    }
+    public void setChannel_name(String channel_name) {
+        this.channel_name = channel_name;
+    }
+    public void setVideos(ArrayList<Video> videos) {
+        this.videos = videos;
+    }
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+    public void setN_posts(int n_posts) {
+        this.n_posts = n_posts;
     }
 
     //------------------ getters -----------------------
@@ -39,10 +49,19 @@ public class Playlist extends ClassInfo {
     public String getChannel_id() {
         return channel_id;
     }
-    public ArrayList<String> getVideo_ids() {
-        return video_ids;
-    }
     public String getId() {
         return id;
+    }
+    public String getChannel_name() {
+        return channel_name;
+    }
+    public ArrayList<Video> getVideos() {
+        return videos;
+    }
+    public String getUser_id() {
+        return user_id;
+    }
+    public int getN_posts() {
+        return n_posts;
     }
 }

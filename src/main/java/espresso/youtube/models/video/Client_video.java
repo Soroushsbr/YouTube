@@ -46,13 +46,110 @@ public class Client_video {
         video.setVideo_id(video_id);
         send_request();
     }
+    public void check_user_likes_post(String video_id, String user_id, int request_id){
+        video.setRequest("check_user_likes_post");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void check_user_dislikes_post(String video_id, String user_id, int request_id){
+        video.setRequest("check_user_dislikes_post");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void add_to_post_viewers(String video_id, String user_id, int request_id){
+        video.setRequest("add_to_post_viewers");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void check_if_user_viewed_post(String video_id, String user_id, int request_id){
+        video.setRequest("check_if_user_viewed_post");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void number_of_views(String video_id, int request_id){
+        video.setRequest("number_of_views");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void number_of_likes(String video_id, int request_id){
+        video.setRequest("number_of_likes");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void number_of_dislikes(String video_id, int request_id){
+        video.setRequest("number_of_dislikes");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void number_of_comments(String video_id, int request_id){
+        video.setRequest("number_of_comments");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void get_info(String video_id, int request_id){
+        video.setRequest("get_info");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void delete_post(String video_id, String user_id, int request_id){
+        video.setRequest("delete_post");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        video.setOwner_id(user_id);
+        send_request();
+    }
+    public void get_all_posts(int request_id){
+        video.setRequest("get_all_posts");
+        video.setRequest_id(request_id);
+        send_request();
+    }
+    public void get_all_posts_of_a_account(String user_id, int request_id){
+        video.setRequest("get_all_posts_of_a_account");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        send_request();
+    }
+    public void get_all_posts_of_a_channel(String user_id, int request_id){
+        video.setRequest("get_all_posts_of_a_channel");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        send_request();
+    }
+    public void get_all_viewers_of_a_post(String video_id, int request_id){
+        video.setRequest("get_all_viewers_of_a_post");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
 
     public void upload_media(File mediaFile, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8002);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
         DataInputStream in = new DataInputStream(v.getInputStream());
         DataInputStream fin = new DataInputStream(new FileInputStream(mediaFile));
-        UUID uuid = UUID.randomUUID();
+        String media_id = "not_set";
+
+        if(type.equals("video") || type.equals("thumbnail") || type.equals("playlist_photo")) { // payyyyyyyyyyyyy attentionnnnnnnnnnnnnnnnnnn
+            UUID uuid = UUID.randomUUID();
+            media_id = uuid.toString();
+        } else if (type.equals("profile_photo")) {
+            media_id = "profile_photo";
+        } else if (type.equals("channel_photo")) {
+            media_id = "channel_photo";
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();
@@ -60,7 +157,7 @@ public class Client_video {
         json.put("type", type);
         json.put("data_type", data_type);
         json.put("client_handler_id", client_handler_id);
-        json.put("video_id", uuid.toString());
+        json.put("video_id", media_id);
         json.put("request_id", video.getRequest_id());
         out.writeUTF(mapper.writeValueAsString(json));
         
@@ -75,7 +172,7 @@ public class Client_video {
         v.close();
 
         System.out.println("[CLIENT] media uploaded");
-        video.setVideo_id(uuid.toString());
+        video.setVideo_id(media_id);
         send_request();
     }
 
@@ -130,13 +227,13 @@ public class Client_video {
         video.setOwner_id(owner_id);
         video.setTitle(title);
         video.setDescription(description);
-        video.setChannel_id(channel_id);
+        video.getChannel().setId(channel_id);
         video.setData_type(data_type);
     }
     public void change_channel_photo(String channel_id, String data_type, int request_id){
         video.setRequest("change_channel_photo");
         video.setRequest_id(request_id);
-        video.setChannel_id(channel_id);
+        video.getChannel().setId(channel_id);
         video.setData_type(data_type);
     }
     public void change_profile_photo(String user_id, String data_type, int request_id){
@@ -164,7 +261,7 @@ public class Client_video {
         send_request();
     }
 
-    public void get_videos_id(int request_id){
+    public void get_videos_id(int request_id){// useless
         video.setRequest_id(request_id);
         video.setRequest("get_videos_id");
         send_request();
