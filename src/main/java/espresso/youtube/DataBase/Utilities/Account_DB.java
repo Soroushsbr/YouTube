@@ -129,8 +129,10 @@ public class Account_DB {
         return false;
     }
 
-    public static void make_user_premium(UUID user_id) {
+    public static ServerResponse make_user_premium(UUID user_id, int request_id) {
         System.out.println("[DATABASE] Making " + user_id + " user premium...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE accounts SET is_premium = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -138,14 +140,19 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void remove_premium_of_user(UUID user_id) {
+    public static ServerResponse remove_premium_of_user(UUID user_id, int request_id) {
         System.out.println("[DATABASE] Removing premium of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE accounts SET is_premium = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -153,14 +160,19 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void change_dark_mode(UUID user_id, boolean dark_mode) {
+    public static ServerResponse change_dark_mode(UUID user_id, boolean dark_mode, int request_id) {
         System.out.println("[DATABASE] Changing dark mode of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE accounts SET dark_mode = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -168,14 +180,19 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
-
-    public static void change_password(UUID user_id, String password) {
+    //??
+    public static ServerResponse change_password(UUID user_id, String password, int request_id) {
         System.out.println("[DATABASE] Changing password of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         password = hash_password(password);
         String query = "UPDATE accounts SET password = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
@@ -185,18 +202,25 @@ public class Account_DB {
             preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("[DATABASE] Done");
+            serverResponse.add_part("isSuccessful", true);
+            return serverResponse;
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void add_notification(UUID user_id, String content) {
+    public static void add_notification(UUID user_id, String title, UUID comment_id, UUID post_id, UUID channel_id ) {
         System.out.println("[DATABASE] Sending notification for user " + user_id + " ...");
-        String query = "INSERT INTO notifications (user_id, content) VALUES (?, ?)";
+        String query = "INSERT INTO notifications (user_id, title, comment_id, post_id, channel_id) VALUES (?, ?, ?, ?, ?)";
         try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, user_id);
-            preparedStatement.setString(2, content);
+            preparedStatement.setString(2, title);
+            preparedStatement.setObject(3, comment_id);
+            preparedStatement.setObject(4, post_id);
+            preparedStatement.setObject(5, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("[DATABASE] Done");
@@ -286,15 +310,17 @@ public class Account_DB {
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
                 }
             }
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
             return serverResponse;
         }catch (SQLException e){
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
-        return null;
+        return serverResponse;
     }
-
-    public static void account_delete(UUID account_id) {
+    //????????????????????????
+    public static void delete_account(UUID account_id) {
         System.out.println("[DATABASE] Deleting account " + account_id + " ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE user_id = ?");
@@ -330,6 +356,8 @@ public class Account_DB {
     }
 
     public static List<UUID> get_subscribed_channels(UUID user_id) {
+        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setChannels_list();
         System.out.println("[DATABASE] Getting subscribed channels of user " + user_id + " ...");
         List<UUID> IDs = new ArrayList<>();
         String sql = "SELECT channel_id FROM channel_subscription WHERE subscriber_id = ?";
@@ -368,19 +396,60 @@ public class Account_DB {
         return IDs;
     }
     /////+++
+    public static ServerResponse change_username(UUID user_id, String username, int request_id) {
+        System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "UPDATE accounts SET username = ? WHERE id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(false);
+            preparedStatement.setString(1, username);
+            preparedStatement.setObject(2, user_id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            serverResponse.add_part("isSuccessful", true);
+        } catch (SQLException e) {
+            printSQLException(e);
+            serverResponse.add_part("isSuccessful", false);
+        }
+        System.out.println("[DATABASE] Done");
+        return serverResponse;
+    }
+
+    public static ServerResponse change_gmail(UUID user_id, String gmail, int request_id) {
+        System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "UPDATE accounts SET gmail = ? WHERE id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(false);
+            preparedStatement.setString(1, gmail);
+            preparedStatement.setObject(2, user_id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            serverResponse.add_part("isSuccessful", true);
+        } catch (SQLException e) {
+            printSQLException(e);
+            serverResponse.add_part("isSuccessful", false);
+        }
+        System.out.println("[DATABASE] Done");
+        return serverResponse;
+    }
+
+
 
     public static void main(String[] args) {
 
     }
 }
 
-//printSQLException(e)
-//[DATABASE]
 
 //check user is owner of a post, playlist, and channel, and comment???
 
 //!!!!!!!!!!!!
 
+//check delete_account
+//check get info for new columns
 
 
 //give data to load post with comments and views, channel, profile, playlist mobin array in server response?

@@ -31,27 +31,28 @@ public class Search {
             }
         }
     }
-    public static List<UUID> search_accounts(String text, int request_id) {
-        System.out.println("[DATABASE] Searching for "+text+" in accounts ...");
-        ServerResponse serverResponse = new ServerResponse();
-        serverResponse.setRequest_id(request_id);
-        List<UUID> IDs = new ArrayList<>();
 
-        String query = "SELECT id FROM accounts WHERE username LIKE ?";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, "%" + text + "%");
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    UUID id = (UUID) resultSet.getObject("id");
-                    IDs.add(id);
-                }
-            }
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-        System.out.println("[DATABASE] Done");
-        return IDs;
-    }
+//    public static List<UUID> search_accounts(String text, int request_id) {
+//        System.out.println("[DATABASE] Searching for "+text+" in accounts ...");
+//        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setRequest_id(request_id);
+//        List<UUID> IDs = new ArrayList<>();
+//
+//        String query = "SELECT id FROM accounts WHERE username LIKE ?";
+//        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setString(1, "%" + text + "%");
+//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//                while (resultSet.next()) {
+//                    UUID id = (UUID) resultSet.getObject("id");
+//                    IDs.add(id);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        System.out.println("[DATABASE] Done");
+//        return IDs;
+//    }
 
     public static List<UUID> search_channels(String text) {
         System.out.println("[DATABASE] Searching for "+text+" in channels ...");

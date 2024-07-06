@@ -1,7 +1,10 @@
 package espresso.youtube.models.comment;
 
+import espresso.youtube.DataBase.Utilities.Comment_DB;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.ServerResponse;
+
+import java.util.UUID;
 
 public class Server_comment extends Comment {
     @Override
@@ -34,40 +37,42 @@ public class Server_comment extends Comment {
         return null;
     }
     private ServerResponse check_user_likes_comment(){
-        return null;
+        return Comment_DB.check_user_likes_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id() );
     }
     private ServerResponse check_user_dislikes_comment(){
-        return null;
+        return Comment_DB.check_user_likes_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id() );
     }
     private ServerResponse number_of_likes(){
-        return null;
+        return Comment_DB.number_of_likes(UUID.fromString(super.getComment_id()), super.getRequest_id());
     }
     private ServerResponse number_of_dislikes(){
-        return null;
+        return Comment_DB.number_of_dislikes(UUID.fromString(super.getComment_id()), super.getRequest_id());
     }
     private ServerResponse get_info(){
-        return null;
+        return Comment_DB.get_info(UUID.fromString(super.getComment_id()), super.getRequest_id());
     }
     private ServerResponse like_comment(){
-        return null;
+        return Comment_DB.like_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse dislike_comment(){
-        return null;
+        return Comment_DB.dislike_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse load_comments(){
+        //?? get post comments
         return null;
     }
     private ServerResponse put_comment(){
-        return null;
+        return Comment_DB.add_comment(UUID.fromString(super.getUser_id()), UUID.fromString(super.getPost_id()), getMessage(), super.getRequest_id());
     }
     private ServerResponse reply_comment(){
+//        return Comment_DB.reply_to_comment(UUID.fromString(super.getUser_id()), UUID.fromString(super.getPost_id()), super.getMessage(), super.get);
         return null;
     }
     private ServerResponse edit_comment(){
-        return null;
+        return Comment_DB.edit_comment(UUID.fromString(super.getComment_id()), super.getMessage(), super.getRequest_id());
     }
     private ServerResponse delete_comment(){
-        return null;
+        return Comment_DB.delete_comment(UUID.fromString(super.getComment_id()), super.getRequest_id());
     }
 
 }

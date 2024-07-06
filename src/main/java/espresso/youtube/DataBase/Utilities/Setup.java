@@ -22,6 +22,7 @@ public class Setup {
             }
         }
     }
+
     public static void create_database() {
         System.out.println("[DATABASE] Creating youtube database...");
         String query = "CREATE DATABASE youtube;";
@@ -37,9 +38,9 @@ public class Setup {
         System.out.println("[DATABASE] Creating database tables...");
         String[] queries = {
                 "CREATE TABLE IF NOT EXISTS accounts (id UUID PRIMARY KEY, username TEXT, gmail TEXT, password TEXT, dark_mode BOOLEAN, is_premium BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
-                "CREATE TABLE IF NOT EXISTS channels (id UUID PRIMARY KEY, title TEXT, owner_id UUID, description TEXT, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+                "CREATE TABLE IF NOT EXISTS channels (id UUID PRIMARY KEY, title TEXT, username TEXT, owner_id UUID, description TEXT, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS playlists (id UUID PRIMARY KEY, title TEXT, owner_id UUID, description TEXT, is_public BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
-                "CREATE TABLE IF NOT EXISTS posts (id UUID PRIMARY KEY, title TEXT, owner_id UUID, channel_id UUID, description TEXT, is_public BOOLEAN, is_short BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
+                "CREATE TABLE IF NOT EXISTS posts (id UUID PRIMARY KEY, title TEXT, owner_id UUID, channel_id UUID, description TEXT, is_public BOOLEAN, is_short BOOLEAN, video_length INTEGER, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS playlist_posts (playlist_id UUID, post_id UUID)",
                 "CREATE TABLE IF NOT EXISTS channel_subscription (channel_id uuid, subscriber_id uuid)",
                 "CREATE TABLE IF NOT EXISTS playlist_subscription (playlist_id uuid, subscriber_id uuid)",
@@ -49,7 +50,7 @@ public class Setup {
                 "CREATE TABLE IF NOT EXISTS comment_dislikes (comment_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS comments (id uuid PRIMARY KEY, owner_id uuid, content text, post_id uuid, parent_comment_id uuid, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS categories (id uuid PRIMARY KEY, category_name text)",
-                "CREATE TABLE IF NOT EXISTS notifications (user_id uuid , content text)",
+                "CREATE TABLE IF NOT EXISTS notifications (user_id uuid , title text, comment_id uuid, post_id uuid, channel_id uuid, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP))",
                 "CREATE TABLE IF NOT EXISTS views (user_id uuid , post_id uuid)"
         };
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123");Statement statement = connection.createStatement()){

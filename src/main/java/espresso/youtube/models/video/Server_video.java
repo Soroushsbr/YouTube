@@ -63,68 +63,79 @@ public class Server_video extends Video {
     }
 
     private ServerResponse get_all_viewers_of_a_post(){
+        //??
         return null;
     }
     private ServerResponse get_all_posts_of_a_channel(){
+        //??
         return null;
     }
     private ServerResponse get_all_posts_of_a_account(){
+        //??
         return null;
     }
     private ServerResponse get_all_posts(){
+        //??
         return null;
     }
     private ServerResponse delete_post(){
-        return null;
+        return Post_DB.delete_post(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse get_info(){
-        return null;
+        return Post_DB.get_info(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_comments(){
-        return null;
+        return Post_DB.number_of_comments(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_dislikes(){
-        return null;
+        return Post_DB.number_of_dislikes(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_likes(){
-        return null;
+        return Post_DB.number_of_likes(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_views(){
-        return null;
+        return Post_DB.number_of_views(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse check_if_user_viewed_post(){
-        return null;
+        return Post_DB.check_if_user_viewed_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse add_to_post_viewers(){
-        return null;
+        return Post_DB.add_to_post_viewers(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse check_user_dislikes_post(){
-        return null;
+        return Post_DB.check_user_dislikes_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse check_user_likes_post(){
-        return null;
+        return Post_DB.check_user_likes_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse dislike(){
-        return null;
+        return Post_DB.dislike_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse like(){
-        return null;
+        return Post_DB.like_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse search(){
+        //??
+        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setChannels_list(); playlist and posts
         return null;
     }
-    private ServerResponse change_playlist_photo(){
-        return null;
-    }
-    private ServerResponse change_thumbnail(){
-        return null;
-    }
-    private ServerResponse change_profile_photo(){
-        return null;
-    }
-    private ServerResponse change_channel_photo(){
-        return null;
-    }
+//    private ServerResponse change_playlist_photo(){
+//        //??
+//        return null;
+//    }
+//    private ServerResponse change_thumbnail(){
+//        //??
+//        return null;
+//    }
+//    private ServerResponse change_profile_photo(){
+//        //??
+//        return null;
+//    }
+//    private ServerResponse change_channel_photo(){
+//        //??
+//        return null;
+//    }
     private ServerResponse insert_video_info(){
         System.out.println(super.getTitle());
 
@@ -137,7 +148,7 @@ public class Server_video extends Video {
         return serverResponse;
     }
     private ServerResponse send_video_info(){
-        return Post_DB.get_post(UUID.fromString(super.getVideo_id()) , super.getRequest_id());
+        return Post_DB.get_info(UUID.fromString(super.getVideo_id()) , super.getRequest_id());
     }
     private ServerResponse send_videos_id(){
         return Post_DB.get_all_posts(super.getRequest_id());

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class Playlist extends ClassInfo {
     private String title, description, channel_id, channel_name, id, user_id;
+    private boolean is_public;
     private int n_posts;
     private ArrayList<Video> videos = new ArrayList<>();
     public Playlist(){
@@ -38,6 +39,7 @@ public class Playlist extends ClassInfo {
     public void setN_posts(int n_posts) {
         this.n_posts = n_posts;
     }
+    public void setIs_public(boolean is_public) {this.is_public = is_public;}
 
     //------------------ getters -----------------------
     public String getTitle() {
@@ -64,4 +66,8 @@ public class Playlist extends ClassInfo {
     public int getN_posts() {
         return n_posts;
     }
+    public boolean getIs_public() {return is_public;}
+
+
+
 }

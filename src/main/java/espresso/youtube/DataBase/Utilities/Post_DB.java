@@ -1,6 +1,5 @@
 package espresso.youtube.DataBase.Utilities;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
 
 import java.sql.*;
@@ -32,10 +31,10 @@ public class Post_DB {
         }
     }
 
-    public static void add_post(UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short) {
+    public static void add_post(UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short, int video_length) {
         System.out.println("[DATABASE] User "+owner_id+" adding post to channel "+channel_id+" ...");
         UUID id = UUID.randomUUID();
-        String query = "INSERT INTO posts (id, name, owner_id, channel_id, description, is_public, is_short) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO posts (id, name, owner_id, channel_id, description, is_public, is_short, video_length) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, id);
@@ -45,6 +44,7 @@ public class Post_DB {
             preparedStatement.setString(5, description);
             preparedStatement.setBoolean(6, is_public);
             preparedStatement.setBoolean(7, is_short);
+            preparedStatement.setInt(8, video_length);
             preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("[DATABASE] Done");
@@ -68,8 +68,10 @@ public class Post_DB {
         }
     }
 
-    public static void add_post_to_playlist(UUID post_id, UUID playlist_id) {
+    public static ServerResponse add_post_to_playlist(UUID post_id, UUID playlist_id, int request_id) {
         System.out.println("[DATABASE] Adding post "+post_id+" to playlist "+playlist_id+"...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "INSERT INTO playlist_posts (playlist_id, post_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -77,14 +79,19 @@ public class Post_DB {
             preparedStatement.setObject(2, post_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void like_post(UUID post_id, UUID user_id) {
+    public static ServerResponse like_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] User "+user_id+" liking post "+post_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "INSERT INTO post_likes (post_id, user_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -92,14 +99,19 @@ public class Post_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void dislike_post(UUID post_id, UUID user_id) {
+    public static ServerResponse dislike_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] User "+user_id+" disliking post "+post_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "INSERT INTO post_dislikes (post_id, user_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -107,50 +119,57 @@ public class Post_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static boolean check_user_likes_post(UUID post_id, UUID user_id) {
+    public static ServerResponse check_user_likes_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user "+user_id+" has liked post "+post_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "SELECT EXISTS (SELECT 1 FROM post_likes WHERE user_id = ? AND post_id = ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setObject(1, user_id);
             preparedStatement.setObject(2, post_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                    serverResponse.add_part("user_likes_post", resultSet.getBoolean(1));
                     System.out.println("[DATABASE] Done");
-                    return resultSet.getBoolean(1);
                 } else {
-                    return false;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return false;
+        return serverResponse;
     }
 
-    public static boolean check_user_dislikes_post(UUID post_id, UUID user_id) {
+    public static ServerResponse check_user_dislikes_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user "+user_id+" has disliked post "+post_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "SELECT EXISTS (SELECT 1 FROM post_likes WHERE user_id = ? AND post_id = ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setObject(1, user_id);
             preparedStatement.setObject(2, post_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                    serverResponse.add_part("user_dislikes_post", resultSet.getBoolean(1));
                     System.out.println("[DATABASE] Done");
-                    return resultSet.getBoolean(1);
                 } else {
-                    return false;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return false;
+        return serverResponse;
     }
 
     public static void remove_user_like_from_post(UUID post_id, UUID user_id) {
@@ -183,8 +202,10 @@ public class Post_DB {
         }
     }
 
-    public static void add_to_post_viewers(UUID post_id, UUID user_id) {
+    public static ServerResponse add_to_post_viewers(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Adding a viewer to post "+post_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "INSERT INTO views (post_id, user_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
@@ -192,28 +213,33 @@ public class Post_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static boolean check_if_user_viewed_post(UUID post_id, UUID user_id) {
+    public static ServerResponse check_if_user_viewed_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user "+user_id+" has viewed the post "+post_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "SELECT EXISTS (SELECT 1 FROM views WHERE post_id = ? AND user_id = ? )";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, post_id);
             preparedStatement.setObject(2, user_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                    serverResponse.add_part("user_viewed_post", resultSet.getBoolean(1));
                     System.out.println("[DATABASE] Done");
-                    return resultSet.getBoolean(1);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return false;
+        return serverResponse;
     }
 
     public static void restart_post_views(UUID post_id) {
@@ -262,72 +288,80 @@ public class Post_DB {
         }
     }
 
-    public static int number_of_views(UUID post_id) {
+    public static ServerResponse number_of_views(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM views WHERE post_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, post_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_views", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
-    public static int number_of_likes(UUID post_id) {
+    public static ServerResponse number_of_likes(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM post_likes WHERE post_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, post_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_likes", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
-    public static int number_of_dislikes(UUID post_id) {
+    public static ServerResponse number_of_dislikes(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM post_dislikes WHERE post_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, post_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_dislikes", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
-    public static int number_of_comments(UUID post_id) {
+    public static ServerResponse number_of_comments(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM comments WHERE post_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, post_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_comments", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
@@ -347,18 +381,20 @@ public class Post_DB {
                     serverResponse.add_part("is_public" , resultSet.getString("is_public"));
                     serverResponse.add_part("is_short" , resultSet.getString("is_short"));
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
+                    serverResponse.add_part("video_length" , resultSet.getString("video_length"));
                 }
             }
             System.out.println("[DATABASE] Done");
-            return serverResponse;
         }catch (SQLException e){
             printSQLException(e);
         }
-        return null;
+        return serverResponse;
     }
 
-    public static void delete_post(UUID post_id) {
+    public static ServerResponse delete_post(UUID post_id, int request_id) {
         System.out.println("[DATABASE] Deleting post "+ post_id +" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE post_id = ?");
         queries.add("DELETE FROM post_dislikes WHERE post_id = ?");
@@ -375,15 +411,19 @@ public class Post_DB {
                     preparedStatement.setObject(1, post_id);
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
+                    serverResponse.add_part("isSuccessful", false);
                     connection.rollback();
                     printSQLException(e);
                 }
             }
+            serverResponse.add_part("isSuccessful", true);
             connection.commit();
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
     public static ServerResponse get_all_posts(int request_id){
