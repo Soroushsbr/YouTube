@@ -59,6 +59,7 @@ public class LoginMenu implements Initializable {
     private Stage stage;
     private Scene scene;
     public static Client client;
+    public static boolean darkmode;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -113,19 +114,20 @@ public class LoginMenu implements Initializable {
             applyShakeEffect(singupPasswordTF);
         }
         if(!username.isEmpty() && !gmail.isEmpty() && !password.isEmpty()) {
+            darkmode = true;
             //here it validate the data from database without lag
+            client.setReq_id();
+            int req = client.getReq_id();
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
                     Client_account client_account = new Client_account(client.getOut());
-                    client.setReq_id();
-                    int req = client.getReq_id();
                     client_account.sign_up(username, password, gmail, client.getReq_id());
 
                     while (true) {
                         //checks for if the response is available or not
                         if (client.requests.get(client.getReq_id()) != null) {
-                            if ((boolean) client.requests.get(client.getReq_id()).get_part("isSuccessful")) {
+                            if ((boolean) client.requests.get(req).get_part("isSuccessful")) {
                                 return true;
                             } else {
                                 return false;
@@ -138,9 +140,9 @@ public class LoginMenu implements Initializable {
 
             task.setOnSucceeded(e -> {
                 if (task.getValue()) {
+                    client.setChannel_id((String) client.requests.get(req).get_part("ChannelID"));
+                    client.setUser_id((String) client.requests.get(req).get_part("UserID"));
                     switchToMainPage(event, this.client);
-                    client.setUser_id((String) client.requests.get(client.getReq_id()).get_part("UserID"));
-                    System.out.println(client.getUser_id());
                 } else {
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
                         applyShakeEffect(singupgmailTF);
@@ -156,19 +158,6 @@ public class LoginMenu implements Initializable {
     }
 
 
-    public void switchToMainPage(ActionEvent event, Client client){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
-            root = loader.load();
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
-            //set client for next stage
-
-            stage.show();
-        }catch (IOException ignored){
-        }
-    }
 
 
     public void logIn(ActionEvent event) {
@@ -185,18 +174,19 @@ public class LoginMenu implements Initializable {
 
         //checks for if the user can log in or not
         if(!username.isEmpty() && !password.isEmpty()) {
+            darkmode = true;
+            client.setReq_id();
+            //todo: save req id  before doing another thread
+            int req = client.getReq_id();
             Task<Boolean> task = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
                     Client_account client_account = new Client_account(client.getOut());
-                    client.setReq_id();
-                    //todo: save req id  before doing another thread
-                    int req = client.getReq_id();
                     client_account.login(username, password, client.getReq_id());
 
                     while (true) {
                         //checks for if the response is available or not
-                        if (client.requests.get(client.getReq_id()) != null) {
+                        if (client.requests.get(req) != null) {
                             return (boolean) client.requests.get(req).get_part("isSuccessful");
                         }
                         Thread.sleep(50);
@@ -206,8 +196,8 @@ public class LoginMenu implements Initializable {
             //after the task done it goes for actions in stage
             task.setOnSucceeded(e -> {
                 if (task.getValue()) {
-                    client.setUser_id((String) client.requests.get(client.getReq_id()).get_part("UserID"));
-                    System.out.println(client.getUser_id());
+                    client.setChannel_id((String) client.requests.get(req).get_part("ChannelID"));
+                    client.setUser_id((String) client.requests.get(req).get_part("UserID"));
                     switchToMainPage(event, client);
                 } else {
                     applyShakeEffect(loginUsernameTF);
@@ -216,6 +206,19 @@ public class LoginMenu implements Initializable {
             });
 
             new Thread(task).start();
+        }
+    }
+    public void switchToMainPage(ActionEvent event, Client client){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
         }
     }
 
@@ -297,5 +300,4 @@ public class LoginMenu implements Initializable {
             changeOption.setText("Sign Up");
         }
     }
-    //todo: make animation for when user input the wrong pass or name.
 }

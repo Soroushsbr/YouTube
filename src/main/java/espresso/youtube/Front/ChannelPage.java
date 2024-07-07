@@ -6,24 +6,23 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Line;
-import javafx.stage.FileChooser;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
-public class Channel {
+public class ChannelPage {
     @FXML
     AnchorPane profPane;
+    @FXML
+    AnchorPane guidePane;
+    @FXML
+    Rectangle backWindow;
     public void changeProf(){
 
     }
@@ -40,6 +39,23 @@ public class Channel {
                 new KeyFrame(Duration.seconds(0.1), new KeyValue(profPane.opacityProperty(), 0 ))
         );
         t.play();
+    }
+    public void showGuide(){
+        backWindow.setVisible(true);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(guidePane.layoutXProperty(), guidePane.getLayoutX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(guidePane.layoutXProperty(), 0))
+        );
+        timeline.play();
+    }
+
+    public void hideGuide(){
+        backWindow.setVisible(false);
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(guidePane.layoutXProperty(), guidePane.getLayoutX())),
+                new KeyFrame(Duration.seconds(0.2), new KeyValue(guidePane.layoutXProperty(), -200))
+        );
+        timeline.play();
     }
     public void switchToDashboard(ActionEvent event){
         Parent root;

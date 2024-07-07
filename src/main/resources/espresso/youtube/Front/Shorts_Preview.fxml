@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="478.0" prefWidth="278.0" styleClass="back" stylesheets="@Style/Dark/styleSheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="478.0" prefWidth="278.0" styleClass="back" stylesheets="@Style/Dark/Main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox alignment="CENTER" layoutX="20.0" layoutY="9.0" prefHeight="385.0" prefWidth="239.0" style="-fx-background-color: black;" />
       <Label alignment="TOP_LEFT" layoutX="25.0" layoutY="405.0" prefHeight="48.0" prefWidth="230.0" styleClass="colored_text" text="Title" wrapText="true">

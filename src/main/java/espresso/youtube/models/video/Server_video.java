@@ -11,20 +11,12 @@ import java.util.UUID;
 public class Server_video extends Video {
     @Override
     public ServerResponse handle_request() {
-        if (request.equals("send_video_info")) {
+       if (request.equals("send_video_info")) {
             return insert_video_info();
         } else if(request.equals("get_video_info")) {
             return send_video_info();
         } else if(request.equals("get_videos_id")) {
             return send_videos_id();
-//        } else if(request.equals("change_channel_photo")) {
-//            return change_channel_photo();
-//        } else if(request.equals("change_profile_photo")) {
-//            return change_profile_photo();
-//        } else if(request.equals("change_thumbnail")) {
-//            return change_thumbnail();
-//        } else if(request.equals("change_playlist_photo")) {
-//            return change_playlist_photo();
         } else if(request.equals("search")) {
             return search();
         } else if(request.equals("like")) {
@@ -139,6 +131,7 @@ public class Server_video extends Video {
         serverResponse.setRequest_id(super.getRequest_id());
 
         Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(),UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
+
         serverResponse.add_part("status", "received");
         //notification.upload_post();
         return serverResponse;
@@ -146,7 +139,7 @@ public class Server_video extends Video {
     private ServerResponse send_video_info(){
         return Post_DB.get_info(UUID.fromString(super.getVideo_id()) , super.getRequest_id());
     }
-    private ServerResponse send_videos_id(){
+    private ServerResponse send_videos(){
         return Post_DB.get_all_posts(super.getRequest_id());
     }
 }

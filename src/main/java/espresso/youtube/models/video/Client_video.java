@@ -275,9 +275,9 @@ public class Client_video {
         send_request();
     }
 
-    public void get_videos_id(int request_id){// useless
+    public void get_videos(int request_id){ //not useless huh
         video.setRequest_id(request_id);
-        video.setRequest("get_videos_id");
+        video.setRequest("get_videos");
         send_request();
     }
     private void send_request(){

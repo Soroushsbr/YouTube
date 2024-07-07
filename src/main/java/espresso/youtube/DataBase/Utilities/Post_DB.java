@@ -2,6 +2,8 @@ package espresso.youtube.DataBase.Utilities;
 
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
+import espresso.youtube.models.channel.Channel;
+
 import espresso.youtube.models.video.Video;
 
 import java.sql.*;
@@ -467,10 +469,8 @@ public class Post_DB {
         serverResponse.setRequest_id(request_id);
         ArrayList<Video> posts = new ArrayList<>();
         String query = "SELECT id, title, owner_id, channel_id, description, is_public, is_short, video_length, created_at FROM posts";
-
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
-
             while (resultSet.next()) {
                 Video post = new Video();
                 post.setVideo_id(resultSet.getString("id"));
@@ -489,13 +489,10 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
-
         serverResponse.setVideos_list(posts);
         return serverResponse;
     }
-
-
-    public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int request_id) {
+public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         ArrayList<Video> posts = new ArrayList<>();

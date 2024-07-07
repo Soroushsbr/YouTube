@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static espresso.youtube.DataBase.Utilities.Channel_DB.get_channels_of_account;
+
 public class Account_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
@@ -71,11 +73,10 @@ public class Account_DB {
         return(hashed_password);
     }
 
-    public static void save_account(String username, String password, String gmail) {
+    public static void save_account(String username, String password, String gmail,UUID uuid) {
         System.out.println("[DATABASE] Saving account of user "+username+" ...");
-        Channel_DB.create_user_default_channel(get_id_by_username(username));
-        Playlist_DB.create_watch_later(get_id_by_username(username));
-        UUID uuid = UUID.randomUUID();
+        Channel_DB.create_user_default_channel(uuid);
+        Playlist_DB.create_watch_later(uuid);
         boolean dark_mode = true;
         boolean isPremium = false;
         password = hash_password(password);
@@ -99,7 +100,7 @@ public class Account_DB {
 
     public static boolean is_password_correct(String username, String password) {
         System.out.println("[DATABASE] Checking if password is correct... ");
-        String query = "SELECT password FROM users WHERE username = ?";
+        String query = "SELECT password FROM accounts WHERE username = ?";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -245,9 +246,10 @@ public class Account_DB {
         serverResponse.add_part("isValidUsername" , !check_username_exists(username));
         serverResponse.add_part("isValidGmail" , !check_gmail_exists(gmail) && check_gmail_validation(gmail));
         if ((boolean)serverResponse.get_part("isValidUsername") && (boolean)serverResponse.get_part("isValidGmail")){
-            save_account(username, password,gmail);
+            UUID uuid = UUID.randomUUID();
+            save_account(username, password,gmail, uuid);
             serverResponse.add_part("isSuccessful", true);
-            serverResponse.add_part("userID", Objects.requireNonNull(get_id_by_username(username)).toString());
+            serverResponse.add_part("userID", uuid.toString());
         } else {
             serverResponse.add_part("isSuccessful", false);
         }
@@ -261,7 +263,10 @@ public class Account_DB {
         serverResponse.setRequest_id(request_id);
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
         if((boolean)serverResponse.get_part("isSuccessful")){
-            serverResponse.add_part("userID", Objects.requireNonNull(get_id_by_username(username)).toString());
+            String id = Objects.requireNonNull(get_id_by_username(username)).toString();
+            List<UUID> channel_ids = get_channels_of_account(UUID.fromString(id));
+            serverResponse.add_part("ChannelID", channel_ids.get(0));
+            serverResponse.add_part("UserID", id);
         }
         System.out.println("[DATABASE] Done");
         return serverResponse;
