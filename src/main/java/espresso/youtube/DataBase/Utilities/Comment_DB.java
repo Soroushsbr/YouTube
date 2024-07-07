@@ -165,7 +165,9 @@ public class Comment_DB {
         return serverResponse;
     }
 
-    public static void remove_user_like_from_comment(UUID comment_id, UUID user_id) {
+    public static ServerResponse remove_user_like_from_comment(UUID comment_id, UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Removing user "+user_id+" like from comment "+comment_id+" ...");
         String query = "DELETE FROM comment_likes WHERE user_id = ? AND comment_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -174,13 +176,18 @@ public class Comment_DB {
             preparedStatement.setObject(2, comment_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void remove_user_dislike_from_comment(UUID comment_id, UUID user_id) {
+    public static ServerResponse remove_user_dislike_from_comment(UUID comment_id, UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Removing user "+user_id+" dislike from comment "+comment_id+" ...");
         String query = "DELETE FROM comment_dislikes WHERE user_id = ? AND comment_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -189,10 +196,13 @@ public class Comment_DB {
             preparedStatement.setObject(2, comment_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
     public static ServerResponse number_of_likes(UUID comment_id, int request_id) {

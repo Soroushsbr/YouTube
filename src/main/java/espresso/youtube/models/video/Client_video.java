@@ -46,6 +46,20 @@ public class Client_video {
         video.setVideo_id(video_id);
         send_request();
     }
+    public void remove_user_like_from_post(String video_id, String user_id, int request_id){
+        video.setRequest("like");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
+    public void remove_user_dislike_from_post(String video_id, String user_id, int request_id){
+        video.setRequest("like");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        video.setVideo_id(video_id);
+        send_request();
+    }
     public void check_user_likes_post(String video_id, String user_id, int request_id){
         video.setRequest("check_user_likes_post");
         video.setRequest_id(request_id);

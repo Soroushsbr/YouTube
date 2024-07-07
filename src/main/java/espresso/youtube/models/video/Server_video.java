@@ -61,6 +61,10 @@ public class Server_video extends Video {
             return get_all_viewers_of_a_post();
         } else if(request.equals("change_video_info")) {
             return change_video_info();
+        } else if(request.equals("remove_user_like_from_post")) {
+            return remove_user_like_from_post();
+        } else if(request.equals("remove_user_dislike_from_post")) {
+            return remove_user_dislike_from_post();
         }
         return null;
     }
@@ -117,6 +121,12 @@ public class Server_video extends Video {
     }
     private ServerResponse like(){
         return Post_DB.like_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
+    }
+    private ServerResponse remove_user_like_from_post(){
+        return Post_DB.remove_user_like_from_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
+    }
+    private ServerResponse remove_user_dislike_from_post(){
+        return Post_DB.remove_user_dislike_from_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse search(){
 //       return search(super.getText?? , super.getRequest_id())

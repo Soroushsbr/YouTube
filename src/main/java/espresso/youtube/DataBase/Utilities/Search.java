@@ -102,7 +102,7 @@ public class Search {
                     post.setVideo_id(resultSet.getString("id"));
                     post.setTitle(resultSet.getString("title"));
                     post.setOwner_id(resultSet.getString("owner_id"));
-//                    post.setChannel_id(UUID.fromString(resultSet.getString("channel_id")));
+                    post.getChannel().setId(resultSet.getString("channel_id"));
                     post.setDescription(resultSet.getString("description"));
                     post.setIs_public(resultSet.getBoolean("is_public"));
                     post.setIs_short(resultSet.getBoolean("is_short"));

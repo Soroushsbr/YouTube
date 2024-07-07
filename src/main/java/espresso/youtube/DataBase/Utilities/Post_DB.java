@@ -198,7 +198,9 @@ public class Post_DB {
         return serverResponse;
     }
 
-    public static void remove_user_like_from_post(UUID post_id, UUID user_id) {
+    public static ServerResponse remove_user_like_from_post(UUID post_id, UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Removing like of user "+user_id+" from post "+post_id+" ...");
         String query = "DELETE FROM post_likes WHERE user_id = ? AND post_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -207,13 +209,18 @@ public class Post_DB {
             preparedStatement.setObject(2, post_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void remove_user_dislike_from_post(UUID post_id, UUID user_id) {
+    public static ServerResponse remove_user_dislike_from_post(UUID post_id, UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Removing dislike of user "+user_id+" from post "+post_id+" ...");
         String query = "DELETE FROM post_dislikes WHERE user_id = ? AND post_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
@@ -222,10 +229,13 @@ public class Post_DB {
             preparedStatement.setObject(2, post_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
     public static ServerResponse add_to_post_viewers(UUID post_id, UUID user_id, int request_id) {
@@ -466,7 +476,7 @@ public class Post_DB {
                 post.setVideo_id(resultSet.getString("id"));
                 post.setTitle(resultSet.getString("title"));
                 post.setOwner_id(resultSet.getString("owner_id"));
-//                post.setChannel_id(UUID.fromString(resultSet.getString("channel_id")));
+                post.getChannel().setId(resultSet.getString("channel_id"));
                 post.setDescription(resultSet.getString("description"));
                 post.setIs_public(resultSet.getBoolean("is_public"));
                 post.setIs_short(resultSet.getBoolean("is_short"));
@@ -501,7 +511,7 @@ public class Post_DB {
                     post.setVideo_id(resultSet.getString("id"));
                     post.setTitle(resultSet.getString("title"));
                     post.setOwner_id(resultSet.getString("owner_id"));
-//                    post.setCh(UUID.fromString(resultSet.getString("channel_id")));
+                    post.getChannel().setId(resultSet.getString("channel_id"));
                     post.setDescription(resultSet.getString("description"));
                     post.setIs_public(resultSet.getBoolean("is_public"));
                     post.setIs_short(resultSet.getBoolean("is_short"));
@@ -532,7 +542,7 @@ public class Post_DB {
                     post.setVideo_id(resultSet.getString("id"));
                     post.setTitle(resultSet.getString("title"));
                     post.setOwner_id(resultSet.getString("owner_id"));
-//                    post.setChannel( id UUID.fromString(resultSet.getString("channel_id")));
+                    post.getChannel().setId(resultSet.getString("channel_id"));
                     post.setDescription(resultSet.getString("description"));
                     post.setIs_public(resultSet.getBoolean("is_public"));
                     post.setIs_short(resultSet.getBoolean("is_short"));
@@ -563,7 +573,7 @@ public class Post_DB {
 
                     post.setVideo_id(resultSet.getString("id"));
                     post.setOwner_id(resultSet.getString("channel_id"));
-//                    post.setChannel id
+                    post.getChannel().setId(resultSet.getString("channel_id"));
                     post.setTitle(resultSet.getString("title"));
                     post.setDescription(resultSet.getString("description"));
                     post.setIs_public(resultSet.getBoolean("is_public"));

@@ -32,6 +32,8 @@ public class Server_channel extends Channel {
             return delete_channel();
         } else if (request.equals("get_channels_of_account")) {
             return get_channels_of_account();
+        } else if (request.equals("number_of_posts(")) {
+            return number_of_posts();
         }
         return null;
     }
@@ -44,6 +46,9 @@ public class Server_channel extends Channel {
     }
     private ServerResponse number_of_subscribers(){
         return Channel_DB.number_of_subscribers(UUID.fromString(super.getId()), super.getRequest_id());
+    }
+    private ServerResponse number_of_posts(){
+        return Channel_DB.number_of_posts(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_info(){
         return Channel_DB.get_info(UUID.fromString(super.getId()), super.getRequest_id());
@@ -59,6 +64,9 @@ public class Server_channel extends Channel {
     }
     private ServerResponse change_channel_description(){
         return Channel_DB.change_channel_description(UUID.fromString(super.getId()), super.getDescription(), super.getRequest_id());
+    }
+    private ServerResponse change_channel_username(){
+        return Channel_DB.change_channel_username(UUID.fromString(super.getId()), super.getUsername(), super.getRequest_id());
     }
     private ServerResponse get_subscribers(){
         return Channel_DB.get_subscribers(UUID.fromString(super.getId()), super.getRequest_id());

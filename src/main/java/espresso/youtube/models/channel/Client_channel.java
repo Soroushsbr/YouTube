@@ -1,10 +1,13 @@
 package espresso.youtube.models.channel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import espresso.youtube.DataBase.Utilities.Channel_DB;
+import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 public class Client_channel {
     private Channel channel = new Channel();
@@ -33,6 +36,12 @@ public class Client_channel {
     }
     public void number_of_subscribers(String channel_id, int request_id){
         channel.setRequest("number_of_subscribers");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        send_request();
+    }
+    private void number_of_posts(String channel_id, int request_id){
+        channel.setRequest("number_of_posts");
         channel.setRequest_id(request_id);
         channel.setId(channel_id);
         send_request();
@@ -83,6 +92,13 @@ public class Client_channel {
         channel.setRequest_id(request_id);
         channel.setId(channel_id);
         channel.setName(new_name);
+        send_request();
+    }
+    public void change_channel_username(String channel_id, String new_username, int request_id){
+        channel.setRequest("change_channel_name");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        channel.setUsername(new_username);
         send_request();
     }
     public void change_channel_description(String channel_id, String new_description, int request_id){

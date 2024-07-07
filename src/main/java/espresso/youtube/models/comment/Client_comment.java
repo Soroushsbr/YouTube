@@ -1,9 +1,12 @@
 package espresso.youtube.models.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import espresso.youtube.DataBase.Utilities.Comment_DB;
+import espresso.youtube.models.ServerResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 public class Client_comment {
     private Comment comment = new Comment();
@@ -62,6 +65,20 @@ public class Client_comment {
     }
     public void dislike_comment(String comment_id, String user_id, int request_id){
         comment.setRequest("dislike_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
+        send_request();
+    }
+    private void remove_user_like_from_comment(String comment_id, String user_id, int request_id){
+        comment.setRequest("remove_user_like_from_comment");
+        comment.setRequest_id(request_id);
+        comment.setComment_id(comment_id);
+        comment.setUser_id(user_id);
+        send_request();
+    }
+    private void remove_user_dislike_from_comment(String comment_id, String user_id, int request_id){
+        comment.setRequest("remove_user_dislike_from_comment");
         comment.setRequest_id(request_id);
         comment.setComment_id(comment_id);
         comment.setUser_id(user_id);

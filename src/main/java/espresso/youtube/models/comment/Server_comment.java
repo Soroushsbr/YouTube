@@ -33,6 +33,10 @@ public class Server_comment extends Comment {
             return number_of_dislikes();
         } else if (request.equals("get_info")) {
             return get_info();
+        } else if (request.equals("remove_user_like_from_comment")) {
+            return remove_user_like_from_comment();
+        } else if (request.equals("remove_user_dislike_from_comment")) {
+            return remove_user_dislike_from_comment();
         }
         return null;
     }
@@ -56,6 +60,12 @@ public class Server_comment extends Comment {
     }
     private ServerResponse dislike_comment(){
         return Comment_DB.dislike_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id());
+    }
+    private ServerResponse remove_user_like_from_comment(){
+        return Comment_DB.remove_user_like_from_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id());
+    }
+    private ServerResponse remove_user_dislike_from_comment(){
+        return Comment_DB.remove_user_like_from_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse load_comments(){
         return Comment_DB.get_all_comments_of_a_post(UUID.fromString(super.getPost_id()), super.getRequest_id());

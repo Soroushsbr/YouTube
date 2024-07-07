@@ -136,7 +136,6 @@ public class Channel_DB {
     }
 
     public static ServerResponse change_channel_title(UUID channel_id, String title, int request_id) {
-        //check if user is owner of channel??
         System.out.println("[DATABASE] Changing title of channel " + channel_id + "to "+title + " ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -195,21 +194,23 @@ public class Channel_DB {
         return serverResponse;
     }
 
-    public static int number_of_posts(UUID channel_id) {
+    public static ServerResponse number_of_posts(UUID channel_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM posts WHERE channel_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1,channel_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_posts", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
@@ -326,7 +327,9 @@ public class Channel_DB {
         return serverResponse;
     }
 
-    public static void change_channel_username(UUID channel_id, String username) {
+    public static ServerResponse change_channel_username(UUID channel_id, String username, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Changing username of channel " + channel_id + "to "+username + " ...");
         String query = "UPDATE channels SET username = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
@@ -335,10 +338,13 @@ public class Channel_DB {
             preparedStatement.setObject(2, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
     /////+++
 
