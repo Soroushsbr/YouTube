@@ -1,6 +1,7 @@
 package espresso.youtube.DataBase.Utilities;
 
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.channel.Channel;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
@@ -169,19 +170,27 @@ public class Account_DB {
         return serverResponse;
     }
 
-    public static ServerResponse change_dark_mode(UUID user_id, boolean dark_mode, int request_id) {
-        System.out.println("[DATABASE] Changing dark mode of user " + user_id + " ...");
+    public static ServerResponse change_dark_mode(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        String query = "UPDATE accounts SET dark_mode = ? WHERE id = ?";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
+        String selectQuery= "SELECT dark_mode FROM accounts WHERE id = ?";
+        String updateQuery = "UPDATE accounts SET dark_mode = ? WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);PreparedStatement selectStatement = connection.prepareStatement(selectQuery);PreparedStatement updateStatement = connection.prepareStatement(updateQuery) ){
             connection.setAutoCommit(false);
-            preparedStatement.setBoolean(1, dark_mode);
-            preparedStatement.setObject(2, user_id);
-            preparedStatement.executeUpdate();
+            selectStatement.setObject(1, user_id);
+            ResultSet resultSet = selectStatement.executeQuery();
+            if (resultSet.next()) {
+                boolean dark_mode = resultSet.getBoolean("dark_mode");
+                updateStatement.setBoolean(1, !dark_mode);
+                updateStatement.setObject(2, user_id);
+                updateStatement.executeUpdate();
+                serverResponse.add_part("isSuccessful", true);
+                System.out.println("Dark mode for account " + user_id + " has been set to: " + !dark_mode);
+            } else {
+                serverResponse.add_part("isSuccessful", false);
+                System.out.println("Account with ID " + user_id + " not found.");
+            }
             connection.commit();
-            serverResponse.add_part("isSuccessful", true);
-            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
             serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
@@ -319,7 +328,7 @@ public class Account_DB {
         }
         return serverResponse;
     }
-    //????????????????????????
+
     public static void delete_account(UUID account_id) {
         System.out.println("[DATABASE] Deleting account " + account_id + " ...");
         ArrayList<String> queries = new ArrayList<>();
@@ -355,46 +364,53 @@ public class Account_DB {
         }
     }
 
-    public static List<UUID> get_subscribed_channels(UUID user_id) {
+    public static ServerResponse get_subscribed_channels(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
-//        serverResponse.setChannels_list();
-        System.out.println("[DATABASE] Getting subscribed channels of user " + user_id + " ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT channel_id FROM channel_subscription WHERE subscriber_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, user_id);
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Channel> channels = new ArrayList<>();
+        String sql = "SELECT c.id, c.title, c.username, c.owner_id, c.description, c.created_at FROM channels c JOIN channel_subscription cs ON c.id = cs.channel_id WHERE cs.subscriber_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id, Types.OTHER);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID channelId = (UUID) resultSet.getObject("channel_id");
-                    IDs.add(channelId);
+                    Channel channel = new Channel();
+                    channel.setUsername(resultSet.getString("username"));
+                    channel.setId(resultSet.getObject("id").toString());
+                    channel.setName(resultSet.getString("title"));
+                    channel.setOwner_id(resultSet.getObject("owner_id").toString());
+                    channel.setDescription(resultSet.getString("description"));
+                    channel.setCreated_at(resultSet.getTimestamp("created_at"));
+                    channels.add(channel);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setChannels_list(channels);
+
+        return serverResponse;
     }
 
-    public static List<UUID> get_subscribed_playlists(UUID user_id) {
-        System.out.println("[DATABASE] Getting subscribed playlists of user " + user_id + " ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, user_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    UUID playlistId = (UUID) resultSet.getObject("playlist_id");
-                    IDs.add(playlistId);
-                }
-            }
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-        System.out.println("[DATABASE] Done");
-        return IDs;
-    }
+//    public static List<UUID> get_subscribed_playlists(UUID user_id) {
+//        System.out.println("[DATABASE] Getting subscribed playlists of user " + user_id + " ...");
+//        List<UUID> IDs = new ArrayList<>();
+//        String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
+//        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+//             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+//            preparedStatement.setObject(1, user_id);
+//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//                while (resultSet.next()) {
+//                    UUID playlistId = (UUID) resultSet.getObject("playlist_id");
+//                    IDs.add(playlistId);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        System.out.println("[DATABASE] Done");
+//        return IDs;
+//    }
     /////+++
     public static ServerResponse change_username(UUID user_id, String username, int request_id) {
         System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
@@ -443,10 +459,11 @@ public class Account_DB {
     }
 }
 
+//methods that are gray?
 
 //check user is owner of a post, playlist, and channel, and comment???
 
-//!!!!!!!!!!!!
+
 
 //check delete_account
 //check get info for new columns

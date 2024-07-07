@@ -1,6 +1,8 @@
 package espresso.youtube.DataBase.Utilities;
 
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.account.Account;
+import espresso.youtube.models.video.Video;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -31,9 +33,8 @@ public class Post_DB {
         }
     }
 
-    public static void add_post(UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short, int video_length) {
+    public static void add_post(UUID id, UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short, int video_length) {
         System.out.println("[DATABASE] User "+owner_id+" adding post to channel "+channel_id+" ...");
-        UUID id = UUID.randomUUID();
         String query = "INSERT INTO posts (id, name, owner_id, channel_id, description, is_public, is_short, video_length) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -53,34 +54,59 @@ public class Post_DB {
         }
     }
 
-    public static void delete_post_from_playlist(UUID post_id, UUID playlist_id) {
-        System.out.println("[DATABASE] Delete post "+post_id+" from playlist "+playlist_id+"...");
+    public static ServerResponse delete_post_from_playlist(ArrayList<Video> videos, UUID playlist_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "DELETE FROM playlist_posts WHERE post_id = ? AND playlist_id = ?";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
-            connection.setAutoCommit(false);
-            preparedStatement.setObject(1, post_id);
-            preparedStatement.setObject(2, playlist_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("[DATABASE] Done");
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(false); // Start transaction
+
+            for (Video video : videos) {
+                System.out.println("[DATABASE] Deleting post " + video.getVideo_id() + " from playlist " + playlist_id + "...");
+                try {
+                    preparedStatement.setObject(1, video.getVideo_id());
+                    preparedStatement.setObject(2, playlist_id);
+                    preparedStatement.executeUpdate();
+                    System.out.println("[DATABASE] Done");
+                } catch (SQLException e) {
+                    serverResponse.add_part("isSuccessful", false); // Set failure if any deletion fails
+                    printSQLException(e);
+                }
+            }
+
+            connection.commit(); // Commit transaction after all deletions
+            serverResponse.add_part("isSuccessful", true); // If no exceptions, consider operation successful
+
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+
+        return serverResponse;
     }
 
-    public static ServerResponse add_post_to_playlist(UUID post_id, UUID playlist_id, int request_id) {
-        System.out.println("[DATABASE] Adding post "+post_id+" to playlist "+playlist_id+"...");
+    public static ServerResponse add_post_to_playlist(ArrayList<Video> videos, UUID playlist_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         String query = "INSERT INTO playlist_posts (playlist_id, post_id) VALUES (?, ?)";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             connection.setAutoCommit(false);
-            preparedStatement.setObject(1, playlist_id);
-            preparedStatement.setObject(2, post_id);
-            preparedStatement.executeUpdate();
+            for (Video video : videos) {
+                System.out.println("[DATABASE] Adding post " + video.getVideo_id() + " to playlist " + playlist_id + "...");
+                try {
+                    preparedStatement.setObject(1, playlist_id);
+                    preparedStatement.setObject(2, video.getVideo_id());
+                    preparedStatement.executeUpdate();
+                    System.out.println("[DATABASE] Done");
+                } catch (SQLException e) {
+                    serverResponse.add_part("isSuccessful", false); // Set failure if any insertion fails
+                    printSQLException(e);
+                }
+            }
+
             connection.commit();
-            serverResponse.add_part("isSuccessful", true);
-            System.out.println("[DATABASE] Done");
+            serverResponse.add_part("isSuccessful", true); // If no exceptions, consider operation successful
+
         } catch (SQLException e) {
             serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
@@ -256,37 +282,37 @@ public class Post_DB {
         }
     }
 
-    public static void change_post_title(UUID post_id, String title) {
-        //check if user is owner of post??
-        System.out.println("[DATABASE] Changing title of post "+post_id+" to "+title+" ...");
-        String query = "UPDATE posts SET title = ? WHERE id = ?";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
-            connection.setAutoCommit(false);
-            preparedStatement.setString(1, title);
-            preparedStatement.setObject(2, post_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("[DATABASE] Done");
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-    }
-
-    public static void change_post_description(UUID post_id, String description) {
-        //check if user is owner of post??
-        System.out.println("[DATABASE] Changing description of post "+post_id+" to "+description+" ...");
-        String query = "UPDATE posts SET description = ? WHERE id = ?";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
-            connection.setAutoCommit(false);
-            preparedStatement.setString(1, description);
-            preparedStatement.setObject(2, post_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("[DATABASE] Done");
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-    }
+//    public static void change_post_title(UUID post_id, String title) {
+//        //check if user is owner of post??
+//        System.out.println("[DATABASE] Changing title of post "+post_id+" to "+title+" ...");
+//        String query = "UPDATE posts SET title = ? WHERE id = ?";
+//        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
+//            connection.setAutoCommit(false);
+//            preparedStatement.setString(1, title);
+//            preparedStatement.setObject(2, post_id);
+//            preparedStatement.executeUpdate();
+//            connection.commit();
+//            System.out.println("[DATABASE] Done");
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//    }
+//
+//    public static void change_post_description(UUID post_id, String description) {
+//        //check if user is owner of post??
+//        System.out.println("[DATABASE] Changing description of post "+post_id+" to "+description+" ...");
+//        String query = "UPDATE posts SET description = ? WHERE id = ?";
+//        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
+//            connection.setAutoCommit(false);
+//            preparedStatement.setString(1, description);
+//            preparedStatement.setObject(2, post_id);
+//            preparedStatement.executeUpdate();
+//            connection.commit();
+//            System.out.println("[DATABASE] Done");
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//    }
 
     public static ServerResponse number_of_views(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM views WHERE post_id = ?";
@@ -426,102 +452,223 @@ public class Post_DB {
         return serverResponse;
     }
 
-    public static ServerResponse get_all_posts(int request_id){
-        System.out.println("[DATABASE] Getting IDs of all Posts...");
+    public static ServerResponse get_all_posts(int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        String query = "SELECT id FROM posts";
-        try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
-            ArrayList<String> IDs = new ArrayList<>();
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()){
-                    IDs.add(((UUID) resultSet.getObject("id")).toString());
-                }
+        ArrayList<Video> posts = new ArrayList<>();
+        String query = "SELECT id, title, owner_id, channel_id, description, is_public, is_short, video_length, created_at FROM posts";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Video post = new Video();
+                post.setVideo_id(resultSet.getString("id"));
+                post.setTitle(resultSet.getString("title"));
+                post.setOwner_id(resultSet.getString("owner_id"));
+//                post.setChannel_id(UUID.fromString(resultSet.getString("channel_id")));
+                post.setDescription(resultSet.getString("description"));
+                post.setIs_public(resultSet.getBoolean("is_public"));
+                post.setIs_short(resultSet.getBoolean("is_short"));
+                post.setLength(resultSet.getInt("video_length"));
+                post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                posts.add(post);
             }
-            serverResponse.add_part("videos_id", String.join(", ", IDs));
-        } catch (SQLException e){
+
+        } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
+
+        serverResponse.setVideos_list(posts);
         return serverResponse;
     }
 
-    public static List<UUID> get_all_Posts_of_a_account(UUID account_id) {
-        System.out.println("[DATABASE] Getting Posts of account "+account_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT id FROM posts WHERE owner_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+    public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> posts = new ArrayList<>();
+        String query = "SELECT id, title, owner_id, channel_id, description, is_public, is_short, video_length, created_at FROM posts WHERE owner_id = ?";
+
+        try (Connection connection = create_connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, account_id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                UUID id = (UUID) resultSet.getObject("id");
-                IDs.add(id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Video post = new Video();
+                    post.setVideo_id(resultSet.getString("id"));
+                    post.setTitle(resultSet.getString("title"));
+                    post.setOwner_id(resultSet.getString("owner_id"));
+//                    post.setCh(UUID.fromString(resultSet.getString("channel_id")));
+                    post.setDescription(resultSet.getString("description"));
+                    post.setIs_public(resultSet.getBoolean("is_public"));
+                    post.setIs_short(resultSet.getBoolean("is_short"));
+                    post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                    posts.add(post);
+                }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setVideos_list(posts);
+        return serverResponse;
     }
 
-    public static List<UUID> get_all_posts_of_a_channel(UUID channel_id) {
-        System.out.println("[DATABASE] Getting Posts of channel "+channel_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT id FROM posts WHERE channel_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+    public static ServerResponse get_all_posts_of_channel(UUID channel_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> posts = new ArrayList<>();
+        String query = "SELECT p.id, p.title, p.owner_id, p.channel_id, p.description, p.is_public, p.is_short, p.video_length, p.created_at FROM posts p JOIN channels c ON p.channel_id = c.id WHERE p.channel_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, channel_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID postId = (UUID) resultSet.getObject("id");
-                    IDs.add(postId);
+                    Video post = new Video();
+                    post.setVideo_id(resultSet.getString("id"));
+                    post.setTitle(resultSet.getString("title"));
+                    post.setOwner_id(resultSet.getString("owner_id"));
+//                    post.setChannel( id UUID.fromString(resultSet.getString("channel_id")));
+                    post.setDescription(resultSet.getString("description"));
+                    post.setIs_public(resultSet.getBoolean("is_public"));
+                    post.setIs_short(resultSet.getBoolean("is_short"));
+                    post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+                    posts.add(post);
                 }
             }
+
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setVideos_list(posts);
+        return serverResponse;
     }
 
-    public static List<UUID> get_all_posts_of_a_playlist(UUID playlist_id) {
-        System.out.println("[DATABASE] Getting Posts of playlist "+playlist_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT post_id FROM playlist_posts WHERE playlist_id = ?";
+    public static ServerResponse get_all_posts_of_a_playlist(UUID playlist_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> posts = new ArrayList<>();
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, playlist_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+        String query = "SELECT p.id, p.title, p.owner_id, p.channel_id, p.description, p.is_public, p.is_short, p.video_length, p.created_at FROM posts p JOIN playlist_posts pp ON p.id = pp.post_id WHERE pp.playlist_id = ?";
+        try (Connection connection = create_connection(); PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setObject(1, playlist_id);
+            try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID postId = (UUID) resultSet.getObject("post_id");
-                    IDs.add(postId);
+                    Video post = new Video();
+
+                    post.setVideo_id(resultSet.getString("id"));
+                    post.setOwner_id(resultSet.getString("channel_id"));
+//                    post.setChannel id
+                    post.setTitle(resultSet.getString("title"));
+                    post.setDescription(resultSet.getString("description"));
+                    post.setIs_public(resultSet.getBoolean("is_public"));
+                    post.setIs_short(resultSet.getBoolean("is_short"));
+                    post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                    posts.add(post);
                 }
             }
+
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setVideos_list(posts);
+        return serverResponse;
     }
 
-    public static List<UUID> get_all_viewers_of_a_post(UUID post_id) {
-        System.out.println("[DATABASE] Getting viewers of post "+post_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT user_id FROM views WHERE post_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+    public static ServerResponse get_all_viewers_of_a_post(UUID post_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Account> viewers = new ArrayList<>();
+
+        String query = "SELECT a.id, a.username, a.gmail, a.dark_mode, a.is_premium, a.created_at FROM accounts a JOIN views v ON a.id = v.user_id WHERE v.post_id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setObject(1, post_id);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID userId = (UUID) resultSet.getObject("user_id");
-                    IDs.add(userId);
+                    Account account = new Account();
+                    account.setId(resultSet.getString("id"));
+                    account.setUsername(resultSet.getString("username"));
+                    account.setGmail(resultSet.getString("gmail"));
+                    account.setDark_mode(resultSet.getBoolean("dark_mode"));
+                    account.setIs_premium(resultSet.getBoolean("is_premium"));
+                    account.setCreated_at(resultSet.getTimestamp("created_at"));
+                    viewers.add(account);
                 }
             }
+
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setAccounts_list(viewers);
+        return serverResponse;
     }
     ///+++
+    public static ServerResponse change_post_info(UUID post_id, String title, String description, Boolean is_public, Boolean is_short, int video_length, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        StringBuilder queryBuilder = new StringBuilder("UPDATE posts SET ");
+
+        boolean isFirst = true; // Used to manage commas in the query
+        if (title != null) {
+            queryBuilder.append(isFirst ? "" : ", ").append("title = ?");
+            isFirst = false;
+        }
+        if (description != null) {
+            queryBuilder.append(isFirst ? "" : ", ").append("description = ?");
+            isFirst = false;
+        }
+        if (is_public != null) {
+            queryBuilder.append(isFirst ? "" : ", ").append("is_public = ?");
+            isFirst = false;
+        }
+        if (is_short != null) {
+            queryBuilder.append(isFirst ? "" : ", ").append("is_short = ?");
+            isFirst = false;
+        }
+
+        queryBuilder.append(isFirst ? "" : ", ").append("video_length = ?");
+        queryBuilder.append(" WHERE id = ?");
+        String query = queryBuilder.toString();
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            int parameterIndex = 1;
+            if (title != null) {
+                preparedStatement.setString(parameterIndex++, title);
+            }
+            if (description != null) {
+                preparedStatement.setString(parameterIndex++, description);
+            }
+            if (is_public != null) {
+                preparedStatement.setBoolean(parameterIndex++, is_public);
+            }
+            if (is_short != null) {
+                preparedStatement.setBoolean(parameterIndex++, is_short);
+            }
+            preparedStatement.setInt(parameterIndex++, video_length);
+            preparedStatement.setObject(parameterIndex, post_id);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Post with ID " + post_id + " updated successfully.");
+                serverResponse.add_part("isSuccessful", true);
+            } else {
+                System.out.println("No post found with ID " + post_id);
+                serverResponse.add_part("isSuccessful", false);
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return serverResponse;
+    }
 
     public static void main(String[] args) {
 

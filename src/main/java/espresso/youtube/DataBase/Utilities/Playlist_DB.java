@@ -2,6 +2,7 @@ package espresso.youtube.DataBase.Utilities;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.playlist.Playlist;
 
 import java.sql.*;
 import java.util.List;
@@ -128,57 +129,92 @@ public class Playlist_DB {
         }
     }
 
-    public static void subscribe_to_playlist(UUID playlist_id, UUID subscriber_id) {
-        //check if playlist is public?
-        System.out.println("[DATABASE] Subscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
-        String query = "INSERT INTO playlist_subscription (playlist_id, subscriber_id) VALUES (?, ?)";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
-            connection.setAutoCommit(false);
-            preparedStatement.setObject(1, playlist_id);
-            preparedStatement.setObject(2, subscriber_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("[DATABASE] Done");
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-    }
+//    public static void subscribe_to_playlist(UUID playlist_id, UUID subscriber_id) {
+//        //check if playlist is public?
+//        System.out.println("[DATABASE] Subscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
+//        String query = "INSERT INTO playlist_subscription (playlist_id, subscriber_id) VALUES (?, ?)";
+//        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
+//            connection.setAutoCommit(false);
+//            preparedStatement.setObject(1, playlist_id);
+//            preparedStatement.setObject(2, subscriber_id);
+//            preparedStatement.executeUpdate();
+//            connection.commit();
+//            System.out.println("[DATABASE] Done");
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//    }
 
-    public static void unsubscribe_to_playlist(UUID playlist_id, UUID subscriber_id) {
-        System.out.println("[DATABASE] Unsubscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
-        String query = "DELETE FROM playlist_subscription WHERE playlist_id = ? AND subscriber_id = ?";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
-            connection.setAutoCommit(false);
-            preparedStatement.setObject(1, playlist_id);
-            preparedStatement.setObject(2, subscriber_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            System.out.println("[DATABASE] Done");
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-    }
+//    public static void unsubscribe_to_playlist(UUID playlist_id, UUID subscriber_id) {
+//        System.out.println("[DATABASE] Unsubscribing user "+subscriber_id+" to playlist "+playlist_id+" ...");
+//        String query = "DELETE FROM playlist_subscription WHERE playlist_id = ? AND subscriber_id = ?";
+//        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
+//            connection.setAutoCommit(false);
+//            preparedStatement.setObject(1, playlist_id);
+//            preparedStatement.setObject(2, subscriber_id);
+//            preparedStatement.executeUpdate();
+//            connection.commit();
+//            System.out.println("[DATABASE] Done");
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//    }
 
-    public static boolean check_if_user_subscribed(UUID playlist_id, UUID user_id) {
-        System.out.println("[DATABASE] Checking if user "+user_id+" is subscribed to playlist "+playlist_id+" ...");
-        String query = "SELECT EXISTS (SELECT 1 FROM playlist_subscription WHERE playlist_id = ? AND subscriber_id = ? )";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setObject(1, playlist_id);
-            preparedStatement.setObject(2, user_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    System.out.println("[DATABASE] Done");
-                    return resultSet.getBoolean(1);
-                }
-            }
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-        return false;
-    }
+//    public static boolean check_if_user_subscribed(UUID playlist_id, UUID user_id) {
+//        System.out.println("[DATABASE] Checking if user "+user_id+" is subscribed to playlist "+playlist_id+" ...");
+//        String query = "SELECT EXISTS (SELECT 1 FROM playlist_subscription WHERE playlist_id = ? AND subscriber_id = ? )";
+//        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setObject(1, playlist_id);
+//            preparedStatement.setObject(2, user_id);
+//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//                if (resultSet.next()) {
+//                    System.out.println("[DATABASE] Done");
+//                    return resultSet.getBoolean(1);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        return false;
+//    }
+
+    //    public static int number_of_subscribers(UUID playlist_id) {
+//        String query = "SELECT COUNT(*) AS row_count FROM playlist_subscription WHERE playlist_id = ?";
+//        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setObject(1,playlist_id);
+//            try(ResultSet resultSet = preparedStatement.executeQuery();){
+//                if (resultSet.next()) {
+//                    return resultSet.getInt("row_count");
+//                } else {
+//                    return 0;
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        return -1;
+//    }
+
+//    public static List<UUID> get_subscribers(UUID playlist_id) {
+//        System.out.println("[DATABASE] Getting subscribers of playlist "+playlist_id+" ...");
+//        List<UUID> subscriberIds = new ArrayList<>();
+//        String sql = "SELECT subscriber_id FROM playlist_subscription WHERE playlist_id = ?";
+//        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+//            preparedStatement.setObject(1, playlist_id);
+//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//                while (resultSet.next()) {
+//                    UUID subscriberId = (UUID) resultSet.getObject("subscriber_id");
+//                    subscriberIds.add(subscriberId);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        System.out.println("[DATABASE] Done");
+//        return subscriberIds;
+//    }
 
     public static void create_watch_later(UUID owner_id) {
-        //!!!user shouldnt be able to change watch later title or make it public or add description
         System.out.println("[DATABASE] Creating watch later playlist for user "+owner_id+" ...");
         UUID id = UUID.randomUUID();
         String query = "INSERT INTO playlists (id, title, owner_id, is_public) VALUES (?, ?, ?, ?)";
@@ -194,23 +230,6 @@ public class Playlist_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
-    }
-
-    public static int number_of_subscribers(UUID playlist_id) {
-        String query = "SELECT COUNT(*) AS row_count FROM playlist_subscription WHERE playlist_id = ?";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setObject(1,playlist_id);
-            try(ResultSet resultSet = preparedStatement.executeQuery();){
-                if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
-                } else {
-                    return 0;
-                }
-            }
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-        return -1;
     }
 
     public static ServerResponse number_of_posts(UUID playlist_id, int request_id) {
@@ -286,44 +305,43 @@ public class Playlist_DB {
         return serverResponse;
     }
 
-    public static List<UUID> get_playlists_of_account(UUID account_id) {
-        System.out.println("[DATABASE] Getting playlists of account "+account_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT id FROM playlists WHERE owner_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, account_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    UUID playlistId = (UUID) resultSet.getObject("id");
-                    IDs.add(playlistId);
-                }
-            }
-        } catch (SQLException e) {
-            printSQLException(e);
-        }
-        System.out.println("[DATABASE] Done");
-        return IDs;
-    }
+    public static ServerResponse get_playlists_of_account(UUID owner_id, int request_id) {
+        ArrayList<Playlist> playlists = new ArrayList<>();
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "SELECT id, title, owner_id, description, is_public, created_at FROM playlists WHERE owner_id = ?";
 
-    public static List<UUID> get_subscribers(UUID playlist_id) {
-        System.out.println("[DATABASE] Getting subscribers of playlist "+playlist_id+" ...");
-        List<UUID> subscriberIds = new ArrayList<>();
-        String sql = "SELECT subscriber_id FROM playlist_subscription WHERE playlist_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, playlist_id);
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, owner_id);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID subscriberId = (UUID) resultSet.getObject("subscriber_id");
-                    subscriberIds.add(subscriberId);
+                    Playlist playlist = new Playlist();
+                    playlist.setId(resultSet.getString("id"));
+                    playlist.setTitle(resultSet.getString("title"));
+                    playlist.setUser_id(resultSet.getString("owner_id"));
+                    playlist.setDescription(resultSet.getString("description"));
+                    playlist.setIs_public(resultSet.getBoolean("is_public"));
+                    playlist.setCreated_at(resultSet.getTimestamp("created_at"));
+                    playlists.add(playlist);
                 }
             }
+
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return subscriberIds;
+        serverResponse.setPlaylists_list(playlists);
+        return serverResponse;
     }
     ///+++
+    public static ServerResponse change_playlist_info(UUID playlist_id, String description, String title, int request_id){
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        change_playlist_title(playlist_id, title);
+        change_playlist_description(playlist_id, description);
+        serverResponse.add_part("isSuccessful", true);
+        return serverResponse;
+    }
 
     public static void main(String[] args) {
 

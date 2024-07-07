@@ -1,6 +1,7 @@
 package espresso.youtube.DataBase.Utilities;
 
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.comment.Comment;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -288,23 +289,36 @@ public class Comment_DB {
         return serverResponse;
     }
 
-    public static List<UUID> get_all_comments_of_a_post(UUID post_id) {
-        System.out.println("[DATABASE] Getting all comments of post "+post_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT id FROM comments WHERE post_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, post_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+    public static ServerResponse get_all_comments_of_a_post(UUID post_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Comment> comments = new ArrayList<>();
+        String query = "SELECT id, owner_id, content, post_id, parent_comment_id, created_at FROM comments WHERE post_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setObject(1, post_id);
+            try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID commentId = (UUID) resultSet.getObject("id");
-                    IDs.add(commentId);
+                    Comment comment = new Comment();
+                    comment.setComment_id(resultSet.getString("id"));
+                    comment.setUser_id(resultSet.getString("owner_id"));
+                    comment.setMessage(resultSet.getString("content"));
+                    comment.setCreated_at(resultSet.getTimestamp("created_at"));
+                    if (resultSet.getObject("parent_comment_id") == null){
+                        comment.setParent_comment_id(null);
+                    } else {
+                        comment.setParent_comment_id(resultSet.getObject("parent_comment_id").toString());
+                    }
+
+                    comments.add(comment);
                 }
             }
+
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setComments_list(comments);
+        return serverResponse;
     }
     ///+++
     public static ServerResponse edit_comment(UUID comment_id, String content, int request_id) {

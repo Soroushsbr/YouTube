@@ -37,8 +37,7 @@ public class Server_playlist extends Playlist {
     }
 
     private ServerResponse get_all_posts_of_a_playlist(){
-        //???
-        return null;
+        return Post_DB.get_all_posts_of_a_playlist(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse make_playlist_public(){
         return Playlist_DB.make_playlist_public(UUID.fromString(super.getId()), super.getRequest_id());
@@ -57,27 +56,19 @@ public class Server_playlist extends Playlist {
         return Playlist_DB.delete_playlist(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_playlists_of_account(){
-        //??
-        return null;
+        return Playlist_DB.get_playlists_of_account(UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse create_playlist(){
-        return Playlist_DB.create_playlist(super.getUser_id(), super.getTitle(), super.getIs_public(), super.getDescription(), super.getRequest_id());
-        return null;
+        return Playlist_DB.create_playlist(UUID.fromString(super.getUser_id()), super.getTitle(), super.getIs_public(), super.getDescription(), super.getRequest_id());
     }
     private ServerResponse change_playlist_info(){
-        //???
-//        Post_DB.change_pla_description();
-//        Post_DB.check_user_dislikes_post()
-        return null;
+        return Playlist_DB.change_playlist_info(UUID.fromString(super.getUser_id()), super.getDescription(), super.getTitle(), super.getRequest_id());
     }
     private ServerResponse add_video(){
-        //array7 list vide
-//        return Post_DB.add_post_to_playlist(UUID.fromString(super.getVideos().get(0)), )
-        return null;
+        return Post_DB.add_post_to_playlist(super.getVideos(), UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse remove_video(){
-        //why in playlist??
-        return null;
+        return Post_DB.delete_post_from_playlist(super.getVideos(), UUID.fromString(super.getId()), super.getRequest_id());
     }
 
 }

@@ -2,6 +2,8 @@ package espresso.youtube.DataBase.Utilities;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.account.Account;
+import espresso.youtube.models.channel.Channel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -155,7 +157,6 @@ public class Channel_DB {
     }
 
     public static ServerResponse change_channel_description(UUID channel_id, String description, int request_id) {
-        //check if user is owner of channel??
         System.out.println("[DATABASE] Changing description of channel " + channel_id + "to "+description + " ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -246,7 +247,7 @@ public class Channel_DB {
         queries.add("DELETE FROM comment_dislikes WHERE comment_id IN (SELECT id FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?))");
         queries.add("DELETE FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
         queries.add("DELETE FROM posts WHERE channel_id = ?");
-        queries.add("DELETE FROM channel_subscription WHERE channel_id = ?"); // Add this to handle channel subscriptions
+        queries.add("DELETE FROM channel_subscription WHERE channel_id = ?");
         queries.add("DELETE FROM channels WHERE id = ?");
         try (Connection connection = create_connection()) {
             connection.setAutoCommit(false);
@@ -269,46 +270,63 @@ public class Channel_DB {
         return serverResponse;
     }
 
-    public static List<UUID> get_channels_of_account(UUID account_id) {
-        System.out.println("[DATABASE] Getting channels of user "+account_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT id FROM channels WHERE owner_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, account_id);
+    public static ServerResponse get_channels_of_account(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Channel> channels = new ArrayList<>();
+        String sql = "SELECT id, title, username, owner_id, description, created_at FROM channels WHERE owner_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id, Types.OTHER);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID channelId = (UUID) resultSet.getObject("id");
-                    IDs.add(channelId);
+                    Channel channel = new Channel();
+                    channel.setUsername(resultSet.getString("username"));
+                    channel.setId(resultSet.getObject("id").toString());
+                    channel.setName(resultSet.getString("title"));
+                    channel.setOwner_id(resultSet.getObject("owner_id").toString());
+                    channel.setDescription(resultSet.getString("description"));
+                    channel.setCreated_at(resultSet.getTimestamp("created_at"));
+                    channels.add(channel);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setChannels_list(channels);
+        return serverResponse;
     }
 
-    public static List<UUID> get_subscribers(UUID channel_id) {
-        System.out.println("[DATABASE] Getting subscribers of channel "+channel_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT subscriber_id FROM channel_subscription WHERE channel_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, channel_id);
+    public static ServerResponse get_subscribers(UUID channel_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Account> accounts = new ArrayList<>();
+        String sql = "SELECT a.id, a.username, a.gmail, a.password, a.dark_mode, a.is_premium, a.created_at FROM accounts a JOIN channel_subscription cs ON a.id = cs.subscriber_id WHERE cs.channel_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, channel_id, Types.OTHER);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID subscriberId = (UUID) resultSet.getObject("subscriber_id");
-                    IDs.add(subscriberId);
+                    Account account = new Account();
+                    account.setId(resultSet.getObject("id").toString());
+                    account.setUsername(resultSet.getString("username"));
+                    account.setGmail(resultSet.getString("gmail"));
+                    account.setPassword(resultSet.getString("password"));
+                    account.setDark_mode(resultSet.getBoolean("dark_mode"));
+                    account.setIs_premium(resultSet.getBoolean("is_premium"));
+                    account.setCreated_at(resultSet.getTimestamp("created_at"));
+                    accounts.add(account);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+
+        serverResponse.setAccounts_list(accounts);
+        return serverResponse;
     }
 
     public static void change_channel_username(UUID channel_id, String username) {
-        //check if user is owner of channel??
         System.out.println("[DATABASE] Changing username of channel " + channel_id + "to "+username + " ...");
         String query = "UPDATE channels SET username = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){

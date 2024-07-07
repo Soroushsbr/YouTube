@@ -3,12 +3,14 @@ package espresso.youtube.models.playlist;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.video.Video;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Playlist extends ClassInfo {
     private String title, description, channel_id, channel_name, id, user_id;
     private boolean is_public;
     private int n_posts;
+    private Timestamp created_at;
     private ArrayList<Video> videos = new ArrayList<>();
     public Playlist(){
         super.className = "playlist";
@@ -40,6 +42,7 @@ public class Playlist extends ClassInfo {
         this.n_posts = n_posts;
     }
     public void setIs_public(boolean is_public) {this.is_public = is_public;}
+    public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
 
     //------------------ getters -----------------------
     public String getTitle() {
@@ -67,7 +70,7 @@ public class Playlist extends ClassInfo {
         return n_posts;
     }
     public boolean getIs_public() {return is_public;}
-
+    public Timestamp getCreated_at() {return created_at;}
 
 
 }

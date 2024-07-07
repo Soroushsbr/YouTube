@@ -52,8 +52,7 @@ public class Server_channel extends Channel {
         return Channel_DB.delete_channel(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_channels_of_account(){
-        //??
-        return null;
+        return Channel_DB.get_channels_of_account(UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse change_channel_name(){
         return Channel_DB.change_channel_title(UUID.fromString(super.getId()), super.getName(), super.getRequest_id());
@@ -62,8 +61,7 @@ public class Server_channel extends Channel {
         return Channel_DB.change_channel_description(UUID.fromString(super.getId()), super.getDescription(), super.getRequest_id());
     }
     private ServerResponse get_subscribers(){
-        //??
-        return null;
+        return Channel_DB.get_subscribers(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse subscribe(){
         return Channel_DB.subscribe_to_channel(UUID.fromString(super.getId()), UUID.fromString(super.getOwner_id()), super.getRequest_id());

@@ -2,9 +2,12 @@ package espresso.youtube.models.comment;
 
 import espresso.youtube.models.ClassInfo;
 
+import java.sql.Timestamp;
+
 public class Comment extends ClassInfo {
     private String post_id, message, comment_id, user_id, username, parent_comment_id;
     private int n_likes;
+    private Timestamp created_at;
     public Comment(){
         super.className = "comment";
     }
@@ -27,6 +30,7 @@ public class Comment extends ClassInfo {
     public void setN_likes(int n_likes) {
         this.n_likes = n_likes;
     }
+    public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
     public void setParent_comment_id(String parent_comment_id) {this.parent_comment_id = parent_comment_id;}
 
 
@@ -50,6 +54,9 @@ public class Comment extends ClassInfo {
         return n_likes;
     }
     public String getParent_comment_id() {return parent_comment_id;}
+    public Timestamp getCreated_at() {return created_at;}
+
+
 }
 
 

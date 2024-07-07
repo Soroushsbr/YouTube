@@ -3,6 +3,7 @@ package espresso.youtube.models.account;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.channel.Channel;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Account extends ClassInfo {
@@ -11,6 +12,9 @@ public class Account extends ClassInfo {
     private String password;
     private String name;
     private String id;
+    private boolean dark_mode;
+    private boolean is_premium;
+    private Timestamp created_at;
     private ArrayList<Channel> followed_channels = new ArrayList<>();
     public Account(){
         super.className = "account";
@@ -32,6 +36,9 @@ public class Account extends ClassInfo {
     public void setUsername(String username) {
         this.username = username;
     }
+    public void setDark_mode(boolean dark_mode) {this.dark_mode = dark_mode;}
+    public void setIs_premium(boolean is_premium) {this.is_premium = is_premium;}
+    public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
     public void setFollowed_channels(ArrayList<Channel> followed_channels) {
         this.followed_channels = followed_channels;
     }
@@ -55,4 +62,7 @@ public class Account extends ClassInfo {
     public ArrayList<Channel> getFollowed_channels() {
         return followed_channels;
     }
+    public boolean getDark_mode() {return dark_mode;}
+    public boolean getIs_premium() {return is_premium;}
+    public Timestamp getCreated_at() {return created_at;}
 }

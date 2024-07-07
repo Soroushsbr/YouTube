@@ -40,7 +40,7 @@ public class Server_comment extends Comment {
         return Comment_DB.check_user_likes_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id() );
     }
     private ServerResponse check_user_dislikes_comment(){
-        return Comment_DB.check_user_likes_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id() );
+        return Comment_DB.check_user_dislikes_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id() );
     }
     private ServerResponse number_of_likes(){
         return Comment_DB.number_of_likes(UUID.fromString(super.getComment_id()), super.getRequest_id());
@@ -58,15 +58,13 @@ public class Server_comment extends Comment {
         return Comment_DB.dislike_comment(UUID.fromString(super.getComment_id()), UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse load_comments(){
-        //?? get post comments
-        return null;
+        return Comment_DB.get_all_comments_of_a_post(UUID.fromString(super.getPost_id()), super.getRequest_id());
     }
     private ServerResponse put_comment(){
         return Comment_DB.add_comment(UUID.fromString(super.getUser_id()), UUID.fromString(super.getPost_id()), getMessage(), super.getRequest_id());
     }
     private ServerResponse reply_comment(){
-//        return Comment_DB.reply_to_comment(UUID.fromString(super.getUser_id()), UUID.fromString(super.getPost_id()), super.getMessage(), super.get);
-        return null;
+        return Comment_DB.reply_to_comment(UUID.fromString(super.getUser_id()), UUID.fromString(super.getPost_id()), super.getMessage(), UUID.fromString(super.getParent_comment_id()), super.getRequest_id());
     }
     private ServerResponse edit_comment(){
         return Comment_DB.edit_comment(UUID.fromString(super.getComment_id()), super.getMessage(), super.getRequest_id());

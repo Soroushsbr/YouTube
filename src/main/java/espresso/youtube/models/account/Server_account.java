@@ -43,32 +43,22 @@ public class Server_account extends Account {
         return Account_DB.remove_premium_of_user(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse change_dark_mode(){
-//        return Account_DB.change_dark_mode(UUID.fromString(super.getId()), super.g);
-        return null;
-    }
-    private ServerResponse get_username_by_id(){
-        //lazem daram nabayad server response bashe
-        return null;
+        return Account_DB.change_dark_mode(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_info(){
         return Account_DB.get_info(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_subscribed_channels(){
-        //??
-        return null;
-    }
-    private ServerResponse change_name(){
-        // name??
-        return null;
+        return Account_DB.get_subscribed_channels(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse change_email(){
         return Account_DB.change_gmail(UUID.fromString(super.getId()),super.getGmail() ,super.getRequest_id());
     }
     private ServerResponse change_password(){
-        return null;
+        return Account_DB.change_password(UUID.fromString(super.getId()), super.getPassword(), super.getRequest_id());
     }
     private ServerResponse change_username(){
-        return Account_DB.change_gmail(UUID.fromString(super.getId()),super.getPassword() ,super.getRequest_id());
+        return Account_DB.change_username(UUID.fromString(super.getId()),super.getPassword() ,super.getRequest_id());
     }
     private ServerResponse login() {
         System.out.println("[SERVER] : user wants to login");
