@@ -1,6 +1,7 @@
 package espresso.youtube.Front;
 
 import espresso.youtube.Client.Client;
+import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.video.Client_video;
 import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
@@ -80,9 +81,7 @@ public class MainPage implements Initializable {
             Client_video cv = new Client_video(client.getOut());
             client.setReq_id();
 
-            //todo: put this in a thread
-
-            System.out.println("Waiting...");
+            System.out.println("Waiting to get videos...");
             cv.get_videos(client.getReq_id());
             ArrayList<Video> videos ;
 
@@ -94,28 +93,25 @@ public class MainPage implements Initializable {
                 Thread.sleep(50);
             }
             System.out.println("Done.");
-
-            int i = 0;
             videosBox.getChildren().clear();
+            int i = 0;
+
             while (i <videos.size()) {
                 HBox previewBox = new HBox();
                 previewBox.setSpacing(10);
                 previewBox.getChildren().clear();
                 for (int j = 0; j < 3; j++) {
                     if (i < videos.size()) {
+                        int finalI = i;
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                         AnchorPane videoPane = loader.load();
-//
-//                        File file = Client_video.get_media(id, "mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), 100);
-//                        Media media = new Media(file.toURI().toString());
-//                        MediaPlayer mediaPlayer = new MediaPlayer(media);
-//                        MediaView mediaView = new MediaView(mediaPlayer);
-//                        mediaView.fitWidthProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).widthProperty());
-//                        mediaView.fitHeightProperty().bind(((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).heightProperty());
-//                        ((VBox)((AnchorPane) videoPane.getChildren().get(4)).getChildren().get(0)).getChildren().add(mediaView);
-                        int finalI = i;
+
                         ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(0)).setText(videos.get(finalI).getTitle());
+                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(1)).setText(videos.get(finalI).getChannel().getName());
+                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(2)).setText(videos.get(finalI).getViews() + "● time");
+                        ((Button) videoPane.getChildren().get(3)).setOnAction(event -> switchTChannelPage(event , videos.get(finalI).getChannel()));
                         ((Button)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,videos.get(finalI)));
+
                         ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
                         ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
                         previewBox.getChildren().add(videoPane);
@@ -153,6 +149,7 @@ public class MainPage implements Initializable {
 
     public void logout(ActionEvent event){
         client.setUser_id("");
+        client.setChannel_id("");
         Parent root;
         Stage stage;
         Scene scene;
@@ -211,7 +208,21 @@ public class MainPage implements Initializable {
         ty.play();
     }
 
-
+    public void switchTChannelPage(ActionEvent event , Channel channel){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Channel.fxml"));
+            root = loader.load();
+            ChannelPage channelPage = loader.getController();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
     public void switchToVideoPage(ActionEvent event ,Video video){
         Parent root;
         Stage stage;

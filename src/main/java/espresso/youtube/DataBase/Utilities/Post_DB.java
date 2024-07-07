@@ -2,6 +2,8 @@ package espresso.youtube.DataBase.Utilities;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.channel.Channel;
+import espresso.youtube.models.video.Video;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -32,10 +34,9 @@ public class Post_DB {
         }
     }
 
-    public static void add_post(UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short) {
+    public static void add_post(UUID id ,UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short) {
         System.out.println("[DATABASE] User "+owner_id+" adding post to channel "+channel_id+" ...");
-        UUID id = UUID.randomUUID();
-        String query = "INSERT INTO posts (id, name, owner_id, channel_id, description, is_public, is_short) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO posts (id, title, owner_id, channel_id, description, is_public, is_short) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, id);
@@ -390,22 +391,49 @@ public class Post_DB {
         System.out.println("[DATABASE] Getting IDs of all Posts...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        String query = "SELECT id FROM posts";
+        String query = "SELECT * FROM posts";
         try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
-            ArrayList<String> IDs = new ArrayList<>();
+            ArrayList<Video> videos = new ArrayList<>();
             try (ResultSet resultSet = preparedStatement.executeQuery()){
                 while (resultSet.next()){
-                    IDs.add(((UUID) resultSet.getObject("id")).toString());
+                    Video video = new Video();
+                    video.setVideo_id(resultSet.getString("id"));
+                    video.setTitle(resultSet.getString("title"));
+                    video.setDescription(resultSet.getString("description"));
+                    video.setOwner_id(resultSet.getString("owner_id"));
+                    video.setViews(number_of_views(UUID.fromString(resultSet.getString("id"))));
+                    Channel channel = get_channel_info(UUID.fromString(resultSet.getString("channel_id")));
+                    video.setChannel(channel);
+                    videos.add(video);
                 }
             }
-            serverResponse.add_part("videos_id", String.join(", ", IDs));
+            serverResponse.setVideos_list(videos);
         } catch (SQLException e){
             printSQLException(e);
         }
         System.out.println("[DATABASE] Done");
         return serverResponse;
     }
-
+    public static Channel get_channel_info(UUID id){
+        System.out.println("[DATABASE] Getting info of channel "+id+" ...");
+        String query ="SELECT * FROM channels WHERE id = ?";
+        Channel channel = new Channel();
+        try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setObject(1 , id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if(resultSet.next()){
+                    channel.setId(resultSet.getString("id"));
+                    channel.setName(resultSet.getString("title"));
+                    channel.setOwner_id(resultSet.getString("owner_id"));
+                }
+            }
+            System.out.println("[DATABASE] Done");
+            return channel;
+        } catch (SQLException e){
+            printSQLException(e);
+        }
+        return null;
+    }
     public static List<UUID> get_all_Posts_of_a_account(UUID account_id) {
         System.out.println("[DATABASE] Getting Posts of account "+account_id+" ...");
         List<UUID> IDs = new ArrayList<>();

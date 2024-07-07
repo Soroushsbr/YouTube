@@ -1,5 +1,6 @@
 package espresso.youtube.Front;
 
+import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -41,7 +42,6 @@ import static espresso.youtube.Front.LoginMenu.darkmode;
 public class Dashboard implements Initializable {
     private File selectedVideo;
     private File selectedThumbnail;
-    private UUID channelID;
     @FXML
     AnchorPane parent;
     @FXML
@@ -140,7 +140,6 @@ public class Dashboard implements Initializable {
         backgroundFade.setVisible(true);
         createPane.setVisible(true);
     }
-
     public void hideUploadPane(){
         backgroundFade.setVisible(false);
         createPane.setVisible(false);
@@ -159,8 +158,8 @@ public class Dashboard implements Initializable {
                 if(!title.isEmpty() && !description.isEmpty()){
                     client.setReq_id();
                     Client_video client_video = new Client_video(client.getOut());
-                    client_video.send_video_info(client.getUser_id(),title,description,"123", "mp4", client.getReq_id());
-                    client_video.upload_media(selectedFile,client.getUser_id(),"mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
+                    client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id());
+                    client_video.upload_media(selectedFile, client.getChannel_id(), "mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
 
                     while (true) {
                         Thread.sleep(100);
@@ -259,7 +258,7 @@ public class Dashboard implements Initializable {
             uploadingScene();
             Timeline timelinePbar = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(progressBar.progressProperty(), 0)),
-                    new KeyFrame(Duration.seconds(5), new KeyValue(progressBar.progressProperty(), 1 ))
+                    new KeyFrame(Duration.seconds(4), new KeyValue(progressBar.progressProperty(), 1 ))
             );
             timelinePbar.play();
             timelinePbar.setOnFinished(event -> upDone());

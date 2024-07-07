@@ -14,8 +14,8 @@ public class Server_video extends Video {
             return insert_video_info();
         } else if(request.equals("get_video_info")) {
             return send_video_info();
-        } else if(request.equals("get_videos_id")) {
-            return send_videos_id();
+        } else if(request.equals("get_videos")) {
+            return send_videos();
         } else if(request.equals("change_channel_photo")) {
             return change_channel_photo();
         } else if(request.equals("change_profile_photo")) {
@@ -131,15 +131,15 @@ public class Server_video extends Video {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(super.getRequest_id());
 
-        Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(), super.getDescription(), UUID.randomUUID(), true);
+        Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(), UUID.fromString(super.getChannel().getId())  ,  super.getDescription(), true , false);
         serverResponse.add_part("status", "received");
         //notification.upload_post();
         return serverResponse;
     }
     private ServerResponse send_video_info(){
-        return Post_DB.get_post(UUID.fromString(super.getVideo_id()) , super.getRequest_id());
+        return Post_DB.get_info(UUID.fromString(super.getVideo_id()) , super.getRequest_id());
     }
-    private ServerResponse send_videos_id(){
+    private ServerResponse send_videos(){
         return Post_DB.get_all_posts(super.getRequest_id());
     }
 }

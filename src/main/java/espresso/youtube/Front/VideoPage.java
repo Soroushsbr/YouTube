@@ -136,7 +136,7 @@ public class VideoPage implements Initializable {
         Task<File> task = new Task<File>() {
             @Override
             protected File call() throws Exception {
-                return Client_video.get_media(video.getVideo_id(), video.getOwner_id() ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), req);
+                return Client_video.get_media(video.getVideo_id(), video.getChannel().getId() ,"mp4", "video", (int) client.requests.get(0).get_part("client_handler_id"), req);
             }
         };
         task.setOnSucceeded(e ->{
