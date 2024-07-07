@@ -112,4 +112,11 @@ public class Client_account {
             account = new Account();
         }
     }
+
+//    public void delete_account(String user_id, int request_id){
+//        account.setRequest("delete_account");
+//        account.setRequest_id(request_id);
+//        account.setId(user_id);
+//        send_request();
+//    }
 }

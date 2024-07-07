@@ -3,6 +3,8 @@ package espresso.youtube.DataBase.Utilities;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import espresso.youtube.Front.ChannelPage;
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.account.Account;
+import espresso.youtube.models.channel.Channel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,26 +35,34 @@ public class Channel_DB {
         }
     }
 
-    public static void create_channel(UUID owner_id, String title, String description) {
+    public static ServerResponse create_channel(UUID owner_id, String title, String description, int request_id) {
         System.out.println("[DATABASE] Creating channel ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         UUID id = UUID.randomUUID();
-        String query = "INSERT INTO channels (id, title, owner_id, description) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO channels (id, title, owner_id, description, username) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, id);
             preparedStatement.setString(2, title);
             preparedStatement.setObject(3, owner_id);
             preparedStatement.setString(4, description);
+            preparedStatement.setString(5, Account_DB.get_username_by_id(owner_id));
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void subscribe_to_channel(UUID channel_id, UUID subscriber_id) {
+    public static ServerResponse subscribe_to_channel(UUID channel_id, UUID subscriber_id, int request_id) {
         System.out.println("[DATABASE] Subscribing user " + subscriber_id + "to channel "+channel_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "INSERT INTO channel_subscription (channel_id, subscriber_id) VALUES (?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -60,10 +70,13 @@ public class Channel_DB {
             preparedStatement.setObject(2, subscriber_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
     public static void create_user_default_channel(UUID user_id) {
@@ -83,8 +96,10 @@ public class Channel_DB {
         }
     }
 
-    public static boolean check_if_user_subscribed(UUID channel_id, UUID user_id) {
+    public static ServerResponse check_if_user_subscribed(UUID channel_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user " + user_id + " is subscribed to channel "+channel_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "SELECT EXISTS (SELECT 1 FROM channel_subscription WHERE channel_id = ? AND subscriber_id = ? )";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, channel_id);
@@ -92,17 +107,19 @@ public class Channel_DB {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     System.out.println("[DATABASE] Done");
-                    return resultSet.getBoolean(1);
+                    serverResponse.add_part("is_subscribed", resultSet.getBoolean(1));
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return false;
+        return serverResponse;
     }
 
-    public static void unsubscribe_to_channel(UUID channel_id, UUID subscriber_id) {
+    public static ServerResponse unsubscribe_to_channel(UUID channel_id, UUID subscriber_id, int request_id) {
         System.out.println("[DATABASE] Unsubscribing user " + subscriber_id + "from channel "+channel_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "DELETE FROM channel_subscription WHERE channel_id = ? AND subscriber_id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -110,15 +127,19 @@ public class Channel_DB {
             preparedStatement.setObject(2, subscriber_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void change_channel_title(UUID channel_id, String title) {
-        //check if user is owner of channel??
+    public static ServerResponse change_channel_title(UUID channel_id, String title, int request_id) {
         System.out.println("[DATABASE] Changing title of channel " + channel_id + "to "+title + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE channels SET title = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -126,15 +147,19 @@ public class Channel_DB {
             preparedStatement.setObject(2, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void change_channel_description(UUID channel_id, String description) {
-        //check if user is owner of channel??
+    public static ServerResponse change_channel_description(UUID channel_id, String description, int request_id) {
         System.out.println("[DATABASE] Changing description of channel " + channel_id + "to "+description + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE channels SET description = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -142,44 +167,51 @@ public class Channel_DB {
             preparedStatement.setObject(2, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static int number_of_subscribers(UUID channel_id) {
+    public static ServerResponse number_of_subscribers(UUID channel_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM channel_subscription WHERE channel_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1,channel_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_subscribers", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    serverResponse.add_part("number_of_subscribers", resultSet.getInt(0));
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
-    public static int number_of_posts(UUID channel_id) {
+    public static ServerResponse number_of_posts(UUID channel_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM posts WHERE channel_id = ?";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1,channel_id);
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
-                    return resultSet.getInt("row_count");
+                    serverResponse.add_part("number_of_posts", resultSet.getInt("row_count"));
                 } else {
-                    return 0;
+                    return serverResponse;
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return -1;
+        return serverResponse;
     }
 
     public static ServerResponse get_info(UUID id, int request_id){
@@ -203,11 +235,13 @@ public class Channel_DB {
         } catch (SQLException e){
             printSQLException(e);
         }
-        return null;
+        return serverResponse;
     }
 
-    public static void delete_channel(UUID channel_id) {
+    public static ServerResponse delete_channel(UUID channel_id, int request_id) {
         System.out.println("[DATABASE] Deleting channel "+channel_id+" ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
         queries.add("DELETE FROM post_dislikes WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
@@ -215,7 +249,7 @@ public class Channel_DB {
         queries.add("DELETE FROM comment_dislikes WHERE comment_id IN (SELECT id FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?))");
         queries.add("DELETE FROM comments WHERE post_id IN (SELECT id FROM posts WHERE channel_id = ?)");
         queries.add("DELETE FROM posts WHERE channel_id = ?");
-        queries.add("DELETE FROM channel_subscription WHERE channel_id = ?"); // Add this to handle channel subscriptions
+        queries.add("DELETE FROM channel_subscription WHERE channel_id = ?");
         queries.add("DELETE FROM channels WHERE id = ?");
         try (Connection connection = create_connection()) {
             connection.setAutoCommit(false);
@@ -229,53 +263,91 @@ public class Channel_DB {
                 }
             }
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
             printSQLException(e);
+            serverResponse.add_part("isSuccessful", false);
         }
+        return serverResponse;
     }
 
-    public static List<UUID> get_channels_of_account(UUID account_id) {
-        System.out.println("[DATABASE] Getting channels of user "+account_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT id FROM channels WHERE owner_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, account_id);
+    public static ServerResponse get_channels_of_account(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Channel> channels = new ArrayList<>();
+        String sql = "SELECT id, title, username, owner_id, description, created_at FROM channels WHERE owner_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id, Types.OTHER);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID channelId = (UUID) resultSet.getObject("id");
-                    IDs.add(channelId);
+                    Channel channel = new Channel();
+                    channel.setUsername(resultSet.getString("username"));
+                    channel.setId(resultSet.getObject("id").toString());
+                    channel.setName(resultSet.getString("title"));
+                    channel.setOwner_id(resultSet.getObject("owner_id").toString());
+                    channel.setDescription(resultSet.getString("description"));
+                    channel.setCreated_at(resultSet.getTimestamp("created_at"));
+                    channels.add(channel);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setChannels_list(channels);
+        return serverResponse;
     }
+  
+    public static ServerResponse get_subscribers(UUID channel_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Account> accounts = new ArrayList<>();
+        String sql = "SELECT a.id, a.username, a.gmail, a.password, a.dark_mode, a.is_premium, a.created_at FROM accounts a JOIN channel_subscription cs ON a.id = cs.subscriber_id WHERE cs.channel_id = ?";
 
-
-
-    public static List<UUID> get_subscribers(UUID channel_id) {
-        System.out.println("[DATABASE] Getting subscribers of channel "+channel_id+" ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT subscriber_id FROM channel_subscription WHERE channel_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, channel_id);
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, channel_id, Types.OTHER);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID subscriberId = (UUID) resultSet.getObject("subscriber_id");
-                    IDs.add(subscriberId);
+                    Account account = new Account();
+                    account.setId(resultSet.getObject("id").toString());
+                    account.setUsername(resultSet.getString("username"));
+                    account.setGmail(resultSet.getString("gmail"));
+                    account.setPassword(resultSet.getString("password"));
+                    account.setDark_mode(resultSet.getBoolean("dark_mode"));
+                    account.setIs_premium(resultSet.getBoolean("is_premium"));
+                    account.setCreated_at(resultSet.getTimestamp("created_at"));
+                    accounts.add(account);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+
+        serverResponse.setAccounts_list(accounts);
+        return serverResponse;
+    }
+
+    public static ServerResponse change_channel_username(UUID channel_id, String username, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        System.out.println("[DATABASE] Changing username of channel " + channel_id + "to "+username + " ...");
+        String query = "UPDATE channels SET username = ? WHERE id = ?";
+        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
+            connection.setAutoCommit(false);
+            preparedStatement.setString(1, username);
+            preparedStatement.setObject(2, channel_id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            serverResponse.add_part("isSuccessful", true);
+            System.out.println("[DATABASE] Done");
+        } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
+            printSQLException(e);
+        }
+        return serverResponse;
     }
     /////+++
-
 
     public static void main(String[] args) {
 

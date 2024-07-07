@@ -14,6 +14,7 @@ public class Notification {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;
     private String title;
+    private boolean have_seen;
     
     //------------------ setters -----------------------
     public void setChannel_id(String channel_id) {
@@ -34,6 +35,7 @@ public class Notification {
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
+    public void setHave_seen(boolean have_seen) {this.have_seen = have_seen;}
 
     //------------------ getters -----------------------
     public String getChannel_id() {
@@ -54,4 +56,7 @@ public class Notification {
     public String getUser_id() {
         return user_id;
     }
+    public boolean getHave_seen() {return have_seen;}
+
+
 }

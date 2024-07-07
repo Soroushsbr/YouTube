@@ -60,12 +60,6 @@ public class Client_playlist {
         playlist.setId(playlist_id);
         send_request();
     }
-    public void create_watch_later(String user_id, int request_id){
-        playlist.setRequest("create_watch_later");
-        playlist.setRequest_id(request_id);
-        playlist.setUser_id(user_id);
-        send_request();
-    }
     public void number_of_posts(String playlist_id, int request_id){
         playlist.setRequest("number_of_posts");
         playlist.setRequest_id(request_id);

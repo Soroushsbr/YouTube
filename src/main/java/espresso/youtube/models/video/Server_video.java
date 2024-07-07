@@ -5,25 +5,18 @@ import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 import espresso.youtube.models.notification.Notification;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class Server_video extends Video {
     @Override
     public ServerResponse handle_request() {
-        if (request.equals("send_video_info")) {
+       if (request.equals("send_video_info")) {
             return insert_video_info();
         } else if(request.equals("get_video_info")) {
             return send_video_info();
-        } else if(request.equals("get_videos")) {
-            return send_videos();
-        } else if(request.equals("change_channel_photo")) {
-            return change_channel_photo();
-        } else if(request.equals("change_profile_photo")) {
-            return change_profile_photo();
-        } else if(request.equals("change_thumbnail")) {
-            return change_thumbnail();
-        } else if(request.equals("change_playlist_photo")) {
-            return change_playlist_photo();
+        } else if(request.equals("get_videos_id")) {
+            return send_videos_id();
         } else if(request.equals("search")) {
             return search();
         } else if(request.equals("like")) {
@@ -58,71 +51,77 @@ public class Server_video extends Video {
             return get_all_posts_of_a_channel();
         } else if(request.equals("get_all_viewers_of_a_post")) {
             return get_all_viewers_of_a_post();
+        } else if(request.equals("change_video_info")) {
+            return change_video_info();
+        } else if(request.equals("remove_user_like_from_post")) {
+            return remove_user_like_from_post();
+        } else if(request.equals("remove_user_dislike_from_post")) {
+            return remove_user_dislike_from_post();
         }
         return null;
     }
 
     private ServerResponse get_all_viewers_of_a_post(){
+        return Post_DB.get_all_viewers_of_a_post(UUID.fromString(super.getVideo_id()), super.getRequest_id());
+    }
+    private ServerResponse change_video_info(){
+//        Post_DB.change_post_info(UUID.fromString(super.getVideo_id()), super.getTitle(), super.getDescription(), super.get)
         return null;
     }
     private ServerResponse get_all_posts_of_a_channel(){
+//        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel id ()), super.getRequest_id())
         return null;
     }
     private ServerResponse get_all_posts_of_a_account(){
-        return null;
+        return Post_DB.get_all_Posts_of_a_account(UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse get_all_posts(){
-        return null;
+        return Post_DB.get_all_posts(super.getRequest_id()) ;
     }
     private ServerResponse delete_post(){
-        return null;
+        return Post_DB.delete_post(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse get_info(){
-        return null;
+        return Post_DB.get_info(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_comments(){
-        return null;
+        return Post_DB.number_of_comments(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_dislikes(){
-        return null;
+        return Post_DB.number_of_dislikes(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_likes(){
-        return null;
+        return Post_DB.number_of_likes(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse number_of_views(){
-        return null;
+        return Post_DB.number_of_views(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
     private ServerResponse check_if_user_viewed_post(){
-        return null;
+        return Post_DB.check_if_user_viewed_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse add_to_post_viewers(){
-        return null;
+        return Post_DB.add_to_post_viewers(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse check_user_dislikes_post(){
-        return null;
+        return Post_DB.check_user_dislikes_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse check_user_likes_post(){
-        return null;
+        return Post_DB.check_user_likes_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse dislike(){
-        return null;
+        return Post_DB.dislike_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse like(){
-        return null;
+        return Post_DB.like_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
+    }
+    private ServerResponse remove_user_like_from_post(){
+        return Post_DB.remove_user_like_from_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
+    }
+    private ServerResponse remove_user_dislike_from_post(){
+        return Post_DB.remove_user_dislike_from_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse search(){
-        return null;
-    }
-    private ServerResponse change_playlist_photo(){
-        return null;
-    }
-    private ServerResponse change_thumbnail(){
-        return null;
-    }
-    private ServerResponse change_profile_photo(){
-        return null;
-    }
-    private ServerResponse change_channel_photo(){
+//       return search(super.getText?? , super.getRequest_id())
         return null;
     }
     private ServerResponse insert_video_info(){
@@ -131,7 +130,8 @@ public class Server_video extends Video {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(super.getRequest_id());
 
-        Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(), UUID.fromString(super.getChannel().getId())  ,  super.getDescription(), true , false);
+        Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(),UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
+
         serverResponse.add_part("status", "received");
         //notification.upload_post();
         return serverResponse;

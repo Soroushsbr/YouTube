@@ -1,7 +1,11 @@
 package espresso.youtube.models.playlist;
 
+import espresso.youtube.DataBase.Utilities.Playlist_DB;
+import espresso.youtube.DataBase.Utilities.Post_DB;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.ServerResponse;
+
+import java.util.UUID;
 
 public class Server_playlist extends Playlist {
     @Override
@@ -18,8 +22,6 @@ public class Server_playlist extends Playlist {
             return make_playlist_public();
         } else if (request.equals("make_playlist_private")) {
             return make_playlist_private();
-        } else if (request.equals("create_watch_later")) {
-            return create_watch_later();
         } else if (request.equals("number_of_posts")) {
             return number_of_posts();
         } else if (request.equals("get_info")) {
@@ -35,40 +37,38 @@ public class Server_playlist extends Playlist {
     }
 
     private ServerResponse get_all_posts_of_a_playlist(){
-        return null;
+        return Post_DB.get_all_posts_of_a_playlist(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse make_playlist_public(){
-        return null;
+        return Playlist_DB.make_playlist_public(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse make_playlist_private(){
-        return null;
-    }
-    private ServerResponse create_watch_later(){
-        return null;
+        return Playlist_DB.make_playlist_private(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse number_of_posts(){
-        return null;
+        return Playlist_DB.number_of_posts(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_info(){
-        return null;
+        return Playlist_DB.get_info(UUID.fromString(super.getId()), super.getRequest_id());
+
     }
     private ServerResponse delete_playlist(){
-        return null;
+        return Playlist_DB.delete_playlist(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_playlists_of_account(){
-        return null;
+        return Playlist_DB.get_playlists_of_account(UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse create_playlist(){
-        return null;
+        return Playlist_DB.create_playlist(UUID.fromString(super.getUser_id()), super.getTitle(), super.getIs_public(), super.getDescription(), super.getRequest_id());
     }
     private ServerResponse change_playlist_info(){
-        return null;
+        return Playlist_DB.change_playlist_info(UUID.fromString(super.getUser_id()), super.getDescription(), super.getTitle(), super.getRequest_id());
     }
     private ServerResponse add_video(){
-        return null;
+        return Post_DB.add_post_to_playlist(super.getVideos(), UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse remove_video(){
-        return null;
+        return Post_DB.delete_post_from_playlist(super.getVideos(), UUID.fromString(super.getId()), super.getRequest_id());
     }
 
 }

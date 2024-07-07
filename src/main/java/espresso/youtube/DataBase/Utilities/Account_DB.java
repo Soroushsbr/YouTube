@@ -1,6 +1,7 @@
 package espresso.youtube.DataBase.Utilities;
 
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.channel.Channel;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
@@ -130,8 +131,10 @@ public class Account_DB {
         return false;
     }
 
-    public static void make_user_premium(UUID user_id) {
+    public static ServerResponse make_user_premium(UUID user_id, int request_id) {
         System.out.println("[DATABASE] Making " + user_id + " user premium...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE accounts SET is_premium = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -139,14 +142,19 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void remove_premium_of_user(UUID user_id) {
+    public static ServerResponse remove_premium_of_user(UUID user_id, int request_id) {
         System.out.println("[DATABASE] Removing premium of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         String query = "UPDATE accounts SET is_premium = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
@@ -154,29 +162,47 @@ public class Account_DB {
             preparedStatement.setObject(2, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void change_dark_mode(UUID user_id, boolean dark_mode) {
-        System.out.println("[DATABASE] Changing dark mode of user " + user_id + " ...");
-        String query = "UPDATE accounts SET dark_mode = ? WHERE id = ?";
-        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
+    public static ServerResponse change_dark_mode(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String selectQuery= "SELECT dark_mode FROM accounts WHERE id = ?";
+        String updateQuery = "UPDATE accounts SET dark_mode = ? WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);PreparedStatement selectStatement = connection.prepareStatement(selectQuery);PreparedStatement updateStatement = connection.prepareStatement(updateQuery) ){
             connection.setAutoCommit(false);
-            preparedStatement.setBoolean(1, dark_mode);
-            preparedStatement.setObject(2, user_id);
-            preparedStatement.executeUpdate();
+            selectStatement.setObject(1, user_id);
+            ResultSet resultSet = selectStatement.executeQuery();
+            if (resultSet.next()) {
+                boolean dark_mode = resultSet.getBoolean("dark_mode");
+                updateStatement.setBoolean(1, !dark_mode);
+                updateStatement.setObject(2, user_id);
+                updateStatement.executeUpdate();
+                serverResponse.add_part("isSuccessful", true);
+                System.out.println("Dark mode for account " + user_id + " has been set to: " + !dark_mode);
+            } else {
+                serverResponse.add_part("isSuccessful", false);
+                System.out.println("Account with ID " + user_id + " not found.");
+            }
             connection.commit();
-            System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
-
-    public static void change_password(UUID user_id, String password) {
+    //??
+    public static ServerResponse change_password(UUID user_id, String password, int request_id) {
         System.out.println("[DATABASE] Changing password of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         password = hash_password(password);
         String query = "UPDATE accounts SET password = ? WHERE id = ?";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
@@ -186,18 +212,25 @@ public class Account_DB {
             preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("[DATABASE] Done");
+            serverResponse.add_part("isSuccessful", true);
+            return serverResponse;
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
 
-    public static void add_notification(UUID user_id, String content) {
+    public static void add_notification(UUID user_id, String title, UUID comment_id, UUID post_id, UUID channel_id ) {
         System.out.println("[DATABASE] Sending notification for user " + user_id + " ...");
-        String query = "INSERT INTO notifications (user_id, content) VALUES (?, ?)";
+        String query = "INSERT INTO notifications (user_id, title, comment_id, post_id, channel_id) VALUES (?, ?, ?, ?, ?)";
         try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, user_id);
-            preparedStatement.setString(2, content);
+            preparedStatement.setString(2, title);
+            preparedStatement.setObject(3, comment_id);
+            preparedStatement.setObject(4, post_id);
+            preparedStatement.setObject(5, channel_id);
             preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("[DATABASE] Done");
@@ -291,15 +324,17 @@ public class Account_DB {
                     serverResponse.add_part("created_at" , resultSet.getString("created_at"));
                 }
             }
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
             return serverResponse;
         }catch (SQLException e){
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
-        return null;
+        return serverResponse;
     }
 
-    public static void account_delete(UUID account_id) {
+    public static void delete_account(UUID account_id) {
         System.out.println("[DATABASE] Deleting account " + account_id + " ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE user_id = ?");
@@ -334,58 +369,109 @@ public class Account_DB {
         }
     }
 
-    public static List<UUID> get_subscribed_channels(UUID user_id) {
-        System.out.println("[DATABASE] Getting subscribed channels of user " + user_id + " ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT channel_id FROM channel_subscription WHERE subscriber_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, user_id);
+    public static ServerResponse get_subscribed_channels(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Channel> channels = new ArrayList<>();
+        String sql = "SELECT c.id, c.title, c.username, c.owner_id, c.description, c.created_at FROM channels c JOIN channel_subscription cs ON c.id = cs.channel_id WHERE cs.subscriber_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id, Types.OTHER);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    UUID channelId = (UUID) resultSet.getObject("channel_id");
-                    IDs.add(channelId);
+                    Channel channel = new Channel();
+                    channel.setUsername(resultSet.getString("username"));
+                    channel.setId(resultSet.getObject("id").toString());
+                    channel.setName(resultSet.getString("title"));
+                    channel.setOwner_id(resultSet.getObject("owner_id").toString());
+                    channel.setDescription(resultSet.getString("description"));
+                    channel.setCreated_at(resultSet.getTimestamp("created_at"));
+                    channels.add(channel);
                 }
             }
         } catch (SQLException e) {
             printSQLException(e);
         }
-        System.out.println("[DATABASE] Done");
-        return IDs;
+        serverResponse.setChannels_list(channels);
+
+        return serverResponse;
     }
 
-    public static List<UUID> get_subscribed_playlists(UUID user_id) {
-        System.out.println("[DATABASE] Getting subscribed playlists of user " + user_id + " ...");
-        List<UUID> IDs = new ArrayList<>();
-        String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setObject(1, user_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    UUID playlistId = (UUID) resultSet.getObject("playlist_id");
-                    IDs.add(playlistId);
-                }
-            }
+//    public static List<UUID> get_subscribed_playlists(UUID user_id) {
+//        System.out.println("[DATABASE] Getting subscribed playlists of user " + user_id + " ...");
+//        List<UUID> IDs = new ArrayList<>();
+//        String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
+//        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+//             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+//            preparedStatement.setObject(1, user_id);
+//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//                while (resultSet.next()) {
+//                    UUID playlistId = (UUID) resultSet.getObject("playlist_id");
+//                    IDs.add(playlistId);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        System.out.println("[DATABASE] Done");
+//        return IDs;
+//    }
+    /////+++
+    public static ServerResponse change_username(UUID user_id, String username, int request_id) {
+        System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "UPDATE accounts SET username = ? WHERE id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(false);
+            preparedStatement.setString(1, username);
+            preparedStatement.setObject(2, user_id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            serverResponse.add_part("isSuccessful", true);
         } catch (SQLException e) {
             printSQLException(e);
+            serverResponse.add_part("isSuccessful", false);
         }
         System.out.println("[DATABASE] Done");
-        return IDs;
+        return serverResponse;
     }
-    /////+++
+
+    public static ServerResponse change_gmail(UUID user_id, String gmail, int request_id) {
+        System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "UPDATE accounts SET gmail = ? WHERE id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            connection.setAutoCommit(false);
+            preparedStatement.setString(1, gmail);
+            preparedStatement.setObject(2, user_id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+            serverResponse.add_part("isSuccessful", true);
+        } catch (SQLException e) {
+            printSQLException(e);
+            serverResponse.add_part("isSuccessful", false);
+        }
+        System.out.println("[DATABASE] Done");
+        return serverResponse;
+    }
+
+
 
     public static void main(String[] args) {
 
     }
 }
 
-//printSQLException(e)
-//[DATABASE]
+//methods that are gray?
 
 //check user is owner of a post, playlist, and channel, and comment???
 
-//!!!!!!!!!!!!
 
+
+//check delete_account
+//check get info for new columns
 
 
 //give data to load post with comments and views, channel, profile, playlist mobin array in server response?

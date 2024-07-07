@@ -3,6 +3,7 @@ package espresso.youtube.models.channel;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.account.Account;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Channel extends ClassInfo {
@@ -12,6 +13,8 @@ public class Channel extends ClassInfo {
     private ArrayList<Account> followers = new ArrayList<>();
     private String description;
     private int n_posts;
+    private String username;
+    private Timestamp created_at;
     public Channel(){
         super.className = "channel";
     }
@@ -36,6 +39,8 @@ public class Channel extends ClassInfo {
     public void setN_posts(int n_posts) {
         this.n_posts = n_posts;
     }
+    public void setUsername(String username) {this.username = username;}
+    public Timestamp getCreated_at() {return created_at;}
     //------------------ getters -----------------------
     public String getId() {
         return id;
@@ -55,4 +60,6 @@ public class Channel extends ClassInfo {
     public int getN_posts() {
         return n_posts;
     }
+    public String getUsername() {return username;}
+    public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
 }
