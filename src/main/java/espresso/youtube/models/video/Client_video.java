@@ -47,14 +47,14 @@ public class Client_video {
         send_request();
     }
     public void remove_user_like_from_post(String video_id, String user_id, int request_id){
-        video.setRequest("like");
+        video.setRequest("remove_user_like_from_post");
         video.setRequest_id(request_id);
         video.setOwner_id(user_id);
         video.setVideo_id(video_id);
         send_request();
     }
     public void remove_user_dislike_from_post(String video_id, String user_id, int request_id){
-        video.setRequest("like");
+        video.setRequest("remove_user_dislike_from_post");
         video.setRequest_id(request_id);
         video.setOwner_id(user_id);
         video.setVideo_id(video_id);
@@ -139,7 +139,7 @@ public class Client_video {
     public void get_all_posts_of_a_channel(String user_id, int request_id){
         video.setRequest("get_all_posts_of_a_channel");
         video.setRequest_id(request_id);
-        video.setOwner_id(user_id);
+        video.getChannel().setId(user_id);
         send_request();
     }
     public void get_all_viewers_of_a_post(String video_id, int request_id){
@@ -236,7 +236,7 @@ public class Client_video {
 
         return tempFile;
     }
-    public void send_video_info(String owner_id, String title, String description, String channel_id, String data_type, int request_id){// data type added
+    public void send_video_info(String owner_id, String title, String description, String channel_id, String data_type, int request_id, int length){// data type added
         video.setRequest("send_video_info");
         video.setRequest_id(request_id);
         video.setOwner_id(owner_id);
@@ -244,6 +244,7 @@ public class Client_video {
         video.setDescription(description);
         video.getChannel().setId(channel_id);
         video.setData_type(data_type);
+        video.setLength(length);
     }
     public void send_channel_profile_info(String channel_id, String data_type, int request_id){
         video.setRequest("send_channel_profile_info");
@@ -270,9 +271,10 @@ public class Client_video {
         send_request();
     }
 
-    public void get_videos(int request_id){ //not useless huh
+    public void get_videos(int request_id, String userID){ //not useless huh
         video.setRequest_id(request_id);
         video.setRequest("get_videos");
+        video.setOwner_id(userID);
         send_request();
     }
     private void send_request(){

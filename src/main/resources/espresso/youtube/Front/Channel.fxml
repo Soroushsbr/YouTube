@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="background" stylesheets="@Style/Light/Channel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.ChannelPage">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Dark/Channel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.ChannelPage">
    <children>
       <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
          <children>
@@ -59,41 +59,58 @@
             <AnchorPane disable="true" layoutX="837.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="search" />
          </children>
       </AnchorPane>
-      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="125.0" layoutY="79.0" prefHeight="596.0" prefWidth="1115.0" style="-fx-background-color: transparent;">
+      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="125.0" layoutY="79.0" prefHeight="641.0" prefWidth="1115.0" style="-fx-background-color: transparent;">
          <content>
-            <VBox prefHeight="594.0" prefWidth="1116.0" styleClass="background">
+            <VBox fx:id="contentBox" prefHeight="639.0" prefWidth="1116.0" styleClass="back">
                <children>
                   <AnchorPane prefHeight="237.0" prefWidth="1125.0" styleClass="background">
                      <children>
-                        <HBox layoutX="104.5" prefHeight="124.0" prefWidth="461.0">
+                        <HBox layoutX="105.0" prefHeight="148.0" prefWidth="795.0">
                            <children>
                               <Circle radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
-                              <VBox prefHeight="124.0" prefWidth="338.0">
+                              <VBox prefHeight="124.0" prefWidth="338.0" spacing="7.0" HBox.hgrow="SOMETIMES">
                                  <children>
-                                    <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text_color" text="Channel name">
+                                    <Text fx:id="nameTxt" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text_color" text="Channel name">
                                        <font>
-                                          <Font name="System Bold" size="28.0" />
+                                          <Font name="Roboto Bold" size="28.0" />
                                        </font>
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>
                                     </Text>
-                                    <Text fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="\@username  • subs • vids">
+                                    <Text fx:id="infoTxt" fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="\@username  • subs • vids">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Text>
+                                    <Text fx:id="bioTxt" fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="about">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                        <VBox.margin>
-                                          <Insets top="2.0" />
+                                          <Insets />
                                        </VBox.margin>
                                     </Text>
-                                    <Text fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="about">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
+                                    <HBox fx:id="btnBox" spacing="16.0">
                                        <VBox.margin>
-                                          <Insets top="3.0" />
+                                          <Insets top="5.0" />
                                        </VBox.margin>
-                                    </Text>
+                                       <children>
+                                          <Button fx:id="subBtn" mnemonicParsing="false" onAction="#subscribe" prefHeight="33.0" styleClass="coloredBtn" text="Subscribe">
+                                             <font>
+                                                <Font name="Roboto Bold" size="15.0" />
+                                             </font>
+                                          </Button>
+                                          <Button fx:id="subBtn1" mnemonicParsing="false" onAction="#subscribe" prefHeight="33.0" styleClass="coloredBtn" text="Customise channel">
+                                             <font>
+                                                <Font name="Roboto Bold" size="15.0" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                    </HBox>
                                  </children>
                                  <HBox.margin>
                                     <Insets left="10.0" />

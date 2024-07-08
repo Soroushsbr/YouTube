@@ -11,9 +11,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fillWidth="false" style="-fx-background-color: #0f0f0f;" stylesheets="@Style/Dark/Video.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fillWidth="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <HBox focusTraversable="true" stylesheets="@Style/Dark/Video.css">
+      <HBox focusTraversable="true" styleClass="back">
          <children>
             <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" HBox.hgrow="ALWAYS">
                <children>
@@ -26,7 +26,7 @@
             </VBox>
             <VBox fillWidth="false" HBox.hgrow="ALWAYS">
                <children>
-                  <Hyperlink text="\@username" textFill="WHITE">
+                  <Hyperlink styleClass="coloredText" text="\@username" textFill="#7c7c7c">
                      <font>
                         <Font name="Roboto Light" size="15.0" />
                      </font>
@@ -35,6 +35,9 @@
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets left="7.0" />
+                     </VBox.margin>
                   </Text>
                   <AnchorPane prefWidth="886.0">
                      <children>

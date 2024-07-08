@@ -19,6 +19,7 @@ public class Video extends ClassInfo {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp created_at;
     private int views, n_likes, length, n_comments;
+    private boolean watched;
     public Video(){
         super.className = "video";
     }
@@ -62,6 +63,9 @@ public class Video extends ClassInfo {
     }
     public void setThumbnail_id(String thumbnail_id) {
         this.thumbnail_id = thumbnail_id;
+
+    public void setWatched(boolean watched){
+        this.watched = watched;
     }
 
     //------------------ getters -----------------------
@@ -104,4 +108,8 @@ public class Video extends ClassInfo {
     public String getThumbnail_id() {
         return thumbnail_id;
     }
+    public boolean getWatched(){
+        return watched;
+    }
+
 }

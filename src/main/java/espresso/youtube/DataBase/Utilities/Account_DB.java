@@ -75,8 +75,6 @@ public class Account_DB {
 
     public static void save_account(String username, String password, String gmail,UUID uuid) {
         System.out.println("[DATABASE] Saving account of user "+username+" ...");
-        Channel_DB.create_user_default_channel(uuid);
-        Playlist_DB.create_watch_later(uuid);
         boolean dark_mode = true;
         boolean isPremium = false;
         password = hash_password(password);
@@ -92,10 +90,14 @@ public class Account_DB {
             preparedStatement.setBoolean(6, isPremium);
             preparedStatement.executeUpdate();
             connection.commit();
+
             System.out.println("[DATABASE] Done");
+
         } catch (SQLException e) {
             printSQLException(e);
         }
+        Channel_DB.create_user_default_channel(uuid);
+        Playlist_DB.create_watch_later(uuid);
     }
 
     public static boolean is_password_correct(String username, String password) {
@@ -221,9 +223,11 @@ public class Account_DB {
         return serverResponse;
     }
 
-    public static void add_notification(UUID user_id, String title, UUID comment_id, UUID post_id, UUID channel_id ) {
+    public static ServerResponse add_notification(UUID user_id, String title, UUID comment_id, UUID post_id, UUID channel_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Sending notification for user " + user_id + " ...");
-        String query = "INSERT INTO notifications (user_id, title, comment_id, post_id, channel_id) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO notifications (user_id, title, comment_id, post_id, channel_id, have_seen) VALUES (?, ?, ?, ?, ?, ?)";
         try(Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, user_id);
@@ -231,12 +235,47 @@ public class Account_DB {
             preparedStatement.setObject(3, comment_id);
             preparedStatement.setObject(4, post_id);
             preparedStatement.setObject(5, channel_id);
+            preparedStatement.setObject(6, false);
             preparedStatement.executeUpdate();
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
+    }
+
+    public static ServerResponse set_notification_seen(UUID notification_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "UPDATE notifications SET have_seen = TRUE WHERE id = ?";
+        try (Connection connection = create_connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, notification_id);
+            preparedStatement.executeUpdate();
+            serverResponse.add_part("isSuccessful", true);
+        } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
+            printSQLException(e);
+        }
+        return serverResponse;
+    }
+    public static ServerResponse delete_notification(UUID notification_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        String query = "DELETE FROM notifications WHERE id = ?";
+        try (Connection connection = create_connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, notification_id);
+            preparedStatement.executeUpdate();
+            serverResponse.add_part("isSuccessful", true);
+        } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
+            printSQLException(e);
+        }
+        return serverResponse;
     }
 
     public static ServerResponse sign_up(String username, String password, String gmail, int request_id) {
@@ -248,7 +287,10 @@ public class Account_DB {
         if ((boolean)serverResponse.get_part("isValidUsername") && (boolean)serverResponse.get_part("isValidGmail")){
             UUID uuid = UUID.randomUUID();
             save_account(username, password,gmail, uuid);
+            ServerResponse sr = Channel_DB.get_channels_of_account(uuid , request_id);
+            String channel_id = sr.getChannels_list().get(0).getId();
             serverResponse.add_part("isSuccessful", true);
+            serverResponse.add_part("ChannelID", channel_id);
             serverResponse.add_part("userID", uuid.toString());
         } else {
             serverResponse.add_part("isSuccessful", false);
@@ -264,8 +306,9 @@ public class Account_DB {
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
         if((boolean)serverResponse.get_part("isSuccessful")){
             String id = Objects.requireNonNull(get_id_by_username(username)).toString();
-            List<UUID> channel_ids = get_channels_of_account(UUID.fromString(id));
-            serverResponse.add_part("ChannelID", channel_ids.get(0));
+            ServerResponse sr = Channel_DB.get_channels_of_account(UUID.fromString(id) , request_id);
+            String channel_id = sr.getChannels_list().get(0).getId();
+            serverResponse.add_part("ChannelID", channel_id);
             serverResponse.add_part("UserID", id);
         }
         System.out.println("[DATABASE] Done");
@@ -334,7 +377,9 @@ public class Account_DB {
         return serverResponse;
     }
 
-    public static void delete_account(UUID account_id) {
+    public static ServerResponse delete_account(UUID account_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         System.out.println("[DATABASE] Deleting account " + account_id + " ...");
         ArrayList<String> queries = new ArrayList<>();
         queries.add("DELETE FROM post_likes WHERE user_id = ?");
@@ -358,17 +403,20 @@ public class Account_DB {
                     preparedStatement.setObject(1, account_id);
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
+                    serverResponse.add_part("isSuccessful", false);
                     connection.rollback();
                     printSQLException(e);
                 }
             }
             connection.commit();
+            serverResponse.add_part("isSuccessful", true);
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
             printSQLException(e);
         }
+        return serverResponse;
     }
-
     public static ServerResponse get_subscribed_channels(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
