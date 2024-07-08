@@ -64,6 +64,7 @@ public class ChannelPage implements Initializable {
         if(channel.getId().equals(client.getChannel_id())){
             btnBox.getChildren().remove(0);
         }else {
+            profPane.setVisible(false);
             btnBox.getChildren().remove(1);
         }
     }

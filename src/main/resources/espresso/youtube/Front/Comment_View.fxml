@@ -47,16 +47,11 @@
                            </cursor>
                         </Button>
                         <AnchorPane fx:id="like" disable="true" layoutX="12.0" layoutY="4.0" prefHeight="19.0" prefWidth="19.0" styleClass="like" />
-                        <Hyperlink layoutX="4.0" layoutY="30.0" text="replies" textFill="#0076ff">
+                        <Hyperlink layoutX="4.0" layoutY="30.0" text="Replies" textFill="#0076ff">
                            <font>
-                              <Font name="Arial Bold" size="13.0" />
+                              <Font name="Roboto Bold" size="14.0" />
                            </font>
                         </Hyperlink>
-                        <Button layoutX="94.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-insets: 100;" text="Replay" textFill="WHITE">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
                         <Button fx:id="commentDislike" layoutX="40.0" layoutY="-2.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 100;">
                            <cursor>
                               <Cursor fx:constant="HAND" />

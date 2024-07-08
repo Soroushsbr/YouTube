@@ -49,6 +49,8 @@ public class VideoPage implements Initializable {
     private MediaPlayer mediaPlayer;
     private Video video;
     private boolean likeFlag , dislikeFlag;
+    private int replayIndex;
+
     @FXML
     AnchorPane parent;
     @FXML
@@ -93,6 +95,8 @@ public class VideoPage implements Initializable {
     AnchorPane profPane;
     @FXML
     AnchorPane notifPane;
+    @FXML
+    Text infoTxt;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeTextarea(addCommentArea , addCommentBox);
@@ -173,6 +177,7 @@ public class VideoPage implements Initializable {
         channelLabel.setText(video.getChannel().getName());
         totoalTime.setText( "/" + Formatter.formatSeconds(video.getLength()));
         titleTxt.setText(video.getTitle());
+        infoTxt.setText(video.getViews() + "  " + Formatter.formatTime(video.getCreated_at()));
         descriptionTxt.setText(video.getDescription());
     }
     public void sendRequestInfo(){
@@ -541,11 +546,63 @@ public class VideoPage implements Initializable {
         ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(content);
         leftVbox.getChildren().add(commentBox);
     }
+    public void showReplays(int index, String id)  {
+        //todo: remove previous reps
+        System.out.println();
+        if(replayIndex > 2){
+            leftVbox.getChildren().remove(replayIndex);
+        }
+        try {
+            replayIndex = index;
+            VBox repBox = new VBox();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Add_Replay.fxml"));
+            HBox addReplayBox = loader.load();
+            ((Button)((AnchorPane)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(1)).getChildren().get(1)).setOnAction(event -> addReplay(id , ((TextArea)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(0))));
+            repBox.getChildren().add(addReplayBox);
+            //todo: add reps
+            ArrayList<Comment> comments;
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.load_comments(video.getVideo_id(), req);
+            while (true) {
+                if (client.requests.get(req) != null) {
+                    comments = client.requests.get(req).getComments_list();
+                    break;
+                }
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            for(int i = 0 ; i < comments.size() ; i++){
+                if(comments.get(i).getParent_comment_id() == id ){
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
+                    VBox commentBox = fxmlLoader.load();
+                    ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
+                    ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
+                    leftVbox.getChildren().add(commentBox);
+                }
+            }
+            leftVbox.getChildren().add(index , repBox);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void addReplay(String selectedCommentID , TextArea textArea){
+        String content = textArea.getText();
+        Client_comment cc = new Client_comment(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cc.reply_comment(content, client.getChannel_id(), video.getVideo_id(), selectedCommentID,req);
+        textArea.clear();
+    }
     public void cancelComment(){
         addCommentArea.clear();
     }
     public void appendComments() throws IOException {
-        ArrayList<Comment> comments ;
+        ArrayList<Comment> comments;
         Client_comment cc = new Client_comment(client.getOut());
         client.setReq_id();
         int req = client.getReq_id();
@@ -561,12 +618,19 @@ public class VideoPage implements Initializable {
                 throw new RuntimeException(e);
             }
         }
+        int index = 0;
         for(int i = 0 ; i < comments.size() ; i++){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
-            VBox commentBox = loader.load();
-            ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
-            ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
-            leftVbox.getChildren().add(commentBox);
+            int finalI = i;
+            if(comments.get(i).getParent_comment_id() == null ){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
+                VBox commentBox = loader.load();
+                ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
+                ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
+                int finalIndex = index;
+                ((Hyperlink)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(2)).setOnAction(event -> showReplays(finalIndex + 4, comments.get(finalI).getComment_id()));
+                leftVbox.getChildren().add(commentBox);
+                index++;
+            }
         }
     }
     public void switchToDashboard(ActionEvent event){
