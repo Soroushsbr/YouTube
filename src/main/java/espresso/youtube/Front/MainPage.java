@@ -1,12 +1,10 @@
 package espresso.youtube.Front;
 
-import espresso.youtube.Client.Client;
 import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.video.Client_video;
 import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,27 +15,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 import static espresso.youtube.Front.LoginMenu.client;
 import static espresso.youtube.Front.LoginMenu.darkmode;
@@ -82,7 +74,7 @@ public class MainPage implements Initializable {
             client.setReq_id();
 
             System.out.println("Waiting to get videos...");
-            cv.get_videos(client.getReq_id());
+            cv.get_videos(client.getReq_id(), client.getChannel_id());
             ArrayList<Video> videos ;
 
             while (true) {
@@ -105,10 +97,12 @@ public class MainPage implements Initializable {
                         int finalI = i;
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
                         AnchorPane videoPane = loader.load();
-
+                        ((Label)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setText(Formatter.formatSeconds(videos.get(finalI).getLength()));
                         ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(0)).setText(videos.get(finalI).getTitle());
                         ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(1)).setText(videos.get(finalI).getChannel().getName());
-                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(2)).setText(videos.get(finalI).getViews() + "● time");
+                        ((Line)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(2)).setVisible(videos.get(finalI).getWatched());
+
+                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(2)).setText(videos.get(finalI).getViews() + " views • " + Formatter.formatTime(videos.get(finalI).getCreated_at()));
                         ((Button) videoPane.getChildren().get(3)).setOnAction(event -> switchTChannelPage(event , videos.get(finalI).getChannel()));
                         ((Button)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,videos.get(finalI)));
 
@@ -216,6 +210,7 @@ public class MainPage implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Channel.fxml"));
             root = loader.load();
             ChannelPage channelPage = loader.getController();
+            channelPage.setChannel(channel);
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);

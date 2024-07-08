@@ -59,6 +59,27 @@ public class Search {
         }
         return channels;
     }
+    public static ArrayList<String> search_titles(String text) {
+        ArrayList<String> titles = new ArrayList<>();
+        String query = "SELECT title FROM channels WHERE title LIKE ? UNION SELECT title FROM posts WHERE title LIKE ? UNION SELECT title FROM playlists WHERE title LIKE ?";
+
+        try (Connection connection = create_connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            String searchPattern = "%" + text + "%";
+            preparedStatement.setString(1, searchPattern);
+            preparedStatement.setString(2, searchPattern);
+            preparedStatement.setString(3, searchPattern);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    titles.add(resultSet.getString("title"));
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        return titles;
+    }
 
     public static ArrayList<Playlist> search_in_playlists(String text) {
         ArrayList<Playlist> playlists = new ArrayList<>();

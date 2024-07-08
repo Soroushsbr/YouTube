@@ -21,7 +21,7 @@
             </Label>
             <Label text="Username" textFill="#5b5b5b">
                <font>
-                  <Font size="11.0" />
+                  <Font name="Roboto" size="12.0" />
                </font>
             </Label>
             <Label text="Views ● Time" textFill="#5b5b5b">

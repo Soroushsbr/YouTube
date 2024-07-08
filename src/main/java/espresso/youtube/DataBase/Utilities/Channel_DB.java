@@ -82,12 +82,13 @@ public class Channel_DB {
     public static void create_user_default_channel(UUID user_id) {
         System.out.println("[DATABASE] Creating default channel of user " + user_id + " ...");
         UUID id = UUID.randomUUID();
-        String query = "INSERT INTO channels (id, title, owner_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO channels (id, title, username, owner_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, id);
             preparedStatement.setString(2, Account_DB.get_username_by_id(user_id));
-            preparedStatement.setObject(3, user_id);
+            preparedStatement.setString(3, Account_DB.get_username_by_id(user_id));
+            preparedStatement.setObject(4, user_id);
             preparedStatement.executeUpdate();
             connection.commit();
             System.out.println("[DATABASE] Done");

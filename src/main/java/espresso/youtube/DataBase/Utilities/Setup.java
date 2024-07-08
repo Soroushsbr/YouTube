@@ -50,11 +50,12 @@ public class Setup {
                 "CREATE TABLE IF NOT EXISTS comment_dislikes (comment_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS comments (id uuid PRIMARY KEY, owner_id uuid, content text, post_id uuid, parent_comment_id uuid, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS categories (id uuid PRIMARY KEY, category_name text)",
-                "CREATE TABLE IF NOT EXISTS notifications (user_id uuid , title text, comment_id uuid, post_id uuid, channel_id uuid, have_seen BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP))",
+                "CREATE TABLE IF NOT EXISTS notifications (user_id uuid , title text, comment_id uuid, post_id uuid, channel_id uuid, have_seen BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS views (user_id uuid , post_id uuid)"
         };
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123");Statement statement = connection.createStatement()){
             connection.setAutoCommit(false);
+
             for (String query : queries){
                 statement.executeUpdate(query);
             }
@@ -85,8 +86,10 @@ public class Setup {
         };
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123"); Statement statement = connection.createStatement()){
             connection.setAutoCommit(false);
-            for (String query : queries)
+
+            for (String query : queries) {
                 statement.executeUpdate(query);
+            }
             connection.commit();
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {

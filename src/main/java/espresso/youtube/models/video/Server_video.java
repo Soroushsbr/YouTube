@@ -15,8 +15,8 @@ public class Server_video extends Video {
             return insert_video_info();
         } else if(request.equals("get_video_info")) {
             return send_video_info();
-        } else if(request.equals("get_videos_id")) {
-            return send_videos_id();
+        } else if(request.equals("get_videos")) {
+            return send_videos();
         } else if(request.equals("search")) {
             return search();
         } else if(request.equals("like")) {
@@ -69,14 +69,13 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse get_all_posts_of_a_channel(){
-//        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel id ()), super.getRequest_id())
-        return null;
+        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
     }
     private ServerResponse get_all_posts_of_a_account(){
         return Post_DB.get_all_Posts_of_a_account(UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse get_all_posts(){
-        return Post_DB.get_all_posts(super.getRequest_id()) ;
+        return Post_DB.get_all_posts(super.getRequest_id() , UUID.fromString(super.getOwner_id())) ;
     }
     private ServerResponse delete_post(){
         return Post_DB.delete_post(UUID.fromString(super.getVideo_id()), super.getRequest_id());
@@ -140,6 +139,6 @@ public class Server_video extends Video {
         return Post_DB.get_info(UUID.fromString(super.getVideo_id()) , super.getRequest_id());
     }
     private ServerResponse send_videos(){
-        return Post_DB.get_all_posts(super.getRequest_id());
+        return Post_DB.get_all_posts(super.getRequest_id(), UUID.fromString(super.getOwner_id()));
     }
 }

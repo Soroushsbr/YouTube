@@ -319,7 +319,9 @@ public class Comment_DB {
                     } else {
                         comment.setParent_comment_id(resultSet.getObject("parent_comment_id").toString());
                     }
-
+                    ServerResponse sr ;
+                    sr = Channel_DB.get_info(UUID.fromString(comment.getUser_id()) , request_id);
+                    comment.setUsername((String) sr.get_part("title"));
                     comments.add(comment);
                 }
             }

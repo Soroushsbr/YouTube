@@ -17,6 +17,7 @@ public class Video extends ClassInfo {
     private boolean is_short;
     private Timestamp created_at;
     private int views, n_likes, length, n_comments;
+    private boolean watched;
     public Video(){
         super.className = "video";
     }
@@ -55,6 +56,9 @@ public class Video extends ClassInfo {
     public void setIs_public(boolean is_public) {this.is_public = is_public;}
     public void setIs_short(boolean is_short) {this.is_short = is_short;}
     public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
+    public void setWatched(boolean watched){
+        this.watched = watched;
+    }
 
     //------------------ getters -----------------------
     public String getTitle() {
@@ -90,6 +94,8 @@ public class Video extends ClassInfo {
     public boolean getIs_public() {return is_public;}
     public boolean getIs_short() {return is_short;}
     public Timestamp getCreated_at() {return created_at;}
-
+    public boolean getWatched(){
+        return watched;
+    }
 
 }
