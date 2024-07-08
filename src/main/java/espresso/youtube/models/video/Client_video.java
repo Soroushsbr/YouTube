@@ -139,7 +139,7 @@ public class Client_video {
     public void get_all_posts_of_a_channel(String user_id, int request_id){
         video.setRequest("get_all_posts_of_a_channel");
         video.setRequest_id(request_id);
-        video.setOwner_id(user_id);
+        video.getChannel().setId(user_id);
         send_request();
     }
     public void get_all_viewers_of_a_post(String video_id, int request_id){
@@ -276,9 +276,10 @@ public class Client_video {
         send_request();
     }
 
-    public void get_videos(int request_id){ //not useless huh
+    public void get_videos(int request_id, String userID){ //not useless huh
         video.setRequest_id(request_id);
         video.setRequest("get_videos");
+        video.setOwner_id(userID);
         send_request();
     }
     private void send_request(){

@@ -182,7 +182,7 @@ public class Post_DB {
         System.out.println("[DATABASE] Checking if user "+user_id+" has disliked post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        String query = "SELECT EXISTS (SELECT 1 FROM post_likes WHERE user_id = ? AND post_id = ?)";
+        String query = "SELECT EXISTS (SELECT 1 FROM post_dislikes WHERE user_id = ? AND post_id = ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setObject(1, user_id);
             preparedStatement.setObject(2, post_id);
@@ -326,13 +326,32 @@ public class Post_DB {
 //        }
 //    }
 
+//    public static ServerResponse number_of_views(UUID post_id, int request_id) {
+//        String query = "SELECT COUNT(*) AS row_count FROM views WHERE post_id = ?";
+//        ServerResponse serverResponse = new ServerResponse();
+//        serverResponse.setRequest_id(request_id);
+//        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+//            preparedStatement.setObject(1, post_id);
+//            try(ResultSet resultSet = preparedStatement.executeQuery();){
+//                if (resultSet.next()) {
+//                    serverResponse.add_part("number_of_views", resultSet.getInt("row_count"));
+//                } else {
+//                    return serverResponse;
+//                }
+//            }
+//        } catch (SQLException e) {
+//            printSQLException(e);
+//        }
+//        return serverResponse;
+//    }
     public static ServerResponse number_of_views(UUID post_id, int request_id) {
-        String query = "SELECT COUNT(*) AS row_count FROM views WHERE post_id = ?";
+        String query = "SELECT COUNT(DISTINCT user_id) AS row_count FROM views WHERE post_id = ?";
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection connection = create_connection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1, post_id);
-            try(ResultSet resultSet = preparedStatement.executeQuery();){
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     serverResponse.add_part("number_of_views", resultSet.getInt("row_count"));
                 } else {
@@ -344,7 +363,6 @@ public class Post_DB {
         }
         return serverResponse;
     }
-
     public static ServerResponse number_of_likes(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM post_likes WHERE post_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -464,7 +482,7 @@ public class Post_DB {
         return serverResponse;
     }
 
-    public static ServerResponse get_all_posts(int request_id) {
+    public static ServerResponse get_all_posts(int request_id , UUID userID) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         ArrayList<Video> posts = new ArrayList<>();
@@ -489,6 +507,9 @@ public class Post_DB {
 
                 ServerResponse sr2 = number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
                 post.setViews((int) sr2.get_part("number_of_views"));
+
+                ServerResponse sr3 = check_if_user_viewed_post(UUID.fromString(post.getVideo_id()), userID, request_id);
+                post.setWatched((boolean)sr3.get_part("user_viewed_post"));
 
                 posts.add(post);
             }
@@ -552,6 +573,13 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
                     post.setIs_short(resultSet.getBoolean("is_short"));
                     post.setLength(resultSet.getInt("video_length"));
                     post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                    ServerResponse sr = Channel_DB.get_info(UUID.fromString(post.getChannel().getId()) , request_id);
+                    post.getChannel().setName((String) sr.get_part("title"));
+                    post.getChannel().setOwner_id((String) sr.get_part("owner_id"));
+
+                    ServerResponse sr2 = number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
+                    post.setViews((int) sr2.get_part("number_of_views"));
                     posts.add(post);
                 }
             }
@@ -584,6 +612,13 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
                     post.setIs_short(resultSet.getBoolean("is_short"));
                     post.setLength(resultSet.getInt("video_length"));
                     post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                    ServerResponse sr = Channel_DB.get_info(UUID.fromString(post.getChannel().getId()) , request_id);
+                    post.getChannel().setName((String) sr.get_part("title"));
+                    post.getChannel().setOwner_id((String) sr.get_part("owner_id"));
+
+                    ServerResponse sr2 = number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
+                    post.setViews((int) sr2.get_part("number_of_views"));
 
                     posts.add(post);
                 }

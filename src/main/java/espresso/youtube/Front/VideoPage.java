@@ -52,6 +52,10 @@ public class VideoPage implements Initializable {
     @FXML
     AnchorPane parent;
     @FXML
+    AnchorPane like;
+    @FXML
+    AnchorPane dislike;
+    @FXML
     Label totoalTime;
     @FXML
     Label currentTime;
@@ -221,6 +225,10 @@ public class VideoPage implements Initializable {
         while (true) {
             if (client.requests.get(req5) != null) {
                 likeFlag = (boolean) client.requests.get(req5).get_part("user_likes_post");
+                if(likeFlag){
+                    like.getStyleClass().removeAll("like");
+                    like.getStyleClass().add("liked");
+                }
                 break;
             }
             try {
@@ -238,6 +246,10 @@ public class VideoPage implements Initializable {
             if (client.requests.get(req6) != null) {
                 dislikeFlag = (boolean) client.requests.get(req6).get_part("user_dislikes_post");
                 System.out.println(dislikeFlag);
+                if(dislikeFlag){
+                    dislike.getStyleClass().removeAll("dislike");
+                    dislike.getStyleClass().add("disliked");
+                }
                 break;
             }
             try {
@@ -286,6 +298,8 @@ public class VideoPage implements Initializable {
             cv.remove_user_like_from_post(video.getVideo_id() , client.getChannel_id() ,req);
             likeFlag =false;
             likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) - 1));
+            like.getStyleClass().removeAll("liked");
+            like.getStyleClass().add("like");
         }else if(dislikeFlag){
             Client_video cv = new Client_video(client.getOut());
             client.setReq_id();
@@ -298,6 +312,10 @@ public class VideoPage implements Initializable {
             dislikeFlag = false;
             likeFlag = true;
             likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) + 1));
+            dislike.getStyleClass().removeAll("disliked");
+            dislike.getStyleClass().add("dislike");
+            like.getStyleClass().removeAll("like");
+            like.getStyleClass().add("liked");
         }else {
             Client_video cv = new Client_video(client.getOut());
             client.setReq_id();
@@ -305,6 +323,8 @@ public class VideoPage implements Initializable {
             cv.like(video.getVideo_id(), client.getChannel_id(), req);
             likeFlag = true;
             likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) + 1));
+            like.getStyleClass().removeAll("like");
+            like.getStyleClass().add("liked");
         }
     }
     public void dislike(){
@@ -314,6 +334,8 @@ public class VideoPage implements Initializable {
             int req = client.getReq_id();
             dislikeFlag = false;
             cv.remove_user_dislike_from_post(video.getVideo_id() , client.getChannel_id() ,req);
+            dislike.getStyleClass().removeAll("disliked");
+            dislike.getStyleClass().add("dislike");
         }else if(likeFlag){
             Client_video cv = new Client_video(client.getOut());
             client.setReq_id();
@@ -326,12 +348,18 @@ public class VideoPage implements Initializable {
             likeFlag = false;
             dislikeFlag = true;
             likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) - 1));
+            like.getStyleClass().removeAll("liked");
+            like.getStyleClass().add("like");
+            dislike.getStyleClass().removeAll("dislike");
+            dislike.getStyleClass().add("disliked");
         }else {
             Client_video cv = new Client_video(client.getOut());
             client.setReq_id();
             int req = client.getReq_id();
             cv.dislike(video.getVideo_id(), client.getChannel_id(), req);
             dislikeFlag = true;
+            dislike.getStyleClass().removeAll("dislike");
+            dislike.getStyleClass().add("disliked");
         }
     }
     public void hoverVideo(){

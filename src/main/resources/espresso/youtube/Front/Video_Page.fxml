@@ -131,7 +131,7 @@
                                        <children>
                                           <VBox>
                                              <children>
-                                                <Label fx:id="channelLabel" styleClass="colored_text" text="Channel name" textFill="WHITE">
+                                                <Label fx:id="channelLabel" styleClass="coloredText" text="Channel name" textFill="WHITE">
                                                    <font>
                                                       <Font name="Roboto Black" size="17.0" />
                                                    </font>
@@ -176,9 +176,9 @@
                                           </Button>
                                           <AnchorPane fx:id="dislike" disable="true" layoutX="98.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="dislike" />
                                           <Line endX="100.0" layoutX="-22.0" layoutY="11.0" startX="100.0" startY="16.0" stroke="#bfbfbf" />
-                                          <HBox alignment="CENTER" layoutX="32.0" layoutY="11.0" prefHeight="16.0" prefWidth="44.0">
+                                          <HBox alignment="CENTER" disable="true" layoutX="32.0" layoutY="11.0" prefHeight="16.0" prefWidth="44.0">
                                              <children>
-                                                <Text fx:id="likesCntText" disable="true" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="0">
+                                                <Text fx:id="likesCntText" disable="true" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="0">
                                                    <font>
                                                       <Font name="Roboto Bold" size="13.0" />
                                                    </font>
@@ -190,7 +190,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <Text disable="true" fill="WHITE" layoutX="182.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Download">
+                                          <Text disable="true" fill="WHITE" layoutX="182.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="Download">
                                              <font>
                                                 <Font name="Roboto Bold" size="12.0" />
                                              </font>
@@ -201,7 +201,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <Text disable="true" fill="WHITE" layoutX="319.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Save">
+                                          <Text disable="true" fill="WHITE" layoutX="319.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="Save">
                                              <font>
                                                 <Font name="Roboto Bold" size="12.0" />
                                              </font>
@@ -428,7 +428,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </Button>
-                                    <Pane disable="true" layoutX="12.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" styleClass="liked" />
+                                    <Pane disable="true" layoutX="12.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" styleClass="like" />
                                  </children>
                               </AnchorPane>
                               <Line endX="67.5" startX="-115.0" stroke="#686868">
