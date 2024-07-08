@@ -101,7 +101,6 @@ public class MainPage implements Initializable {
                         ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(0)).setText(videos.get(finalI).getTitle());
                         ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(1)).setText(videos.get(finalI).getChannel().getName());
                         ((Line)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(2)).setVisible(videos.get(finalI).getWatched());
-
                         ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(2)).setText(videos.get(finalI).getViews() + " views • " + Formatter.formatTime(videos.get(finalI).getCreated_at()));
                         ((Button) videoPane.getChildren().get(3)).setOnAction(event -> switchTChannelPage(event , videos.get(finalI).getChannel()));
                         ((Button)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(3)).setOnAction(event -> switchToVideoPage(event,videos.get(finalI)));
