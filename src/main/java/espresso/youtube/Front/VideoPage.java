@@ -1,6 +1,9 @@
 package espresso.youtube.Front;
 
 
+import espresso.youtube.models.channel.Client_channel;
+import espresso.youtube.models.comment.Client_comment;
+import espresso.youtube.models.comment.Comment;
 import espresso.youtube.models.video.Client_video;
 import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
@@ -22,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -35,8 +39,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 import static espresso.youtube.Front.LoginMenu.client;
 import static espresso.youtube.Front.LoginMenu.darkmode;
@@ -44,8 +48,13 @@ import static espresso.youtube.Front.LoginMenu.darkmode;
 public class VideoPage implements Initializable {
     private MediaPlayer mediaPlayer;
     private Video video;
+    private boolean likeFlag , dislikeFlag;
     @FXML
     AnchorPane parent;
+    @FXML
+    Label totoalTime;
+    @FXML
+    Label currentTime;
     @FXML
     VBox leftVbox;
     @FXML
@@ -63,6 +72,14 @@ public class VideoPage implements Initializable {
     @FXML
     VBox addCommentBox;
     @FXML
+    Label subsLabel;
+    @FXML
+    Button subBtn;
+    @FXML
+    Label channelLabel;
+    @FXML
+    Text likesCntText;
+    @FXML
     Text descriptionTxt;
     @FXML
     Text titleTxt;
@@ -75,6 +92,7 @@ public class VideoPage implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeTextarea(addCommentArea , addCommentBox);
+
         appendTheme();
     }
     public void selectNotif(){
@@ -146,10 +164,176 @@ public class VideoPage implements Initializable {
         });
         new Thread(task).start();
 
+        sendRequestInfo();
+        appendComments();
+        channelLabel.setText(video.getChannel().getName());
+        totoalTime.setText( "/" + Formatter.formatSeconds(video.getLength()));
         titleTxt.setText(video.getTitle());
         descriptionTxt.setText(video.getDescription());
     }
-
+    public void sendRequestInfo(){
+        //-----checks if user subscribed or not------------
+        Client_channel cc = new Client_channel(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cc.check_if_user_subscribed(client.getChannel_id() , video.getChannel().getId() , req);
+        while (true) {
+            if (client.requests.get(req) != null) {
+                if((boolean) client.requests.get(req).get_part("is_subscribed")){
+                    subBtn.setText("Unsubscribe");
+                }else {
+                    subBtn.setText("Subscribe");
+                }
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //----get number of subscriber of video channel-----------
+        Client_channel cc2 = new Client_channel(client.getOut());
+        client.setReq_id();
+        int req2 = client.getReq_id();
+        cc2.number_of_subscribers(video.getChannel().getId(), req2);
+        while (true) {
+            if (client.requests.get(req2) != null) {
+                subsLabel.setText(Formatter.formatNumber((int) client.requests.get(req2).get_part("number_of_subscribers")) + " subscribers");
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //----add a view count for video------------------
+        Client_video cv2 = new Client_video(client.getOut());
+        client.setReq_id();
+        int req4 = client.getReq_id();
+        cv2.add_to_post_viewers(video.getVideo_id() , client.getChannel_id() , req4);
+        //----get user like -----------------
+        Client_video cv3 = new Client_video(client.getOut());
+        client.setReq_id();
+        int req5 = client.getReq_id();
+        cv3.check_user_likes_post(video.getVideo_id(), client.getChannel_id(), req5);
+        while (true) {
+            if (client.requests.get(req5) != null) {
+                likeFlag = (boolean) client.requests.get(req5).get_part("user_likes_post");
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //----get user dislike-----------
+        Client_video cv4 = new Client_video(client.getOut());
+        client.setReq_id();
+        int req6 = client.getReq_id();
+        cv4.check_user_dislikes_post(video.getVideo_id(), client.getChannel_id(), req6);
+        while (true) {
+            if (client.requests.get(req6) != null) {
+                dislikeFlag = (boolean) client.requests.get(req6).get_part("user_dislikes_post");
+                System.out.println(dislikeFlag);
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //----number of likes------------
+        Client_video cv5 = new Client_video(client.getOut());
+        client.setReq_id();
+        int req7 = client.getReq_id();
+        cv5.number_of_likes(video.getVideo_id(),req7);
+        while (true) {
+            if (client.requests.get(req7) != null) {
+                likesCntText.setText(String.valueOf((int) client.requests.get(req7).get_part("number_of_likes")));
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public void subscribe(){
+        if(subBtn.getText().equals("Subscribe")){
+            Client_channel cc = new Client_channel(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.subscribe(video.getChannel().getId(), client.getChannel_id(),req );
+            subBtn.setText("Unsubscribe");
+        }else {
+            Client_channel cc = new Client_channel(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.unsubscribe(video.getChannel().getId(), client.getChannel_id(),req );
+            subBtn.setText("Subscribe");
+        }
+    }
+    public void like(){
+        if(likeFlag){
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cv.remove_user_like_from_post(video.getVideo_id() , client.getChannel_id() ,req);
+            likeFlag =false;
+            likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) - 1));
+        }else if(dislikeFlag){
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cv.remove_user_dislike_from_post(video.getVideo_id() , client.getChannel_id() ,req);
+            Client_video cv2 = new Client_video(client.getOut());
+            client.setReq_id();
+            int req2 = client.getReq_id();
+            cv2.like(video.getVideo_id(), client.getChannel_id(), req2);
+            dislikeFlag = false;
+            likeFlag = true;
+            likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) + 1));
+        }else {
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cv.like(video.getVideo_id(), client.getChannel_id(), req);
+            likeFlag = true;
+            likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) + 1));
+        }
+    }
+    public void dislike(){
+        if(dislikeFlag){
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            dislikeFlag = false;
+            cv.remove_user_dislike_from_post(video.getVideo_id() , client.getChannel_id() ,req);
+        }else if(likeFlag){
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cv.remove_user_like_from_post(video.getVideo_id() , client.getChannel_id() ,req);
+            Client_video cv2 = new Client_video(client.getOut());
+            client.setReq_id();
+            int req2 = client.getReq_id();
+            cv2.dislike(video.getVideo_id(), client.getChannel_id(), req2);
+            likeFlag = false;
+            dislikeFlag = true;
+            likesCntText.setText(String.valueOf(Integer.parseInt(likesCntText.getText()) - 1));
+        }else {
+            Client_video cv = new Client_video(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cv.dislike(video.getVideo_id(), client.getChannel_id(), req);
+            dislikeFlag = true;
+        }
+    }
     public void hoverVideo(){
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(actionPane.opacityProperty(), 0)),
@@ -276,6 +460,9 @@ public class VideoPage implements Initializable {
         mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) ->
                 slider.setValue(newTime.toSeconds())
         );
+        mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) ->
+                currentTime.setText(Formatter.formatSeconds((int) newTime.toSeconds()))
+        );
     }
 
     public void initializeTextarea(TextArea textArea , VBox vbox){
@@ -313,17 +500,46 @@ public class VideoPage implements Initializable {
     }
     public void openEmoji(){
     }
-    public void addComment(){
+    public void addComment() throws IOException {
         String content = addCommentArea.getText();
+        Client_comment cc = new Client_comment(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cc.put_comment(content , client.getChannel_id(), video.getVideo_id() , req);
+        addCommentArea.clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
+        VBox commentBox = loader.load();
+        ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@You");
+        ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(content);
+        leftVbox.getChildren().add(commentBox);
     }
     public void cancelComment(){
         addCommentArea.clear();
     }
     public void appendComments() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
-        VBox commentBox = loader.load();
-//        ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText("hello \n bye");
-        leftVbox.getChildren().add(commentBox);
+        ArrayList<Comment> comments ;
+        Client_comment cc = new Client_comment(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cc.load_comments(video.getVideo_id(), req);
+        while (true) {
+            if (client.requests.get(req) != null) {
+                comments = client.requests.get(req).getComments_list();
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for(int i = 0 ; i < comments.size() ; i++){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
+            VBox commentBox = loader.load();
+            ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
+            ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
+            leftVbox.getChildren().add(commentBox);
+        }
     }
     public void switchToDashboard(ActionEvent event){
         mediaPlayer.stop();

@@ -37,7 +37,7 @@ public class Post_DB {
 
     public static void add_post(UUID id, UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short, int video_length) {
         System.out.println("[DATABASE] User "+owner_id+" adding post to channel "+channel_id+" ...");
-        String query = "INSERT INTO posts (id, name, owner_id, channel_id, description, is_public, is_short, video_length) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO posts (id, title, owner_id, channel_id, description, is_public, is_short, video_length) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, id);
@@ -468,7 +468,7 @@ public class Post_DB {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         ArrayList<Video> posts = new ArrayList<>();
-        String query = "SELECT id, title, owner_id, channel_id, description, is_public, is_short, video_length, created_at FROM posts";
+        String query = "SELECT * FROM posts";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
@@ -482,6 +482,13 @@ public class Post_DB {
                 post.setIs_short(resultSet.getBoolean("is_short"));
                 post.setLength(resultSet.getInt("video_length"));
                 post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                ServerResponse sr = Channel_DB.get_info(UUID.fromString(post.getChannel().getId()) , request_id);
+                post.getChannel().setName((String) sr.get_part("title"));
+                post.getChannel().setOwner_id((String) sr.get_part("owner_id"));
+
+                ServerResponse sr2 = number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
+                post.setViews((int) sr2.get_part("number_of_views"));
 
                 posts.add(post);
             }

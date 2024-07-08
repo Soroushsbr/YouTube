@@ -35,6 +35,9 @@
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets left="7.0" />
+                     </VBox.margin>
                   </Text>
                   <AnchorPane prefWidth="886.0">
                      <children>

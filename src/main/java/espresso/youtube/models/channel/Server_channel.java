@@ -72,10 +72,10 @@ public class Server_channel extends Channel {
         return Channel_DB.get_subscribers(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse subscribe(){
-        return Channel_DB.subscribe_to_channel(UUID.fromString(super.getId()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
+        return Channel_DB.subscribe_to_channel(UUID.fromString(super.getId()), UUID.fromString(super.getFollowers().get(0).getId()), super.getRequest_id());
     }
     private ServerResponse unsubscribe(){
-        return Channel_DB.unsubscribe_to_channel(UUID.fromString(super.getId()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
+        return Channel_DB.unsubscribe_to_channel(UUID.fromString(super.getId()), UUID.fromString(super.getFollowers().get(0).getId()), super.getRequest_id());
     }
 
 }

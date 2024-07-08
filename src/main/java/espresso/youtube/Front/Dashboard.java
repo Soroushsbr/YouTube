@@ -1,6 +1,5 @@
 package espresso.youtube.Front;
 
-import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -14,7 +13,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
@@ -27,14 +25,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static espresso.youtube.Front.LoginMenu.client;
 import static espresso.youtube.Front.LoginMenu.darkmode;
@@ -149,7 +145,10 @@ public class Dashboard implements Initializable {
     }
 
     public void sendFile(File selectedFile) throws IOException, InterruptedException {
-        //todo: put this method in a thread
+
+        MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
+        System.out.println(mediaView.getMediaPlayer().getTotalDuration().toSeconds());
+        int length = (int) mediaView.getMediaPlayer().getTotalDuration().toSeconds();
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -158,7 +157,9 @@ public class Dashboard implements Initializable {
                 if(!title.isEmpty() && !description.isEmpty()){
                     client.setReq_id();
                     Client_video client_video = new Client_video(client.getOut());
-                    client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id());
+
+                    client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id(), length);
+
                     client_video.upload_media(selectedFile, client.getChannel_id(), "mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
 
                     while (true) {
@@ -253,7 +254,6 @@ public class Dashboard implements Initializable {
             MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
             mediaView.fitWidthProperty().bind(upVid.widthProperty());
             mediaView.fitHeightProperty().bind(upVid.heightProperty());
-
             upVid.getChildren().add(mediaView);
             uploadingScene();
             Timeline timelinePbar = new Timeline(

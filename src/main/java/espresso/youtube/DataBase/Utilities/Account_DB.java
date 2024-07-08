@@ -75,8 +75,6 @@ public class Account_DB {
 
     public static void save_account(String username, String password, String gmail,UUID uuid) {
         System.out.println("[DATABASE] Saving account of user "+username+" ...");
-        Channel_DB.create_user_default_channel(uuid);
-        Playlist_DB.create_watch_later(uuid);
         boolean dark_mode = true;
         boolean isPremium = false;
         password = hash_password(password);
@@ -92,7 +90,10 @@ public class Account_DB {
             preparedStatement.setBoolean(6, isPremium);
             preparedStatement.executeUpdate();
             connection.commit();
+            Channel_DB.create_user_default_channel(uuid);
+            Playlist_DB.create_watch_later(uuid);
             System.out.println("[DATABASE] Done");
+
         } catch (SQLException e) {
             printSQLException(e);
         }
@@ -248,7 +249,10 @@ public class Account_DB {
         if ((boolean)serverResponse.get_part("isValidUsername") && (boolean)serverResponse.get_part("isValidGmail")){
             UUID uuid = UUID.randomUUID();
             save_account(username, password,gmail, uuid);
+            ServerResponse sr = Channel_DB.get_channels_of_account(uuid , request_id);
+            String channel_id = sr.getChannels_list().get(0).getId();
             serverResponse.add_part("isSuccessful", true);
+            serverResponse.add_part("ChannelID", channel_id);
             serverResponse.add_part("userID", uuid.toString());
         } else {
             serverResponse.add_part("isSuccessful", false);
@@ -264,8 +268,9 @@ public class Account_DB {
         serverResponse.add_part("isSuccessful" , check_username_exists(username) && is_password_correct(username, password));
         if((boolean)serverResponse.get_part("isSuccessful")){
             String id = Objects.requireNonNull(get_id_by_username(username)).toString();
-            List<UUID> channel_ids = get_channels_of_account(UUID.fromString(id));
-            serverResponse.add_part("ChannelID", channel_ids.get(0));
+            ServerResponse sr = Channel_DB.get_channels_of_account(UUID.fromString(id) , request_id);
+            String channel_id = sr.getChannels_list().get(0).getId();
+            serverResponse.add_part("ChannelID", channel_id);
             serverResponse.add_part("UserID", id);
         }
         System.out.println("[DATABASE] Done");

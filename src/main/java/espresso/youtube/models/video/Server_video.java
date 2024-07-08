@@ -15,8 +15,8 @@ public class Server_video extends Video {
             return insert_video_info();
         } else if(request.equals("get_video_info")) {
             return send_video_info();
-        } else if(request.equals("get_videos_id")) {
-            return send_videos_id();
+        } else if(request.equals("get_videos")) {
+            return send_videos();
         } else if(request.equals("search")) {
             return search();
         } else if(request.equals("like")) {
