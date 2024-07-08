@@ -9,6 +9,8 @@ import java.util.UUID;
 public class Server_comment extends Comment {
     @Override
     public ServerResponse handle_request() {
+        super.handle_request();
+
         if (request.equals("put_comment")) {
             return  put_comment();
         } else if (request.equals("reply_comment")) {

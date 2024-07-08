@@ -9,6 +9,8 @@ import java.util.UUID;
 public class Server_account extends Account {
     @Override
     public ServerResponse handle_request() {
+        super.handle_request();
+
         if (request.equals("login")) {
             return login();
         } else if (request.equals("sign_up")) {

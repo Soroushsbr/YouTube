@@ -39,7 +39,7 @@ public class Video_sender implements Runnable{
             String type = rootNode.path("type").asText();
             int request_id = rootNode.path("request_id").asInt();
             System.out.println("[VIDEO SENDER] request "+request_id+" received");
-
+            
             File mediaFile = new File("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+ media_id+"."+data_type);
             if(mediaFile.exists()){
                 out.writeUTF("1");

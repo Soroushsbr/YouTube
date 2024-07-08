@@ -38,6 +38,7 @@ public abstract class ClassInfo {
     }
     //==============================================
     public ServerResponse handle_request(){
+        System.out.println("[SERVER] new request arrived : " + className + ", " + request + ", id:" + request_id);
         return null;
     }
 }
