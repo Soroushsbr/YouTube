@@ -156,13 +156,13 @@ public class Client_video {
         DataInputStream fin = new DataInputStream(new FileInputStream(mediaFile));
         String media_id = "not_set";
 
-        if(type.equals("video") || type.equals("thumbnail") || type.equals("playlist_photo")) { // payyyyyyyyyyyyy attentionnnnnnnnnnnnnnnnnnn
+        if(type.equals("post") || type.equals("thumbnail")) {
             UUID uuid = UUID.randomUUID();
             media_id = uuid.toString();
-        } else if (type.equals("profile_photo")) {
-            media_id = "profile_photo";
-        } else if (type.equals("channel_photo")) {
-            media_id = "channel_photo";
+        } else if (type.equals("profile")) {
+            media_id = "profile";
+        } else if (type.equals("banner")) {
+            media_id = "banner";
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -186,6 +186,7 @@ public class Client_video {
         v.close();
 
         System.out.println("[CLIENT] media uploaded");
+
         video.setVideo_id(media_id);
         send_request();
     }
@@ -244,26 +245,20 @@ public class Client_video {
         video.getChannel().setId(channel_id);
         video.setData_type(data_type);
     }
-    public void change_channel_photo(String channel_id, String data_type, int request_id){
-        video.setRequest("change_channel_photo");
+    public void send_channel_profile_info(String channel_id, String data_type, int request_id){
+        video.setRequest("send_channel_profile_info");
         video.setRequest_id(request_id);
         video.getChannel().setId(channel_id);
         video.setData_type(data_type);
     }
-    public void change_profile_photo(String user_id, String data_type, int request_id){
-        video.setRequest("change_profile_photo");
+    public void send_profile_photo_info(String user_id, String data_type, int request_id){
+        video.setRequest("send_profile_photo_info");
         video.setRequest_id(request_id);
         video.setOwner_id(user_id);
         video.setData_type(data_type);
     }
-    public void change_thumbnail(String video_id, String data_type, int request_id){
-        video.setRequest("change_thumbnail");
-        video.setRequest_id(request_id);
-        video.setVideo_id(video_id);
-        video.setData_type(data_type);
-    }
-    public void change_playlist_photo(String video_id, String data_type, int request_id){
-        video.setRequest("change_playlist_photo");
+    public void send_thumbnail_info(String video_id, String data_type, int request_id){
+        video.setRequest("send_thumbnail_info");
         video.setRequest_id(request_id);
         video.setVideo_id(video_id);
         video.setData_type(data_type);

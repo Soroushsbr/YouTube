@@ -3,7 +3,7 @@ package espresso.youtube.models.notification;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import espresso.youtube.models.ClassInfo;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 public class Notification {
 
@@ -12,7 +12,7 @@ public class Notification {
     private String comment_id;
     private String user_id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime time;
+    private Timestamp time;
     private String title;
     private boolean have_seen;
     
@@ -20,7 +20,7 @@ public class Notification {
     public void setChannel_id(String channel_id) {
         this.channel_id = channel_id;
     }
-    public void setTime(LocalDateTime time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
     public void setTitle(String message) {
@@ -41,7 +41,7 @@ public class Notification {
     public String getChannel_id() {
         return channel_id;
     }
-    public LocalDateTime getTime() {
+    public Timestamp getTime() {
         return time;
     }
     public String getTitle() {

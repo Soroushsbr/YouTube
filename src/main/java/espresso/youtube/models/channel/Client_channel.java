@@ -108,6 +108,27 @@ public class Client_channel {
         channel.setDescription(new_description);
         send_request();
     }
+    public void see_notification(String channel_id, String user_id, int request_id){
+        channel.setRequest("see_notification");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        channel.setOwner_id(user_id);
+        send_request();
+    }
+    public void stop_seeing_notification(String channel_id, String user_id, int request_id){
+        channel.setRequest("stop_seeing_notification");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        channel.setOwner_id(user_id);
+        send_request();
+    }
+    public void delete_notification(String channel_id, String user_id, int request_id){
+        channel.setRequest("delete_notification");
+        channel.setRequest_id(request_id);
+        channel.setId(channel_id);
+        channel.setOwner_id(user_id);
+        send_request();
+    }
 
 
     private void send_request(){
@@ -117,10 +138,8 @@ public class Client_channel {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } finally {
-            erase_info();
+            channel = new Channel();
         }
-    }
-    private void erase_info(){
     }
 
 }

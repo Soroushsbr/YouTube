@@ -10,6 +10,8 @@ import java.util.UUID;
 public class Server_channel extends Channel {
     @Override
     public ServerResponse handle_request() {
+        super.handle_request();
+
         if (request.equals("subscribe")) {
             return subscribe();
         } else if (request.equals("unsubscribe")) {
@@ -34,10 +36,19 @@ public class Server_channel extends Channel {
             return get_channels_of_account();
         } else if (request.equals("number_of_posts(")) {
             return number_of_posts();
+        } else if (request.equals("see_notification")) {
+            return see_notification();
+        } else if (request.equals("stop_seeing_notification")) {
+            return stop_seeing_notification();
+        } else if (request.equals("delete_notification")) {
+            return delete_notification();
         }
         return null;
     }
 
+    private ServerResponse stop_seeing_notification(){return null;}
+    private ServerResponse delete_notification(){return null;}
+    private ServerResponse see_notification(){return null;}
     private ServerResponse create_channel(){
         return Channel_DB.create_channel(UUID.fromString(super.getOwner_id()), super.getDescription(), super.getName(), super.getRequest_id());
     }

@@ -10,6 +10,8 @@ import java.util.UUID;
 public class Server_playlist extends Playlist {
     @Override
     public ServerResponse handle_request() {
+        super.handle_request();
+
         if (request.equals("create_playlist")) {
             return create_playlist();
         } else if (request.equals("change_playlist_info")) {

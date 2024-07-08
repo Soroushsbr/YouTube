@@ -1,5 +1,6 @@
 package espresso.youtube.models.channel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.account.Account;
 
@@ -14,6 +15,7 @@ public class Channel extends ClassInfo {
     private String description;
     private int n_posts;
     private String username;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp created_at;
     public Channel(){
         super.className = "channel";
