@@ -68,9 +68,6 @@ public class Server_account extends Account {
         return Account_DB.change_username(UUID.fromString(super.getId()),super.getPassword() ,super.getRequest_id());
     }
     private ServerResponse login() {
-        System.out.println("[SERVER] : user wants to login");
-        System.out.println("username : " + super.getUsername());
-        System.out.println("password : " + super.getPassword());
         return Account_DB.login(super.getUsername() , super.getPassword() , super.getRequest_id());
     }
 
