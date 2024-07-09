@@ -6,6 +6,7 @@ import espresso.youtube.DataBase.Utilities.Post_DB;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Client_video {
@@ -16,6 +17,45 @@ public class Client_video {
 
     public Client_video(DataOutputStream out){
         this.out = out;
+    }
+
+    public void get_recommended_posts(String user_id, int request_id){
+        video.setRequest("get_recommended_posts");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        send_request();
+    }
+    public void get_watch_history(String user_id, int request_id){
+        video.setRequest("get_watch_history");
+        video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
+        send_request();
+    }
+    public void get_categories(int request_id){
+        video.setRequest("get_categories");
+        video.setRequest_id(request_id);
+        send_request();
+    }
+    public void set_category(String video_id, ArrayList<String> category_names, int request_id){
+        video.setRequest("set_category");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        video.setCategory_names(category_names);
+        send_request();
+    }
+    public void get_posts_by_category(String category_name, int request_id){
+        video.setRequest("get_posts_by_category");
+        video.setRequest_id(request_id);
+        ArrayList<String> c = new ArrayList<>();
+        c.add(category_name);
+        video.setCategory_names(c);
+        send_request();
+    }
+    public void get_posts_with_same_categories(String video_id, int request_id){
+        video.setRequest("get_posts_with_same_categories");
+        video.setRequest_id(request_id);
+        video.setVideo_id(video_id);
+        send_request();
     }
 
     public void change_video_info(String video_id, String new_title, String new_description, int request_id){

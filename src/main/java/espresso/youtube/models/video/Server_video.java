@@ -1,8 +1,10 @@
 package espresso.youtube.models.video;
 
+import espresso.youtube.DataBase.Utilities.Channel_DB;
 import espresso.youtube.DataBase.Utilities.Post_DB;
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
+import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.notification.Notification;
 
 import java.util.ArrayList;
@@ -64,12 +66,42 @@ public class Server_video extends Video {
             return change_video_info();
         } else if(request.equals("remove_user_like_from_post")) {
             return remove_user_like_from_post();
-        } else if(request.equals("remove_user_dislike_from_post")) {
-            return remove_user_dislike_from_post();
+       } else if(request.equals("remove_user_dislike_from_post")) {
+           return remove_user_dislike_from_post();
+       } else if(request.equals("get_recommended_posts")) {
+           return get_recommended_posts();
+       } else if(request.equals("get_watch_history")) {
+           return get_watch_history();
+       } else if(request.equals("get_categories")) {
+           return get_categories();
+       } else if(request.equals("set_category")) {
+           return set_category();
+       } else if(request.equals("get_posts_by_category")) {
+           return get_posts_by_category();
+       } else if(request.equals("get_posts_with_same_categories")) {
+           return get_posts_with_same_categories();
         }
         return null;
     }
 
+    private ServerResponse get_recommended_posts(){
+        return Post_DB.get_recommended_posts(UUID.fromString(super.getOwner_id()), super.getRequest_id());
+    }
+    private ServerResponse get_watch_history(){
+        return Post_DB.get_watch_history(UUID.fromString(super.getOwner_id()), super.getRequest_id());
+    }
+    private ServerResponse get_categories(){
+        return Post_DB.get_categories(super.getRequest_id());
+    }
+    private ServerResponse set_category(){
+        return Post_DB.set_category(UUID.fromString(super.getVideo_id()), super.getCategory_names(), super.getRequest_id());
+    }
+    private ServerResponse get_posts_by_category(){
+        return Post_DB.get_posts_by_category(super.getCategory_names().get(0), super.getRequest_id());
+    }
+    private ServerResponse get_posts_with_same_categories(){
+        return Post_DB.get_posts_with_same_categories(UUID.fromString(super.getVideo_id()), super.getRequest_id());
+    }
     private ServerResponse get_all_viewers_of_a_post(){
         return Post_DB.get_all_viewers_of_a_post(UUID.fromString(super.getVideo_id()), super.getRequest_id());
     }
@@ -120,6 +152,9 @@ public class Server_video extends Video {
         return Post_DB.dislike_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse like(){
+        ServerResponse sr = Post_DB.get_info(UUID.fromString(super.getVideo_id()), 0);
+        notification.like_post(super.getOwner_id(), super.getVideo_id(), (String) sr.get_part("owner_id"));
+
         return Post_DB.like_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse remove_user_like_from_post(){
@@ -134,7 +169,13 @@ public class Server_video extends Video {
     }
     private ServerResponse insert_video_info(){
 
-        Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(),UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
+        ServerResponse sr = Channel_DB.get_subscribers(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
+        ArrayList<String> ids = new ArrayList<>();
+        for(Channel channel : sr.getChannels_list())
+            ids.add(channel.getId());
+        notification.upload_post(ids, super.getVideo_id());
+
+        Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(), UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
         return null;
     }
     private ServerResponse insert_thumbnail_info(){

@@ -21,6 +21,12 @@ public class Client_account {
         account.setId(user_id);
         send_request();
     }
+    public void get_liked_posts(String user_id, int request_id){
+        account.setRequest("get_liked_posts");
+        account.setRequest_id(request_id);
+        account.setId(user_id);
+        send_request();
+    }
     public void remove_premium_of_user(String user_id, int request_id){
         account.setRequest("remove_premium_of_user");
         account.setRequest_id(request_id);
