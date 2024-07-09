@@ -34,8 +34,24 @@ public class Server_playlist extends Playlist {
             return get_playlists_of_account();
         } else if (request.equals("get_all_posts_of_a_playlist")) {
             return get_all_posts_of_a_playlist();
+        } else if (request.equals("save_playlist")) {
+            return save_playlist();
+        } else if (request.equals("unSave_playlist")) {
+            return unSave_playlist();
+        } else if (request.equals("check_if_user_saved_playlist")) {
+            return check_if_user_saved_playlist();
         }
         return null;
+    }
+
+    private ServerResponse save_playlist(){
+        return Playlist_DB.save_playlist(UUID.fromString(super.getId()), UUID.fromString(super.getUser_id()), super.getRequest_id());
+    }
+    private ServerResponse unSave_playlist(){
+        return Playlist_DB.unSave_playlist(UUID.fromString(super.getId()), UUID.fromString(super.getUser_id()), super.getRequest_id());
+    }
+    private ServerResponse check_if_user_saved_playlist(){
+        return Playlist_DB.check_if_user_saved_playlist(UUID.fromString(super.getId()), UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
 
     private ServerResponse get_all_posts_of_a_playlist(){

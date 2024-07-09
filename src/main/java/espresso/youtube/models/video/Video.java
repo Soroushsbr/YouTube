@@ -6,6 +6,7 @@ import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.channel.Channel;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Video extends ClassInfo {
     private String title, media_type, thumbnail_id;
@@ -20,6 +21,7 @@ public class Video extends ClassInfo {
     private Timestamp created_at;
     private int views, n_likes, length, n_comments;
     private boolean watched;
+    private ArrayList<String> category_names;
     public Video(){
         super.className = "video";
     }
@@ -73,6 +75,9 @@ public class Video extends ClassInfo {
         this.thumbnail_id = thumbnail_id;
     }
     public void setWatched(boolean watched){this.watched = watched;}
+    public void setCategory_names(ArrayList<String> category_names) {
+        this.category_names = category_names;
+    }
 
     //------------------ getters -----------------------
     public String getTitle() {
@@ -117,5 +122,7 @@ public class Video extends ClassInfo {
     public boolean getWatched(){
         return watched;
     }
-
+    public ArrayList<String> getCategory_names() {
+        return category_names;
+    }
 }

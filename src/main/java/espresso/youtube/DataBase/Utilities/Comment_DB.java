@@ -48,6 +48,7 @@ public class Comment_DB {
             preparedStatement.executeUpdate();
             connection.commit();
             serverResponse.add_part("isSuccessful", true);
+            serverResponse.add_part("comment_id", id.toString());
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
             serverResponse.add_part("isSuccessful", false);
@@ -72,6 +73,7 @@ public class Comment_DB {
             preparedStatement.executeUpdate();
             connection.commit();
             serverResponse.add_part("isSuccessful", true);
+            serverResponse.add_part("comment_id", id.toString());
             System.out.println("[DATABASE] Done");
         } catch (SQLException e) {
             serverResponse.add_part("isSuccessful", false);

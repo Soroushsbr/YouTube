@@ -25,7 +25,7 @@ public class Handle_Server_Response implements Runnable {
                 serverResponse.update_request(jsonString);
 
                 if(serverResponse.getResponse_type().equals("notification")){
-                    System.out.println("new notification received with title : "+serverResponse.get_part("title"));
+                    System.out.println("new notification received with title : "+serverResponse.getNotifications_list().get(0).getTitle());
                 } else {
                     if(requests.get(serverResponse.getRequest_id()) == null)
                         requests.put(serverResponse.getRequest_id(), serverResponse);
