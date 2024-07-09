@@ -142,6 +142,7 @@ public class LoginMenu implements Initializable {
                 if (task.getValue()) {
                     client.setChannel_id((String) client.requests.get(req).get_part("ChannelID"));
                     client.setUser_id((String) client.requests.get(req).get_part("UserID"));
+                    client.setChannel(client.requests.get(req).getChannels_list().get(0));
                     switchToMainPage(event, this.client);
                 } else {
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
@@ -198,6 +199,7 @@ public class LoginMenu implements Initializable {
                 if (task.getValue()) {
                     client.setChannel_id((String) client.requests.get(req).get_part("ChannelID"));
                     client.setUser_id((String) client.requests.get(req).get_part("UserID"));
+                    client.setChannel(client.requests.get(req).getChannels_list().get(0));
                     switchToMainPage(event, client);
                 } else {
                     applyShakeEffect(loginUsernameTF);

@@ -142,10 +142,11 @@ public class Client_video {
         video.setOwner_id(user_id);
         send_request();
     }
-    public void get_all_posts_of_a_channel(String user_id, int request_id){
+    public void get_all_posts_of_a_channel(String id, String user_id,int request_id){
         video.setRequest("get_all_posts_of_a_channel");
         video.setRequest_id(request_id);
-        video.getChannel().setId(user_id);
+        video.setOwner_id(user_id);
+        video.getChannel().setId(id);
         send_request();
     }
     public void get_all_viewers_of_a_post(String video_id, int request_id){
@@ -272,6 +273,12 @@ public class Client_video {
         video.setRequest_id(request_id);
         video.setRequest("get_videos");
         video.setOwner_id(userID);
+        send_request();
+    }
+    public void get_liked_videos(String userId, int request){
+        video.setRequest("get_liked_videos");
+        video.setOwner_id(userId);
+        video.setRequest_id(request);
         send_request();
     }
     private void send_request(){

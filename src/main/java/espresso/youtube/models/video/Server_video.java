@@ -1,5 +1,7 @@
 package espresso.youtube.models.video;
 
+import espresso.youtube.DataBase.Utilities.Account_DB;
+import espresso.youtube.DataBase.Utilities.Playlist_DB;
 import espresso.youtube.DataBase.Utilities.Post_DB;
 import espresso.youtube.DataBase.Utilities.Search;
 import espresso.youtube.models.ServerResponse;
@@ -69,7 +71,9 @@ public class Server_video extends Video {
             return remove_user_like_from_post();
         } else if(request.equals("remove_user_dislike_from_post")) {
             return remove_user_dislike_from_post();
-        }
+        } else if(request.equals("get_liked_videos")){
+           return send_liked_videos();
+       }
         return null;
     }
 
@@ -81,7 +85,7 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse get_all_posts_of_a_channel(){
-        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
+        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel().getId()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse get_all_posts_of_a_account(){
         return Post_DB.get_all_Posts_of_a_account(UUID.fromString(super.getOwner_id()), super.getRequest_id());
@@ -138,7 +142,6 @@ public class Server_video extends Video {
         return Search.search_titles(super.getRequest_id());
     }
     private ServerResponse insert_video_info(){
-
         Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(),UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
         return null;
     }
@@ -156,5 +159,8 @@ public class Server_video extends Video {
     }
     private ServerResponse send_videos(){
         return Post_DB.get_all_posts(super.getRequest_id(), UUID.fromString(super.getOwner_id()));
+    }
+    private ServerResponse send_liked_videos(){
+        return Account_DB.get_liked_posts(UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
 }

@@ -26,24 +26,32 @@
          <children>
             <AnchorPane prefHeight="103.0" prefWidth="263.0">
                <children>
-                  <Circle layoutX="132.0" layoutY="60.0" onMouseEntered="#hoverProfile" onMouseExited="#unhoverProfile" radius="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="prof">
+                  <Circle fx:id="profile2" layoutX="132.0" layoutY="60.0" onMouseEntered="#hoverProfile" onMouseExited="#unhoverProfile" radius="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="prof">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Circle>
                   <AnchorPane fx:id="goChannelSvg" disable="true" layoutX="122.0" layoutY="50.0" opacity="0.0" prefHeight="21.0" prefWidth="20.0" styleClass="GOchannel_svg" />
+                  <Button layoutX="80.0" layoutY="8.0" mnemonicParsing="false" onAction="#switchToYourChannel" onMouseEntered="#hoverProfile" onMouseExited="#unhoverProfile" opacity="0.0" prefHeight="104.0" prefWidth="104.0" style="-fx-background-radius: 100;" text="Button">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                </children>
+               <VBox.margin>
+                  <Insets top="7.0" />
+               </VBox.margin>
             </AnchorPane>
             <AnchorPane prefHeight="55.0" prefWidth="263.0">
                <children>
-                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="82.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Your channel">
+                  <Text fill="WHITE" layoutX="82.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Your channel">
                      <font>
-                        <Font name="System Bold" size="16.0" />
+                        <Font name="Roboto Bold" size="17.0" />
                      </font>
                   </Text>
-                  <Text fill="#c6c6c6" fontSmoothingType="LCD" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel name" textAlignment="CENTER" wrappingWidth="263.0">
+                  <Text fx:id="channelName" fill="#c6c6c6" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel name" textAlignment="CENTER" wrappingWidth="263.0">
                      <font>
-                        <Font name="System Bold" size="11.0" />
+                        <Font name="Roboto Bold" size="13.0" />
                      </font>
                   </Text>
                </children>
@@ -96,32 +104,6 @@
             </AnchorPane>
             <AnchorPane prefHeight="50.0" prefWidth="263.0">
                <children>
-                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="Earn">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <AnchorPane disable="true" layoutX="43.0" layoutY="15.0" prefHeight="20.0" prefWidth="14.0" styleClass="earn_svg" />
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="50.0" prefWidth="263.0">
-               <children>
-                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="   Audio">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <AnchorPane disable="true" layoutX="39.0" layoutY="15.0" prefHeight="23.0" prefWidth="23.0" styleClass="audio_svg" />
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="50.0" prefWidth="263.0">
-               <children>
                   <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="                 Customisation">
                      <font>
                         <Font name="System Bold" size="14.0" />
@@ -146,7 +128,7 @@
                   <AnchorPane disable="true" layoutX="39.0" layoutY="14.0" prefHeight="23.0" prefWidth="23.0" styleClass="setting_svg" />
                </children>
                <VBox.margin>
-                  <Insets top="70.0" />
+                  <Insets top="185.0" />
                </VBox.margin>
             </AnchorPane>
          </children>

@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
@@ -13,6 +14,7 @@
       <AnchorPane layoutX="3.0" layoutY="-1.0" prefHeight="306.0" prefWidth="486.0">
          <children>
             <VBox layoutX="22.0" layoutY="35.0" prefHeight="265.0" prefWidth="442.0" style="-fx-background-color: black;" />
+            <ImageView fitHeight="255.0" fitWidth="449.0" layoutX="18.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true" />
             <Rectangle arcHeight="30.0" arcWidth="30.0" fill="#ffffff00" height="265.0" layoutX="23.0" layoutY="36.0" stroke="BLACK" strokeWidth="15.0" styleClass="rect_border" width="440.0" />
             <AnchorPane layoutX="40.0" layoutY="36.0" prefHeight="5.0" prefWidth="408.0" style="-fx-background-color: #737390;" styleClass="playlist_background" />
             <AnchorPane layoutX="48.0" layoutY="31.0" prefHeight="4.0" prefWidth="390.0" style="-fx-background-color: #494971;" styleClass="playlist_background" />

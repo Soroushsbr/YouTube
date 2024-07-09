@@ -52,7 +52,7 @@
                   </Text>
                   <VBox alignment="CENTER" layoutX="23.0" layoutY="56.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
                      <children>
-                        <Circle radius="73.0" stroke="#ae4646" strokeType="INSIDE" strokeWidth="0.0" />
+                        <Circle fx:id="profile" radius="73.0" stroke="#ae4646" strokeType="INSIDE" strokeWidth="0.0" />
                      </children>
                   </VBox>
                   <Text layoutX="330.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="It's recommended that you use a picture that's at least 98 x 98 pixels and 4 MB or less. Use a PNG file. Make sure that your picture follows the YouTube Community Guidelines." wrappingWidth="251.767578125">
@@ -64,7 +64,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="240.0" prefWidth="1018.0">
                <children>
-                  <Button layoutX="332.0" layoutY="143.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Upload">
+                  <Button layoutX="332.0" layoutY="143.0" mnemonicParsing="false" onAction="#changeBanner" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Upload">
                      <font>
                         <Font name="Roboto Bold" size="15.0" />
                      </font>
@@ -100,7 +100,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="240.0" prefWidth="1018.0">
                <children>
-                  <Button layoutX="334.0" layoutY="175.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Upload">
+                  <Button layoutX="334.0" layoutY="175.0" mnemonicParsing="false" onAction="#changeWatermark" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Upload">
                      <font>
                         <Font name="Roboto Bold" size="15.0" />
                      </font>
@@ -146,7 +146,7 @@
                      </font>
                   </Text>
                   <Text fontSmoothingType="LCD" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Choose a channel name that represents you and your content. Changes made to your name and picture are only visible on YouTube and not on other Google services. You can change your name twice in 14 days. " wrappingWidth="647.443359375" />
-                  <TextField layoutX="21.0" layoutY="95.0" prefHeight="47.0" prefWidth="677.0">
+                  <TextField fx:id="nameField" layoutX="21.0" layoutY="95.0" prefHeight="47.0" prefWidth="677.0">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -164,7 +164,7 @@
                      </font>
                   </Text>
                   <Text fontSmoothingType="LCD" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Choose your unique handle by adding letters and numbers. You can change your handle back within 14 days. Handles can be changed twice every 14 days" wrappingWidth="647.443359375" />
-                  <TextField layoutX="21.0" layoutY="96.0" prefHeight="47.0" prefWidth="677.0">
+                  <TextField fx:id="handleField" layoutX="21.0" layoutY="96.0" prefHeight="47.0" prefWidth="677.0">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -178,7 +178,21 @@
                         <Font name="Roboto Bold" size="16.0" />
                      </font>
                   </Text>
-                  <TextArea layoutX="20.0" layoutY="59.0" prefHeight="165.0" prefWidth="677.0" />
+                  <TextArea fx:id="bioArea" layoutX="20.0" layoutY="59.0" prefHeight="165.0" prefWidth="677.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="883.0" layoutY="57.0" mnemonicParsing="false" onAction="#saveChanges" prefHeight="39.0" prefWidth="106.0" styleClass="lightBtn" text="Save">
+                     <font>
+                        <Font name="Roboto Bold" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="752.0" layoutY="57.0" mnemonicParsing="false" onAction="#cancelChanges" prefHeight="39.0" prefWidth="106.0" styleClass="lightBtn" text="Cancel">
+                     <font>
+                        <Font name="Roboto Bold" size="18.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </children>

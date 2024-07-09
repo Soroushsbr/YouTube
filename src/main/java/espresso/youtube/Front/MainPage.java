@@ -1,6 +1,7 @@
 package espresso.youtube.Front;
 
 import espresso.youtube.models.channel.Channel;
+import espresso.youtube.models.channel.Client_channel;
 import espresso.youtube.models.playlist.Client_playlist;
 import espresso.youtube.models.playlist.Playlist;
 import espresso.youtube.models.video.Client_video;
@@ -70,13 +71,20 @@ public class MainPage implements Initializable {
     VBox searchBox;
     @FXML
     TextField searchField;
+    @FXML
+    Circle profile2;
+    @FXML
+    Text urName;
+    @FXML
+    Text urUsername;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         appendTheme();
         setProfile();
-//        appendVideos();
     }
     public void setProfile(){
+        urName.setText(client.getChannel().getName());
+        urUsername.setText(client.getChannel().getUsername());
         client.setReq_id();
         int req = client.getReq_id();
         Task<File> task = new Task<File>() {
@@ -91,6 +99,7 @@ public class MainPage implements Initializable {
             if(task.getValue() != null) {
                 ImagePattern pattern = new ImagePattern(new Image(task.getValue().toURI().toString()));
                 profile.setFill(pattern);
+                profile2.setFill(pattern);
                 thread.interrupt();
             }
         });
@@ -116,14 +125,17 @@ public class MainPage implements Initializable {
     public void hideSearch(){
         searchPane.setVisible(false);
     }
-    public void showResult() throws IOException {
+    public void getSearch() throws IOException {
+        showResult(searchField.getText());
+    }
+    public void showResult(String title) throws IOException {
         Client_video cv = new Client_video(client.getOut());
         client.setReq_id();
         int req = client.getReq_id();
         ArrayList<Video> videos;
         ArrayList<Channel> channels;
         ArrayList<Playlist> playlists;
-        cv.search(searchField.getText(),client.getChannel_id() , req);
+        cv.search(title,client.getChannel_id() , req);
         while (true){
             if(client.requests.get(req) != null){
                 videos = client.requests.get(req).getVideos_list();
@@ -132,7 +144,7 @@ public class MainPage implements Initializable {
                 break;
             }
         }
-        System.out.println(videos);
+
         videosBox.getChildren().clear();
         for (Video video : videos){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Large.fxml"));
@@ -182,8 +194,24 @@ public class MainPage implements Initializable {
         for(Playlist playlist : playlists){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Playlist_Long.fxml"));
             AnchorPane previewPane = loader.load();
-            ((Text)((VBox) previewPane.getChildren().get(1)).getChildren().get(0)).setText(playlist.getTitle());
-//            ((Text)((VBox) previewPane.getChildren().get(1)).getChildren().get(1)).setText(playlist.getTitle());
+            ((Label)((VBox) previewPane.getChildren().get(1)).getChildren().get(0)).setText(playlist.getTitle());
+            ((Text)((VBox) previewPane.getChildren().get(1)).getChildren().get(1)).setText(playlist.getChannel_name() + " • Playlist");
+            Task<File> taskNail = new Task<File>() {
+                @Override
+                protected File call() throws Exception {
+                    client.setReq_id();
+                    int req = client.getReq_id();
+                    System.out.println(playlist.getVideos().get(0).getVideo_id());
+                    return Client_video.get_media(playlist.getVideos().get(0).getVideo_id(), playlist.getVideos().get(0).getChannel().getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req);
+                }
+            };
+            Thread threadNail = new Thread(taskNail);
+            threadNail.start();
+            taskNail.setOnSucceeded(e -> {
+                ((ImageView) ((AnchorPane) previewPane.getChildren().get(0)).getChildren().get(1)).setImage(new Image(taskNail.getValue().toURI().toString()));
+                threadNail.interrupt();
+            });
+            videosBox.getChildren().add(previewPane);
         }
     }
     public void appendSearch(ArrayList<String> titles){
@@ -236,69 +264,7 @@ public class MainPage implements Initializable {
                 Thread.sleep(50);
             }
             System.out.println("Done.");
-            videosBox.getChildren().clear();
-            int i = 0;
-
-            while (i <videos.size()) {
-                HBox previewBox = new HBox();
-                previewBox.setSpacing(10);
-                previewBox.getChildren().clear();
-                for (int j = 0; j < 3; j++) {
-                    if (i < videos.size()) {
-                        int finalI = i;
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
-                        AnchorPane videoPane = loader.load();
-                        ((Label)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(2)).setText(Formatter.formatSeconds(videos.get(finalI).getLength()));
-                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(0)).setText(videos.get(finalI).getTitle());
-                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(1)).setText(videos.get(finalI).getChannel().getName());
-                        ((Line)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(3)).setVisible(videos.get(finalI).getWatched());
-                        ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(2)).setText(videos.get(finalI).getViews() + " views • " + Formatter.formatTime(videos.get(finalI).getCreated_at()));
-                        ((Button) videoPane.getChildren().get(3)).setOnAction(event -> switchTChannelPage(event , videos.get(finalI).getChannel()));
-                        ((Button)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(4)).setOnAction(event -> switchToVideoPage(event,videos.get(finalI)));
-
-                        ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
-                        ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
-                        Task<File> task = new Task<File>() {
-                            @Override
-                            protected File call() throws Exception {
-                                client.setReq_id();
-                                int req =client.getReq_id();
-                                return Client_video.get_media(videos.get(finalI).getVideo_id(), videos.get(finalI).getChannel().getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req );
-                            }
-                        };
-                        Thread thread = new Thread(task);
-                        thread.start();
-                        task.setOnSucceeded(e -> {
-                            ((ImageView)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(task.getValue().toURI().toString()));
-                            thread.interrupt();
-                            Task<File> taskProf = new Task<File>() {
-                                @Override
-                                protected File call() throws Exception {
-                                    client.setReq_id();
-                                    int req = client.getReq_id();
-                                    return Client_video.get_media("profile", videos.get(finalI).getChannel().getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req );
-                                }
-                            };
-                            Thread threadProf = new Thread(taskProf);
-                            threadProf.start();
-                            taskProf.setOnSucceeded(event -> {
-                                if(task.getValue() != null) {
-                                    ImagePattern pattern = new ImagePattern(new Image(taskProf.getValue().toURI().toString()));
-                                    ((Circle) videoPane.getChildren().get(1)).setFill(pattern);
-                                    threadProf.interrupt();
-                                }
-                            });
-                        });
-
-                        previewBox.getChildren().add(videoPane);
-                        i++;
-                    } else {
-                        break;
-                    }
-                }
-
-                videosBox.getChildren().add(previewBox);
-            }
+            putVideos(videos);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -330,7 +296,7 @@ public class MainPage implements Initializable {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("Playlist_Box.fxml"));
                     AnchorPane playlistPane = loader.load();
                     ((Label) playlistPane.getChildren().get(0)).setText(playlists.get(i).getTitle());
-                    ((Text) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(8)).setText(String.valueOf(playlists.get(i).getVideos().size()) + " Videos");
+                    ((Text) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(8)).setText(playlists.get(i).getVideos().size() + " Videos");
                     int finalI = i;
                     if(playlists.get(i).getVideos().size() != 0){
                         ((Button) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(2)).setOnAction(event -> selectPlaylist(event , playlists.get(finalI)));
@@ -497,6 +463,111 @@ public class MainPage implements Initializable {
         }catch (IOException ignored){
         }
     }
+    public void switchToYourChannel(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Channel.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            ChannelPage channelPage = loader.getController();
+            channelPage.setChannel(client.getChannel());
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void showLiked() throws IOException {
+        Client_video cv = new Client_video(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        ArrayList<Video> videos ;
+        cv.get_liked_videos(client.getChannel_id(), req);
+        while (true){
+            if(client.requests.get(req) != null){
+                videos = client.requests.get(req).getVideos_list();
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        putVideos(videos);
+    }
+
+    private void putVideos(ArrayList<Video> videos) throws IOException {
+        videosBox.getChildren().clear();
+        int i = 0;
+
+        while (i <videos.size()) {
+            HBox previewBox = new HBox();
+            previewBox.setSpacing(10);
+            previewBox.getChildren().clear();
+            for (int j = 0; j < 3; j++) {
+                if (i < videos.size()) {
+                    int finalI = i;
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_Box.fxml"));
+                    AnchorPane videoPane = loader.load();
+                    ((Label)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(2)).setText(Formatter.formatSeconds(videos.get(finalI).getLength()));
+                    ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(0)).setText(videos.get(finalI).getTitle());
+                    ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(1)).setText(videos.get(finalI).getChannel().getName());
+                    ((Line)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(3)).setVisible(videos.get(finalI).getWatched());
+                    ((Label)((VBox) videoPane.getChildren().get(0)).getChildren().get(2)).setText(videos.get(finalI).getViews() + " views • " + Formatter.formatTime(videos.get(finalI).getCreated_at()));
+                    ((Button) videoPane.getChildren().get(3)).setOnAction(event -> switchTChannelPage(event , videos.get(finalI).getChannel()));
+                    ((Button)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(4)).setOnAction(event -> switchToVideoPage(event,videos.get(finalI)));
+
+                    ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
+                    ((AnchorPane) videoPane.getChildren().get(2)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) videoPane.getChildren().get(2))));
+                    Task<File> task = new Task<File>() {
+                        @Override
+                        protected File call() throws Exception {
+                            client.setReq_id();
+                            int req =client.getReq_id();
+                            return Client_video.get_media(videos.get(finalI).getVideo_id(), videos.get(finalI).getChannel().getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req );
+                        }
+                    };
+                    Thread thread = new Thread(task);
+                    thread.start();
+                    task.setOnSucceeded(e -> {
+                        ((ImageView)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(task.getValue().toURI().toString()));
+                        thread.interrupt();
+                        Task<File> taskProf = new Task<File>() {
+                            @Override
+                            protected File call() throws Exception {
+                                client.setReq_id();
+                                int req = client.getReq_id();
+                                return Client_video.get_media("profile", videos.get(finalI).getChannel().getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req );
+                            }
+                        };
+                        Thread threadProf = new Thread(taskProf);
+                        threadProf.start();
+                        taskProf.setOnSucceeded(event -> {
+                            if(task.getValue() != null) {
+                                ImagePattern pattern = new ImagePattern(new Image(taskProf.getValue().toURI().toString()));
+                                ((Circle) videoPane.getChildren().get(1)).setFill(pattern);
+                                threadProf.interrupt();
+                            }
+                        });
+                    });
+
+                    previewBox.getChildren().add(videoPane);
+                    i++;
+                } else {
+                    break;
+                }
+            }
+
+            videosBox.getChildren().add(previewBox);
+        }
+    }
+
     public void switchToVideoPage(ActionEvent event ,Video video){
         Parent root;
         Stage stage;

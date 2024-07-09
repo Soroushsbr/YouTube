@@ -87,7 +87,7 @@
             </AnchorPane>
             <AnchorPane>
                <children>
-                  <Button layoutX="8.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="50.0">
+                  <Button layoutX="8.0" mnemonicParsing="false" onAction="#switchToYourChannel" prefHeight="55.0" prefWidth="50.0">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -104,7 +104,7 @@
       </VBox>
       <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
          <children>
-            <TextField fx:id="searchField" layoutX="421.0" onAction="#showResult" onKeyTyped="#searching" onMouseClicked="#selectSearch" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
+            <TextField fx:id="searchField" layoutX="421.0" onAction="#getSearch" onKeyTyped="#searching" onMouseClicked="#selectSearch" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
                <font>
                   <Font name="Roboto" size="14.0" />
                </font>
@@ -132,14 +132,14 @@
             </Button>
             <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" />
             <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" />
-            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" onMouseClicked="#selectProf" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" onMouseClicked="#s" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
             <Button contentDisplay="BOTTOM" layoutY="4.0" mnemonicParsing="false" onAction="#showGuide" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
             <Pane disable="true" layoutX="6.0" layoutY="14.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" />
-            <Button layoutX="817.0" mnemonicParsing="false" onAction="#showResult" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
+            <Button layoutX="817.0" mnemonicParsing="false" onAction="#getSearch" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
             <AnchorPane disable="true" layoutX="837.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="search" />
          </children>
       </AnchorPane>
@@ -154,7 +154,7 @@
                            <children>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="Home" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#appendVideos" prefHeight="34.0" prefWidth="177.0" text="Home" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -206,7 +206,7 @@
                               </Text>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="           Your channel" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#switchToYourChannel" prefHeight="34.0" prefWidth="177.0" text="           Your channel" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -245,7 +245,7 @@
                               </AnchorPane>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="           Liked videos" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#showLiked" prefHeight="34.0" prefWidth="177.0" text="           Liked videos" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -308,14 +308,14 @@
                <children>
                   <HBox prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Circle fx:id="profile1" fill="WHITE" onMouseClicked="#changeTheme" radius="22.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof">
+                        <Circle fx:id="profile2" fill="WHITE" onMouseClicked="#changeTheme" radius="22.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof">
                            <HBox.margin>
                               <Insets left="10.0" top="10.0" />
                            </HBox.margin>
                         </Circle>
                         <VBox prefWidth="144.0" spacing="5.0">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Cahnnel name" wrappingWidth="220.40869140625">
+                              <Text fx:id="urName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Cahnnel name" wrappingWidth="220.40869140625">
                                  <font>
                                     <Font name="Roboto Bold" size="15.0" />
                                  </font>
@@ -323,7 +323,7 @@
                                     <Insets left="8.0" />
                                  </VBox.margin>
                               </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel username" wrappingWidth="220.40869140625">
+                              <Text fx:id="urUsername" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel username" wrappingWidth="220.40869140625">
                                  <font>
                                     <Font name="Roboto Bold" size="15.0" />
                                  </font>
@@ -331,7 +331,7 @@
                                     <Insets left="8.0" />
                                  </VBox.margin>
                               </Text>
-                              <Button mnemonicParsing="false" style="-fx-text-fill: #445dff;" text="View your channel" textFill="#445dff">
+                              <Button mnemonicParsing="false" onAction="#switchToYourChannel" style="-fx-text-fill: #445dff;" text="View your channel" textFill="#445dff">
                                  <font>
                                     <Font name="Roboto" size="15.0" />
                                  </font>

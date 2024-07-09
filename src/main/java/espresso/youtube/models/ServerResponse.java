@@ -1,5 +1,6 @@
 package espresso.youtube.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,7 @@ import espresso.youtube.models.notification.Notification;
 import espresso.youtube.models.playlist.Playlist;
 import espresso.youtube.models.video.Video;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,6 +48,7 @@ public class ServerResponse {
         }
     }
 
+
     public void add_part(String name, Object object){
         response_parts.put(name, object);
     }
@@ -61,6 +64,8 @@ public class ServerResponse {
     public void delete_all_parts(){
         response_parts.clear();
     }
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Timestamp created_at;
 //------------------------ getters -----------------------------
 
     public HashMap<String, Object> getResponse_parts() {
@@ -89,6 +94,9 @@ public class ServerResponse {
     }
     public String getResponse_type() {
         return response_type;
+    }
+    public Timestamp getCreated_at(){
+        return created_at;
     }
 
 //------------------------ setters -----------------------------
@@ -119,5 +127,8 @@ public class ServerResponse {
     }
     public void setResponse_type(String response_type) {
         this.response_type = response_type;
+    }
+    public void setCreated_at(Timestamp created_at){
+        this.created_at =created_at;
     }
 }
