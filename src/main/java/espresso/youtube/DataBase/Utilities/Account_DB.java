@@ -2,6 +2,8 @@ package espresso.youtube.DataBase.Utilities;
 
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.channel.Channel;
+import espresso.youtube.models.playlist.Playlist;
+import espresso.youtube.models.video.Video;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
@@ -445,25 +447,34 @@ public class Account_DB {
         return serverResponse;
     }
 
-//    public static List<UUID> get_subscribed_playlists(UUID user_id) {
-//        System.out.println("[DATABASE] Getting subscribed playlists of user " + user_id + " ...");
-//        List<UUID> IDs = new ArrayList<>();
-//        String sql = "SELECT playlist_id FROM playlist_subscription WHERE subscriber_id = ?";
-//        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-//             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-//            preparedStatement.setObject(1, user_id);
-//            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//                while (resultSet.next()) {
-//                    UUID playlistId = (UUID) resultSet.getObject("playlist_id");
-//                    IDs.add(playlistId);
-//                }
-//            }
-//        } catch (SQLException e) {
-//            printSQLException(e);
-//        }
-//        System.out.println("[DATABASE] Done");
-//        return IDs;
-//    }
+    public static ServerResponse get_saved_playlists(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Playlist> playlists = new ArrayList<>();
+
+        String sql = "SELECT p.id, p.title, p.owner_id, p.description, p.is_public, p.created_at FROM saved_playlists sp JOIN playlists p ON sp.playlist_id = p.id WHERE sp.user_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Playlist playlist = new Playlist();
+                    playlist.setUser_id(resultSet.getObject("owner_id").toString());
+                    playlist.setTitle(resultSet.getString("title"));
+                    playlist.setId(resultSet.getObject("id").toString());
+                    playlist.setDescription(resultSet.getString("description"));
+                    playlist.setIs_public(resultSet.getBoolean("is_public"));
+                    playlist.setCreated_at(resultSet.getTimestamp("created_at"));
+                    playlists.add(playlist);
+                }
+            }
+
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        serverResponse.setPlaylists_list(playlists);
+        return serverResponse;
+    }
     /////+++
     public static ServerResponse change_username(UUID user_id, String username, int request_id) {
         System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
@@ -505,6 +516,36 @@ public class Account_DB {
         return serverResponse;
     }
 
+    public static ServerResponse get_liked_posts(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> likedPosts = new ArrayList<>();
+        String fetchLikedPostsQuery = "SELECT p.* FROM post_likes pl JOIN posts p ON pl.post_id = p.id WHERE pl.user_id = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(fetchLikedPostsQuery)) {
+            preparedStatement.setObject(1, user_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Video post = new Video();
+                    post.setVideo_id(resultSet.getString("id"));
+                    post.setTitle(resultSet.getString("title"));
+                    post.setOwner_id(resultSet.getString("owner_id"));
+                    post.getChannel().setId(resultSet.getString("channel_id"));
+                    post.setDescription(resultSet.getString("description"));
+                    post.setIs_public(resultSet.getBoolean("is_public"));
+                    post.setIs_short(resultSet.getBoolean("is_short"));
+                    post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+                    likedPosts.add(post);
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        serverResponse.setVideos_list(likedPosts);
+        return serverResponse;
+    }
+
 
 
     public static void main(String[] args) {
@@ -512,35 +553,4 @@ public class Account_DB {
     }
 }
 
-//methods that are gray?
-
-//check user is owner of a post, playlist, and channel, and comment???
-
-
-
-//check delete_account
-//check get info for new columns
-
-
-//give data to load post with comments and views, channel, profile, playlist mobin array in server response?
-
-//notification????
-//delete notifications??
-
-//give ids in search and get_all_posts
-
-//array returns:
-//accounts that liked/disliked a post/comment????
-
-//get all posts?
-
-//watch history?
-
-//change anything else?
-
-//check tables with schema
-//write list of methods to check
-//write log with detail. add [DATABASE], complete logs. remove println to print in same line
-//complete doc
-//write comment about what method does
 
