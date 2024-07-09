@@ -43,13 +43,13 @@ public class Setup {
                 "CREATE TABLE IF NOT EXISTS posts (id UUID PRIMARY KEY, title TEXT, owner_id UUID, channel_id UUID, description TEXT, is_public BOOLEAN, is_short BOOLEAN, video_length INTEGER, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS playlist_posts (playlist_id UUID, post_id UUID)",
                 "CREATE TABLE IF NOT EXISTS channel_subscription (channel_id uuid, subscriber_id uuid)",
-                "CREATE TABLE IF NOT EXISTS playlist_subscription (playlist_id uuid, subscriber_id uuid)",
+                "CREATE TABLE IF NOT EXISTS saved_playlists (playlist_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS post_likes (post_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS post_dislikes (post_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS comment_likes (comment_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS comment_dislikes (comment_id uuid, user_id uuid)",
                 "CREATE TABLE IF NOT EXISTS comments (id uuid PRIMARY KEY, owner_id uuid, content text, post_id uuid, parent_comment_id uuid, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
-                "CREATE TABLE IF NOT EXISTS categories (id uuid PRIMARY KEY, category_name text)",
+                "CREATE TABLE IF NOT EXISTS categories ( post_id uuid, category_name text)",
                 "CREATE TABLE IF NOT EXISTS notifications (user_id uuid , title text, comment_id uuid, post_id uuid, channel_id uuid, have_seen BOOLEAN, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)",
                 "CREATE TABLE IF NOT EXISTS views (user_id uuid , post_id uuid)"
         };

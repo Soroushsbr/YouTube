@@ -4,6 +4,7 @@ import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 import espresso.youtube.models.channel.Channel;
 
+import espresso.youtube.models.notification.Server_notification;
 import espresso.youtube.models.video.Video;
 
 import java.sql.*;
@@ -718,6 +719,276 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         }
         return serverResponse;
     }
+
+    public static ArrayList<UUID> get_ranked_posts() {
+        ArrayList<UUID> rankedPosts = new ArrayList<>();
+        String sql = "SELECT v.post_id, COUNT(v.post_id) * COALESCE(l.like_count, 0) AS score FROM views v LEFT JOIN (SELECT post_id, COUNT(*) AS like_count FROM post_likes GROUP BY post_id) l ON v.post_id = l.post_id GROUP BY v.post_id, l.like_count ORDER BY score DESC";
+
+        try (Connection conn = create_connection(); PreparedStatement preparedStatement = conn.prepareStatement(sql); ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                UUID postId = (UUID) resultSet.getObject("post_id");
+                rankedPosts.add(postId);
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+
+        return rankedPosts;
+    }
+
+    public static ArrayList<UUID> get_posts_by_last_watched_category(UUID user_id) {
+        ArrayList<UUID> postIds = new ArrayList<>();
+        String findLastWatchedVideoQuery = "SELECT post_id FROM views WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
+        String findCategoriesQuery = "SELECT category_name FROM categories WHERE post_id = ?";
+        String findPostsByCategoryQuery = "SELECT post_id FROM categories WHERE category_name = ?";
+
+        try (Connection connection = create_connection()) {
+            UUID lastWatchedPostId = null;
+            try (PreparedStatement preparedStatement = connection.prepareStatement(findLastWatchedVideoQuery)) {
+                preparedStatement.setObject(1, user_id);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        lastWatchedPostId = (UUID) resultSet.getObject("post_id");
+                    }
+                }
+            }
+
+            if (lastWatchedPostId == null) {
+                return postIds;
+            }
+
+            ArrayList<String> categoryNames = new ArrayList<>();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(findCategoriesQuery)) {
+                preparedStatement.setObject(1, lastWatchedPostId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        categoryNames.add(resultSet.getString("category_name"));
+                    }
+                }
+            }
+
+            if (categoryNames.isEmpty()) {
+                return postIds;
+            }
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(findPostsByCategoryQuery)) {
+                for (String categoryName : categoryNames) {
+                    preparedStatement.setString(1, categoryName);
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        while (resultSet.next()) {
+                            postIds.add((UUID) resultSet.getObject("post_id"));
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+
+        return postIds;
+    }
+
+    public static ServerResponse get_recommended_posts(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> recommended_posts = new ArrayList<>();
+        ArrayList<UUID> ranked_posts = get_ranked_posts();
+        ArrayList<UUID> same_category_posts = get_posts_by_last_watched_category(user_id);
+
+        int maxLength = Math.max(ranked_posts.size(), same_category_posts.size());
+
+        ArrayList<UUID> combined_posts = new ArrayList<>();
+        for (int i = 0; i < maxLength; i++) {
+            if (i < ranked_posts.size()) {
+                combined_posts.add(ranked_posts.get(i));
+            }
+            if (i < same_category_posts.size()) {
+                combined_posts.add(same_category_posts.get(i));
+            }
+        }
+
+        String fetchPostDetailsQuery = "SELECT * FROM posts WHERE id = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(fetchPostDetailsQuery)) {
+            for (UUID postId : combined_posts) {
+                preparedStatement.setObject(1, postId);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Video post = new Video();
+                        post.setVideo_id(resultSet.getString("id"));
+                        post.setTitle(resultSet.getString("title"));
+                        post.setOwner_id(resultSet.getString("owner_id"));
+                        post.getChannel().setId(resultSet.getString("channel_id"));
+                        post.setDescription(resultSet.getString("description"));
+                        post.setIs_public(resultSet.getBoolean("is_public"));
+                        post.setIs_short(resultSet.getBoolean("is_short"));
+                        post.setLength(resultSet.getInt("video_length"));
+                        post.setCreated_at(resultSet.getTimestamp("created_at"));
+                        recommended_posts.add(post);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        serverResponse.setVideos_list(recommended_posts);
+        return serverResponse;
+    }
+
+    public static ServerResponse get_watch_history(UUID user_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> watchHistory = new ArrayList<>();
+        String sql = "SELECT p.id, p.title, p.owner_id, p.channel_id, p.description, p.is_public, p.is_short, p.video_length, p.created_at FROM views v JOIN posts p ON v.post_id = p.id WHERE v.user_id = ? ORDER BY v.created_at DESC LIMIT 100";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setObject(1, user_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Video post = new Video();
+                    post.setVideo_id(resultSet.getString("id"));
+                    post.setTitle(resultSet.getString("title"));
+                    post.getChannel().setId(resultSet.getString("channel_id"));
+                    post.setOwner_id(resultSet.getString("owner_id"));
+                    post.setDescription(resultSet.getString("description"));
+                    post.setIs_public(resultSet.getBoolean("is_public"));
+                    post.setIs_short(resultSet.getBoolean("is_short"));
+                    post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+                    watchHistory.add(post);
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        serverResponse.setVideos_list(watchHistory);
+        return serverResponse;
+    }
+
+    public static ServerResponse get_categories(int request_id){
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<String> categories = new ArrayList<>();
+        categories.add("Education");
+        categories.add("Music" );
+        categories.add("Gaming" );
+        categories.add("Comedy" );
+        categories.add("Entertainment" );
+        categories.add("Science and Technology" );
+        categories.add("News and Politics" );
+        categories.add("Pets & Animals" );
+        categories.add("Fashion" );
+        categories.add("ASMR" );
+        categories.add("Film and Animation" );
+        categories.add("Vehicles" );
+        categories.add("Travel and Events" );
+        serverResponse.add_part("categories", categories);
+        return serverResponse;
+    }
+
+    public static ServerResponse set_category(UUID post_id, ArrayList<String> category_names, int request_id) {
+        String query = "INSERT INTO categories (post_id, category_name) VALUES (?, ?)";
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            for (String category_name : category_names) {
+                preparedStatement.setObject(1, post_id);
+                preparedStatement.setString(2, category_name);
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            serverResponse.add_part("isSuccessful", true);
+        } catch (SQLException e) {
+            serverResponse.add_part("isSuccessful", false);
+            printSQLException(e);
+        }
+        return serverResponse;
+    }
+
+    public static ServerResponse get_posts_by_category(String category_name, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> postsByCategory = new ArrayList<>();
+        String fetchPostsByCategoryQuery = "SELECT p.* FROM categories c JOIN posts p ON c.post_id = p.id WHERE c.category_name = ?";
+
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(fetchPostsByCategoryQuery)) {
+            preparedStatement.setString(1, category_name);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Video post = new Video();
+                    post.setVideo_id(resultSet.getString("id"));
+                    post.setTitle(resultSet.getString("title"));
+                    post.setOwner_id(resultSet.getString("owner_id"));
+                    post.getChannel().setId(resultSet.getString("channel_id"));
+                    post.setDescription(resultSet.getString("description"));
+                    post.setIs_public(resultSet.getBoolean("is_public"));
+                    post.setIs_short(resultSet.getBoolean("is_short"));
+                    post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+                    postsByCategory.add(post);
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        serverResponse.setVideos_list(postsByCategory);
+        return serverResponse;
+    }
+
+    //returns posts that have at least one of categories of given post
+    public static ServerResponse get_posts_with_same_categories(UUID post_id, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
+        ArrayList<Video> postsBySharedCategories = new ArrayList<>();
+        ArrayList<String> sharedCategories = new ArrayList<>();
+        String findCategoriesQuery = "SELECT category_name FROM categories WHERE post_id = ?";
+        String findPostsByCategoriesQuery = "SELECT DISTINCT p.* FROM categories c JOIN posts p ON c.post_id = p.id WHERE c.category_name = ? AND p.id <> ?";
+
+        try (Connection connection = create_connection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(findCategoriesQuery)) {
+                preparedStatement.setObject(1, post_id);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String category = resultSet.getString("category_name");
+                        if (!sharedCategories.contains(category)) {
+                            sharedCategories.add(category);
+                        }
+                    }
+                }
+            }
+
+            if (sharedCategories.isEmpty()) {
+                serverResponse.setVideos_list(postsBySharedCategories);
+                return serverResponse;
+            }
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(findPostsByCategoriesQuery)) {
+                for (String category : sharedCategories) {
+                    preparedStatement.setString(1, category);
+                    preparedStatement.setObject(2, post_id);
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        while (resultSet.next()) {
+                            Video post = new Video();
+                            post.setVideo_id(resultSet.getString("id"));
+                            post.setTitle(resultSet.getString("title"));
+                            post.setOwner_id(resultSet.getString("owner_id"));
+                            post.getChannel().setId(resultSet.getString("channel_id"));
+                            post.setDescription(resultSet.getString("description"));
+                            post.setIs_public(resultSet.getBoolean("is_public"));
+                            post.setIs_short(resultSet.getBoolean("is_short"));
+                            post.setLength(resultSet.getInt("video_length"));
+                            post.setCreated_at(resultSet.getTimestamp("created_at"));
+                            postsBySharedCategories.add(post);
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            printSQLException(e);
+        }
+        serverResponse.setVideos_list(postsBySharedCategories);
+        return serverResponse;
+    }
+
 
     public static void main(String[] args) {
 
