@@ -10,7 +10,9 @@ import java.io.File;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 public class Video_sender implements Runnable{
@@ -39,6 +41,7 @@ public class Video_sender implements Runnable{
             String type = rootNode.path("type").asText();
             int request_id = rootNode.path("request_id").asInt();
             System.out.println("[VIDEO SENDER] request "+request_id+" received");
+            log("[VIDEO SENDER] request "+request_id+" received", owner_id);
             
             File mediaFile = new File("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+ media_id+"."+data_type);
             if(mediaFile.exists()){
@@ -46,13 +49,16 @@ public class Video_sender implements Runnable{
             } else {
                 ServerResponse serverResponse = new ServerResponse();
                 serverResponse.add_part("exist", false);
+                serverResponse.setRequest_id(request_id);
                 client_handlers.get(client_handler_id).send_response(serverResponse);
                 System.out.println("[VIDEO SENDER] media not found");
+                log("[VIDEO SENDER] media not found", owner_id);
                 out.writeUTF("0");
                 return;
             }
 
             ServerResponse serverResponse = new ServerResponse();
+            serverResponse.setRequest_id(request_id);
             serverResponse.add_part("exist", true);
             serverResponse.add_part("status", "sending");
             client_handlers.get(client_handler_id).send_response(serverResponse);
@@ -66,6 +72,7 @@ public class Video_sender implements Runnable{
             }
             fin.close();
             System.out.println("[VIDEO SENDER] media sent");
+            log("[VIDEO SENDER] media sent", owner_id);
             
             serverResponse.set_part("status", "complete");
             client_handlers.get(client_handler_id).send_response(serverResponse);
@@ -81,4 +88,20 @@ public class Video_sender implements Runnable{
             }
         }
     }
+    public void log(String message, String id) {
+        String LOG_FILE = "src/main/resources/espresso/youtube/Server/" + id + "/server_log.log";
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(new FileWriter(LOG_FILE, true));
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            writer.println(timeStamp + " - " + message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
+    }
+
 }

@@ -35,11 +35,16 @@ public class Server_account extends Account {
             return sign_up();
         } else if (request.equals("change_username")) {
             return sign_up();
+        } else if (request.equals("get_liked_posts")) {
+            return get_liked_posts();
         }
         return null;
     }
     private ServerResponse make_user_premium(){
         return Account_DB.make_user_premium(UUID.fromString(super.getId()), super.getRequest_id());
+    }
+    private ServerResponse get_liked_posts(){
+        return Account_DB.get_liked_posts(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse remove_premium_of_user(){
         return Account_DB.remove_premium_of_user(UUID.fromString(super.getId()), super.getRequest_id());
@@ -63,9 +68,6 @@ public class Server_account extends Account {
         return Account_DB.change_username(UUID.fromString(super.getId()),super.getPassword() ,super.getRequest_id());
     }
     private ServerResponse login() {
-        System.out.println("[SERVER] : user wants to login");
-        System.out.println("username : " + super.getUsername());
-        System.out.println("password : " + super.getPassword());
         return Account_DB.login(super.getUsername() , super.getPassword() , super.getRequest_id());
     }
 

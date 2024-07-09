@@ -18,20 +18,22 @@ public class Client_playlist {
         this.out = out;
     }
 
-    public void create_playlist(String title, String description, ArrayList<Video> videos, int request_id){
+    public void create_playlist(String title, String description, boolean is_public, ArrayList<Video> videos, int request_id){
         playlist.setRequest("create_playlist");
         playlist.setRequest_id(request_id);
         playlist.setVideos(videos);
         playlist.setTitle(title);
         playlist.setDescription(description);
+        playlist.setIs_public(is_public);
         send_request();
     }
-    public void change_playlist_info(String playlist_id, String new_title, String new_description, int request_id){
+    public void change_playlist_info(String playlist_id, String new_title, String new_description, boolean is_public, int request_id){
         playlist.setRequest("change_playlist_info");
         playlist.setRequest_id(request_id);
         playlist.setTitle(new_title);
         playlist.setDescription(new_description);
         playlist.setId(playlist_id);
+        playlist.setIs_public(is_public);
         send_request();
     }
     public void add_video(String playlist_id, ArrayList<Video> videos, int request_id){
@@ -91,6 +93,28 @@ public class Client_playlist {
         playlist.setId(playlist_id);
         send_request();
     }
+    public void save_playlist(String playlist_id, String user_id, int request_id){
+        playlist.setRequest("save_playlist");
+        playlist.setRequest_id(request_id);
+        playlist.setId(playlist_id);
+        playlist.setUser_id(user_id);
+        send_request();
+    }
+    public void unSave_playlist(String playlist_id, String user_id, int request_id){
+        playlist.setRequest("unSave_playlist");
+        playlist.setRequest_id(request_id);
+        playlist.setId(playlist_id);
+        playlist.setUser_id(user_id);
+        send_request();
+    }
+    public void check_if_user_saved_playlist(String playlist_id, String user_id, int request_id){
+        playlist.setRequest("check_if_user_saved_playlist");
+        playlist.setRequest_id(request_id);
+        playlist.setId(playlist_id);
+        playlist.setUser_id(user_id);
+        send_request();
+    }
+
 
     private void send_request(){
         try {
