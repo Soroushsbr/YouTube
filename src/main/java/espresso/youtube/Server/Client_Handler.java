@@ -82,12 +82,13 @@ public class Client_Handler implements Runnable {
                 server_handler.setNotification(notification);
                 serverResponse = server_handler.handle_request();
 
-                if((server_handler.getRequest().equals("login") || server_handler.getRequest().equals("sign_up")) && (boolean) serverResponse.get_part("isSuccessful")){
-                    Client_Handler clientHandler = online_clients.get(random_key);
-                    online_clients.remove(random_key);
-                    online_clients.put((String) serverResponse.get_part("UserID"), clientHandler);
-                    random_key = (String) serverResponse.get_part("UserID");
-                }
+
+//                if((server_handler.getRequest().equals("login") || server_handler.getRequest().equals("sign_up")) && (boolean) serverResponse.get_part("isSuccessful")){
+//                    Client_Handler clientHandler = online_clients.get(random_key);
+//                    online_clients.remove(random_key);
+//                    online_clients.put((String) serverResponse.get_part("UserID"), clientHandler);
+//                    random_key = (String) serverResponse.get_part("UserID");
+//                }
 
 
 

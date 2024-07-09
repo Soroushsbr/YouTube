@@ -133,9 +133,7 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse insert_video_info(){
-        ArrayList<String> s = new ArrayList<>();
-        s.add("7abe78ac-92b6-416a-a540-43cf72b48028");
-        notification.upload_post(s, super.getVideo_id());
+
         Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(),UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
         return null;
     }

@@ -59,7 +59,9 @@ public class Search {
         }
         return channels;
     }
-    public static ArrayList<String> search_titles(String text) {
+    public static ServerResponse search_titles(String text, int request_id) {
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse.setRequest_id(request_id);
         ArrayList<String> titles = new ArrayList<>();
         String query = "SELECT title FROM channels WHERE title LIKE ? UNION SELECT title FROM posts WHERE title LIKE ? UNION SELECT title FROM playlists WHERE title LIKE ?";
 
@@ -78,7 +80,8 @@ public class Search {
         } catch (SQLException e) {
             printSQLException(e);
         }
-        return titles;
+        serverResponse.add_part("titles", titles);
+        return serverResponse;
     }
 
     public static ArrayList<Playlist> search_in_playlists(String text) {
