@@ -62,7 +62,7 @@ public class Comment_DB {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         UUID id = UUID.randomUUID();
-        String query = "INSERT INTO comments (id, owner_id, content, post_id, parent_comment_id) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO comments (id, owner_id, content, post_id, parent_comment_id) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);
             preparedStatement.setObject(1, id);
@@ -216,7 +216,6 @@ public class Comment_DB {
             try(ResultSet resultSet = preparedStatement.executeQuery();){
                 if (resultSet.next()) {
                     serverResponse.add_part("number_of_likes", resultSet.getInt("row_count"));
-
                 } else {
                     return serverResponse;
                 }

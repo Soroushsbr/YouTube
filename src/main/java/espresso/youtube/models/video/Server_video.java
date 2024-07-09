@@ -168,6 +168,7 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse insert_video_info(){
+
         ServerResponse sr = Channel_DB.get_subscribers(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
         ArrayList<String> ids = new ArrayList<>();
         for(Channel channel : sr.getChannels_list())

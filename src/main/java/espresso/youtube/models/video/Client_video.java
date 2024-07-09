@@ -189,21 +189,12 @@ public class Client_video {
         send_request();
     }
 
-    public void upload_media(File mediaFile, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
+    public void upload_media(File mediaFile,String media_id, String owner_id, String data_type, String type, int client_handler_id) throws IOException {
         Socket v = new Socket("127.0.0.1", 8002);
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
         DataInputStream in = new DataInputStream(v.getInputStream());
         DataInputStream fin = new DataInputStream(new FileInputStream(mediaFile));
-        String media_id = "not_set";
 
-        if(type.equals("post") || type.equals("thumbnail")) {
-            UUID uuid = UUID.randomUUID();
-            media_id = uuid.toString();
-        } else if (type.equals("profile")) {
-            media_id = "profile";
-        } else if (type.equals("banner")) {
-            media_id = "banner";
-        }
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();

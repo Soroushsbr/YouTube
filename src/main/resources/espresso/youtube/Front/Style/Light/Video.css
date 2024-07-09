@@ -89,21 +89,18 @@
     -fx-text-fill: white;
 }
 
-.prof{
-    -fx-stroke: transparent;
-    -fx-fill: #ff2121;
-}
-
-.prof:hover{
-    -fx-stroke: black;
-    -fx-fill: #ff2121;
+.shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(120, 120, 120, 0.8), 10, 0, 0, 0);
 }
 
 .coloredText{
     -fx-fill: black;
     -fx-text-fill: black;
 }
-
+.exit{
+    -fx-background-color: #2f2f2f;
+    -fx-shape: "M12.7,12l6.6,6.6l-0.7,0.7L12,12.7l-6.6,6.6l-0.7-0.7l6.6-6.6L4.6,5.4l0.7-0.7l6.6,6.6l6.6-6.6l0.7,0.7L12.7,12z";
+}
 
 .scroll-bar:horizontal .thumb {
     -fx-background-color: #aaaaaa;

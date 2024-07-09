@@ -98,7 +98,7 @@ public class Post_DB {
                 System.out.println("[DATABASE] Adding post " + video.getVideo_id() + " to playlist " + playlist_id + "...");
                 try {
                     preparedStatement.setObject(1, playlist_id);
-                    preparedStatement.setObject(2, video.getVideo_id());
+                    preparedStatement.setObject(2, UUID.fromString(video.getVideo_id()));
                     preparedStatement.executeUpdate();
                     System.out.println("[DATABASE] Done");
                 } catch (SQLException e) {

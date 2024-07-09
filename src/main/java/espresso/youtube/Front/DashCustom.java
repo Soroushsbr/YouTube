@@ -31,12 +31,15 @@ public class DashCustom {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Thumbnail");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png")
+                new FileChooser.ExtensionFilter("JPG Files", "*.jpg")
         );
         File selectedProf = fileChooser.showOpenDialog(new Stage());
         if(selectedProf != null){
             Client_video cv = new Client_video(client.getOut());
-            cv.upload_media(selectedProf , client.getUser_id(), "png", "picture" , (int) client.requests.get(0).get_part("client_handler_id"));
+            client.setReq_id();
+            int req = client.getReq_id();
+            cv.send_profile_photo_info(client.getChannel_id(), "jpg",req );
+            cv.upload_media(selectedProf ,"profile", client.getChannel_id(), "jpg", "picture" , (int) client.requests.get(0).get_part("client_handler_id"));
         }
     }
 
@@ -44,7 +47,7 @@ public class DashCustom {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Thumbnail");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png")
+                new FileChooser.ExtensionFilter("JPG Files", "*.jpg")
         );
         File selectedThumbnail = fileChooser.showOpenDialog(new Stage());
         if(selectedThumbnail != null){
@@ -55,7 +58,7 @@ public class DashCustom {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Thumbnail");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png")
+                new FileChooser.ExtensionFilter("JPG Files", "*.jpg")
         );
         File selectedThumbnail = fileChooser.showOpenDialog(new Stage());
         if(selectedThumbnail != null){

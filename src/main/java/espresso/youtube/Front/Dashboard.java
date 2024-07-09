@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -145,9 +146,7 @@ public class Dashboard implements Initializable {
     }
 
     public void sendFile(File selectedFile) throws IOException, InterruptedException {
-
         MediaView mediaView = (MediaView) videoPre.getChildren().get(0);
-        System.out.println(mediaView.getMediaPlayer().getTotalDuration().toSeconds());
         int length = (int) mediaView.getMediaPlayer().getTotalDuration().toSeconds();
         Task<Void> task = new Task<Void>() {
             @Override
@@ -159,17 +158,12 @@ public class Dashboard implements Initializable {
                     Client_video client_video = new Client_video(client.getOut());
 
                     client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id(), length);
-
-                    client_video.upload_media(selectedFile, client.getChannel_id(), "mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
-
-                    while (true) {
-                        Thread.sleep(100);
-                        if (client.requests.get(client.getReq_id()) != null) {
-                            System.out.println(client.requests.get(client.getReq_id()).get_part("status"));
-                            break;
-                        } else
-                            System.out.println("waiting for response");
-                    }
+                    UUID id = UUID.randomUUID();
+                    client_video.upload_media(selectedThumbnail, id.toString() ,client.getChannel_id(), "jpg","video",(int) client.requests.get(0).get_part("client_handler_id"));
+                    Thread.sleep(200);
+                    client.setReq_id();
+                    client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id(), length);
+                    client_video.upload_media(selectedFile, id.toString() ,client.getChannel_id(), "mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
                 }
                 return null;
             }
@@ -177,6 +171,7 @@ public class Dashboard implements Initializable {
         Thread thread = new Thread(task);
         thread.start();
         // to Interrupt the thread after the task done
+        task.setOnSucceeded(e -> thread.interrupt());
         //todo -> soroush : do this for every thread you have made
         try{
             thread.join();

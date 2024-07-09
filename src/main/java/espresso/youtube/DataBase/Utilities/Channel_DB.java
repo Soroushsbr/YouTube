@@ -79,9 +79,8 @@ public class Channel_DB {
         return serverResponse;
     }
 
-    public static void create_user_default_channel(UUID user_id) {
+    public static void create_user_default_channel(UUID user_id, UUID id) {
         System.out.println("[DATABASE] Creating default channel of user " + user_id + " ...");
-        UUID id = UUID.randomUUID();
         String query = "INSERT INTO channels (id, title, username, owner_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query)){
             connection.setAutoCommit(false);

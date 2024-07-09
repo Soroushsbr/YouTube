@@ -4,6 +4,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -31,7 +32,7 @@
                         <Font name="Roboto Light" size="15.0" />
                      </font>
                   </Hyperlink>
-                  <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="comment" wrappingWidth="911.4580078125" VBox.vgrow="ALWAYS">
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="comment" wrappingWidth="911.4580078125" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="Arial" size="15.0" />
                      </font>
@@ -52,12 +53,17 @@
                               <Font name="Roboto Bold" size="14.0" />
                            </font>
                         </Hyperlink>
-                        <Button fx:id="commentDislike" layoutX="40.0" layoutY="-2.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 100;">
+                        <Button fx:id="commentDislike" layoutX="90.0" layoutY="-2.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 100;">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <AnchorPane fx:id="dislike" disable="true" layoutX="46.0" layoutY="6.0" prefHeight="19.0" prefWidth="19.0" styleClass="dislike" />
+                        <AnchorPane fx:id="dislike" disable="true" layoutX="96.0" layoutY="6.0" prefHeight="19.0" prefWidth="19.0" styleClass="dislike" />
+                        <Label alignment="CENTER" layoutX="34.0" layoutY="6.0" prefHeight="17.0" prefWidth="57.0" styleClass="coloredText" text="123" textAlignment="CENTER">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
                      </children>
                      <VBox.margin>
                         <Insets top="20.0" />

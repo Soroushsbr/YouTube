@@ -215,8 +215,8 @@ public class LoginMenu implements Initializable {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
-            //set client for next stage
-
+            MainPage mainPage = loader.getController();
+            mainPage.appendVideos();
             stage.show();
         }catch (IOException ignored){
         }
