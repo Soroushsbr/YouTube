@@ -1,6 +1,7 @@
 package espresso.youtube.Client;
 
 import espresso.youtube.models.ServerResponse;
+import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.video.Client_video;
 import javafx.fxml.FXML;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class Client {
 
     private static final String SERVER_IP = "127.0.0.1";
+    private Channel channel;
     private int req_id = 1;
     private String user_id;
     private String channel_id;
@@ -63,5 +65,11 @@ public class Client {
     }
     public String getChannel_id() {
         return channel_id;
+    }
+    public Channel getChannel(){
+        return channel;
+    }
+    public void setChannel(Channel channel){
+        this.channel =channel;
     }
 }

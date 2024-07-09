@@ -1,7 +1,10 @@
 package espresso.youtube.models.video;
 
+import espresso.youtube.DataBase.Utilities.Account_DB;
+import espresso.youtube.DataBase.Utilities.Playlist_DB;
 import espresso.youtube.DataBase.Utilities.Channel_DB;
 import espresso.youtube.DataBase.Utilities.Post_DB;
+import espresso.youtube.DataBase.Utilities.Search;
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 import espresso.youtube.models.channel.Channel;
@@ -30,6 +33,8 @@ public class Server_video extends Video {
             return send_videos();
         } else if(request.equals("search")) {
             return search();
+        } else if(request.equals("get_search_titles")){
+           return send_search_titles();
         } else if(request.equals("like")) {
             return like();
         } else if(request.equals("dislike")) {
@@ -110,7 +115,7 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse get_all_posts_of_a_channel(){
-        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
+        return Post_DB.get_all_posts_of_channel(UUID.fromString(super.getChannel().getId()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse get_all_posts_of_a_account(){
         return Post_DB.get_all_Posts_of_a_account(UUID.fromString(super.getOwner_id()), super.getRequest_id());
@@ -164,11 +169,12 @@ public class Server_video extends Video {
         return Post_DB.remove_user_dislike_from_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse search(){
-//       return search(super.getText?? , super.getRequest_id())
-        return null;
+        return Search.search(super.getTitle() , super.getOwner_id() , super.getRequest_id());
+    }
+    public ServerResponse send_search_titles(){
+        return Search.search_titles(super.getRequest_id());
     }
     private ServerResponse insert_video_info(){
-
         ServerResponse sr = Channel_DB.get_subscribers(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
         ArrayList<String> ids = new ArrayList<>();
         for(Channel channel : sr.getChannels_list())
@@ -192,5 +198,8 @@ public class Server_video extends Video {
     }
     private ServerResponse send_videos(){
         return Post_DB.get_all_posts(super.getRequest_id(), UUID.fromString(super.getOwner_id()));
+    }
+    private ServerResponse send_liked_videos(){
+        return Account_DB.get_liked_posts(UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
 }

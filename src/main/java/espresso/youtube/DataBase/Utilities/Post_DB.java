@@ -554,7 +554,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
-    public static ServerResponse get_all_posts_of_channel(UUID channel_id, int request_id) {
+    public static ServerResponse get_all_posts_of_channel(UUID channel_id, UUID userID, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         ArrayList<Video> posts = new ArrayList<>();
@@ -581,6 +581,9 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
 
                     ServerResponse sr2 = number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
                     post.setViews((int) sr2.get_part("number_of_views"));
+
+                    ServerResponse sr3 = check_if_user_viewed_post(UUID.fromString(post.getVideo_id()), userID, request_id);
+                    post.setWatched((boolean)sr3.get_part("user_viewed_post"));
                     posts.add(post);
                 }
             }

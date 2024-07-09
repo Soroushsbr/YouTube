@@ -294,6 +294,7 @@ public class Account_DB {
             String channel_id = sr.getChannels_list().get(0).getId();
             serverResponse.add_part("isSuccessful", true);
             serverResponse.add_part("ChannelID", channel_id);
+            serverResponse.setChannels_list(sr.getChannels_list());
             serverResponse.add_part("userID", uuid.toString());
         } else {
             serverResponse.add_part("isSuccessful", false);
@@ -312,6 +313,7 @@ public class Account_DB {
             ServerResponse sr = Channel_DB.get_channels_of_account(UUID.fromString(id) , request_id);
             String channel_id = sr.getChannels_list().get(0).getId();
             serverResponse.add_part("ChannelID", channel_id);
+            serverResponse.setChannels_list(sr.getChannels_list());
             serverResponse.add_part("UserID", id);
         }
         System.out.println("[DATABASE] Done");
@@ -537,6 +539,13 @@ public class Account_DB {
                     post.setIs_short(resultSet.getBoolean("is_short"));
                     post.setLength(resultSet.getInt("video_length"));
                     post.setCreated_at(resultSet.getTimestamp("created_at"));
+                    ServerResponse sr = Channel_DB.get_info(UUID.fromString(post.getChannel().getId()) , request_id);
+                    post.getChannel().setName((String) sr.get_part("title"));
+                    post.getChannel().setOwner_id((String) sr.get_part("owner_id"));
+
+                    ServerResponse sr2 =Post_DB.number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
+                    post.setViews((int) sr2.get_part("number_of_views"));
+
                     likedPosts.add(post);
                 }
             }

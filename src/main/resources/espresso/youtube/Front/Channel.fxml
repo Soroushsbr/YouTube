@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -16,11 +17,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Dark/Channel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.ChannelPage">
+<AnchorPane fx:id="parent" prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Light/Channel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.ChannelPage">
    <children>
       <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
          <children>
-            <TextField layoutX="421.0" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
+            <TextField fx:id="searchField" layoutX="421.0" onAction="#showResult" onKeyTyped="#searching" onMouseClicked="#selectSearch" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
                <font>
                   <Font name="Roboto Light" size="13.0" />
                </font>
@@ -31,7 +32,7 @@
                </cursor>
             </Button>
             <Pane layoutX="77.0" layoutY="14.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
-            <Button layoutX="64.0" layoutY="8.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo">
+            <Button layoutX="64.0" layoutY="8.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -48,14 +49,14 @@
             </Button>
             <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" />
             <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" />
-            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" onMouseClicked="#selectProf" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
             <Button layoutY="4.0" mnemonicParsing="false" onAction="#showGuide" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
             <Pane disable="true" layoutX="6.0" layoutY="14.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" />
-            <Button layoutX="817.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
+            <Button layoutX="817.0" mnemonicParsing="false" onAction="#showResult" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
             <AnchorPane disable="true" layoutX="837.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="search" />
          </children>
       </AnchorPane>
@@ -67,10 +68,10 @@
                      <children>
                         <HBox layoutX="105.0" prefHeight="148.0" prefWidth="795.0">
                            <children>
-                              <Circle radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+                              <Circle fx:id="channelProfile" radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
                               <VBox prefHeight="124.0" prefWidth="338.0" spacing="7.0" HBox.hgrow="SOMETIMES">
                                  <children>
-                                    <Text fx:id="nameTxt" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text_color" text="Channel name">
+                                    <Text fx:id="nameTxt" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel name">
                                        <font>
                                           <Font name="Roboto Bold" size="28.0" />
                                        </font>
@@ -104,7 +105,7 @@
                                                 <Font name="Roboto Bold" size="15.0" />
                                              </font>
                                           </Button>
-                                          <Button fx:id="subBtn1" mnemonicParsing="false" onAction="#subscribe" prefHeight="33.0" styleClass="coloredBtn" text="Customise channel">
+                                          <Button fx:id="subBtn1" mnemonicParsing="false" onAction="#switchToDashboard" prefHeight="33.0" styleClass="coloredBtn" text="Customise channel">
                                              <font>
                                                 <Font name="Roboto Bold" size="15.0" />
                                              </font>
@@ -140,15 +141,6 @@
                               </AnchorPane>
                               <AnchorPane prefHeight="42.0" prefWidth="56.0">
                                  <children>
-                                    <Button layoutY="12.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="59.0" styleClass="channel_button" text="Shorts">
-                                       <font>
-                                          <Font name="System Bold" size="13.0" />
-                                       </font>
-                                    </Button>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="42.0" prefWidth="56.0">
-                                 <children>
                                     <Button layoutY="12.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="71.0" styleClass="channel_button" text="Playlists">
                                        <font>
                                           <Font name="System Bold" size="13.0" />
@@ -172,6 +164,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Circle>
+                              <Button mnemonicParsing="false" onAction="#switchToDashboard" opacity="0.0" prefHeight="149.0" prefWidth="149.0" text="Button" />
                            </children>
                         </AnchorPane>
                      </children>
@@ -187,7 +180,7 @@
          <children>
             <AnchorPane>
                <children>
-                  <Button layoutX="8.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="50.0">
+                  <Button layoutX="8.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="55.0" prefWidth="50.0">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -232,7 +225,7 @@
             </AnchorPane>
             <AnchorPane>
                <children>
-                  <Button layoutX="8.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="50.0">
+                  <Button layoutX="8.0" mnemonicParsing="false" onAction="#switchToYourChannel" prefHeight="55.0" prefWidth="50.0">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -248,17 +241,17 @@
          </children>
       </VBox>
       <Rectangle fx:id="backWindow" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#hideGuide" opacity="0.19" stroke="BLACK" strokeType="INSIDE" visible="false" width="1281.0" />
-      <AnchorPane fx:id="guidePane" layoutX="-200.0" prefHeight="720.0" prefWidth="202.0" styleClass="background">
+      <AnchorPane fx:id="guidePane" layoutX="-200.0" prefHeight="720.0" prefWidth="202.0" styleClass="back">
          <children>
             <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutY="75.0" prefHeight="645.0" prefWidth="202.0" style="-fx-background-color: transparent;">
                <content>
-                  <VBox fx:id="leftSideBox" prefHeight="644.0" prefWidth="196.0" styleClass="background">
+                  <VBox fx:id="leftSideBox" prefHeight="644.0" prefWidth="196.0" styleClass="back">
                      <children>
-                        <VBox>
+                        <VBox styleClass="back">
                            <children>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="Home" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="34.0" prefWidth="177.0" text="Home" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -310,7 +303,7 @@
                               </Text>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="           Your channel" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#switchToYourChannel" prefHeight="34.0" prefWidth="177.0" text="           Your channel" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -323,7 +316,7 @@
                               </AnchorPane>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="   Playlists" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#switchtoPlaylists" prefHeight="34.0" prefWidth="177.0" text="   Playlists" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -349,7 +342,7 @@
                               </AnchorPane>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="           Liked videos" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#showLiked" prefHeight="34.0" prefWidth="177.0" text="           Liked videos" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -402,6 +395,137 @@
                </cursor>
             </Button>
          </children>
+      </AnchorPane>
+      <AnchorPane fx:id="searchPane" layoutX="451.0" layoutY="69.0" prefHeight="244.0" prefWidth="443.0" style="-fx-background-radius: 20;" visible="false">
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="7.0" layoutY="33.0" prefHeight="202.0" prefWidth="427.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox fx:id="searchBox" prefHeight="200.0" prefWidth="100.0" spacing="7.0" styleClass="back" />
+               </content>
+            </ScrollPane>
+            <Button layoutX="404.0" layoutY="5.0" mnemonicParsing="false" onAction="#hideSearch" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 100;" />
+            <AnchorPane disable="true" layoutX="409.0" layoutY="10.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="profilePane" layoutX="934.0" layoutY="69.0" prefHeight="314.0" prefWidth="295.0" style="-fx-background-radius: 20;" visible="false">
+         <children>
+            <VBox layoutY="3.0" prefHeight="307.0" prefWidth="295.0" spacing="5.0" style="-fx-background-radius: 20;">
+               <children>
+                  <HBox prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Circle fx:id="profile2" fill="WHITE" onMouseClicked="#changeTheme" radius="22.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Circle>
+                        <VBox prefWidth="144.0" spacing="5.0">
+                           <children>
+                              <Text fx:id="urName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Cahnnel name" wrappingWidth="220.40869140625">
+                                 <font>
+                                    <Font name="Roboto Bold" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="8.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Text fx:id="urUsername" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel username" wrappingWidth="220.40869140625">
+                                 <font>
+                                    <Font name="Roboto Bold" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="8.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Button mnemonicParsing="false" onAction="#switchToYourChannel" style="-fx-text-fill: #445dff;" text="View your channel" textFill="#445dff">
+                                 <font>
+                                    <Font name="Roboto" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" text="             Switch account                                       " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="20.0" styleClass="your-channel" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="295.0" text="             Log out                                                    " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="18.0" styleClass="logout" />
+                     </children>
+                  </AnchorPane>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#changeTheme" prefHeight="34.0" prefWidth="295.0" text="       Change Appearance                        " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="15.0" styleClass="theme" />
+                     </children>
+                  </AnchorPane>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" text="       Setting                                               " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="15.0" layoutY="8.0" prefHeight="20.0" prefWidth="20.0" styleClass="setting" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
       </AnchorPane>
    </children>
 </AnchorPane>

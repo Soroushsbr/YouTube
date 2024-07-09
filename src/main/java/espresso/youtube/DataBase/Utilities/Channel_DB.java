@@ -225,9 +225,10 @@ public class Channel_DB {
                 if(resultSet.next()){
                     serverResponse.add_part("id" , resultSet.getString("id"));
                     serverResponse.add_part("title" , resultSet.getString("title"));
+                    serverResponse.add_part("username" , resultSet.getString("username"));
                     serverResponse.add_part("owner_id" , resultSet.getString("owner_id"));
                     serverResponse.add_part("description" , resultSet.getString("description"));
-                    serverResponse.add_part("created_at" , resultSet.getString("created_at"));
+                    serverResponse.setCreated_at(resultSet.getTimestamp("created_at"));
                 }
             }
             System.out.println("[DATABASE] Done");

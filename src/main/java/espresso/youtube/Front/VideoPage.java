@@ -1,6 +1,8 @@
 package espresso.youtube.Front;
 
 
+import espresso.youtube.DataBase.Utilities.Account_DB;
+import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.channel.Client_channel;
 import espresso.youtube.models.comment.Client_comment;
 import espresso.youtube.models.comment.Comment;
@@ -25,6 +27,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -32,6 +35,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -42,7 +48,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static espresso.youtube.Front.LoginMenu.client;
 import static espresso.youtube.Front.LoginMenu.darkmode;
@@ -52,7 +62,7 @@ public class VideoPage implements Initializable {
     private Video video;
     private boolean likeFlag , dislikeFlag;
     private int replayIndex;
-
+    private ArrayList<String> searches;
     @FXML
     AnchorPane parent;
     @FXML
@@ -105,12 +115,53 @@ public class VideoPage implements Initializable {
     AnchorPane savePane;
     @FXML
     VBox playlistBox;
-
+    @FXML
+    Circle profile;
+    @FXML
+    Circle profile2;
+    @FXML
+    Circle channelProfile;
+    @FXML
+    AnchorPane searchPane;
+    @FXML
+    VBox searchBox;
+    @FXML
+    TextField searchField;
+    @FXML
+    Circle profile3;
+    @FXML
+    Text urName;
+    @FXML
+    Text urUsername;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeTextarea(addCommentArea , addCommentBox);
-
+        setProfile();
         appendTheme();
+    }
+    public void setProfile(){
+        urName.setText(client.getChannel().getName());
+        urUsername.setText(client.getChannel().getUsername());
+        client.setReq_id();
+        int req = client.getReq_id();
+        Task<File> task = new Task<File>() {
+            @Override
+            protected File call() throws Exception {
+                return Client_video.get_media("profile", client.getChannel_id(),"jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req);
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+        task.setOnSucceeded(e -> {
+            if(task.getValue() != null) {
+                ImagePattern pattern = new ImagePattern(new Image(task.getValue().toURI().toString()));
+                profile.setFill(pattern);
+                profile2.setFill(pattern);
+                profile3.setFill(pattern);
+                thread.interrupt();
+            }
+        });
+
     }
     public void selectNotif(){
         profPane.setVisible(false);
@@ -193,6 +244,23 @@ public class VideoPage implements Initializable {
         descriptionTxt.setText(video.getDescription());
     }
     public void sendRequestInfo(){
+        client.setReq_id();
+        int request = client.getReq_id();
+        Task<File> task = new Task<File>() {
+            @Override
+            protected File call() throws Exception {
+                return Client_video.get_media("profile", video.getChannel().getId(),"jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), request);
+            }
+        };
+        Thread thread = new Thread(task);
+        thread.start();
+        task.setOnSucceeded(e -> {
+            if(task.getValue() != null) {
+                ImagePattern pattern = new ImagePattern(new Image(task.getValue().toURI().toString()));
+                channelProfile.setFill(pattern);
+                thread.interrupt();
+            }
+        });
         //-----checks if user subscribed or not------------
         Client_channel cc = new Client_channel(client.getOut());
         client.setReq_id();
@@ -626,6 +694,78 @@ public class VideoPage implements Initializable {
         }catch (IOException ignored){
         }
     }
+    public void switchToMainPage(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            MainPage mainPage = loader.getController();
+            mainPage.appendVideos();
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void showLiked(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            MainPage mainPage = loader.getController();
+            mainPage.showLiked();
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void switchToYourChannel(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Channel.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            ChannelPage channelPage = loader.getController();
+            channelPage.setChannel(client.getChannel());
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void switchtoPlaylists(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Main_Page.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            MainPage mainPage = loader.getController();
+            mainPage.showPlaylists();
+            //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
     public void choseAnotherPlaylist(ActionEvent event, Playlist playlist , int index){
         Parent root;
         Stage stage;
@@ -936,8 +1076,27 @@ public class VideoPage implements Initializable {
         );
         timeline.play();
     }
-    public void switchToMainPage(ActionEvent event){
-        mediaPlayer.stop();
+    public void selectSearch(){
+        searchPane.setVisible(true);
+        Client_video cv = new Client_video(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cv.get_search_titles(req);
+        ArrayList<String> titles ;
+        while (true){
+            if(client.requests.get(req) != null){
+                titles = ((ArrayList<String>)(client.requests.get(req).get_part("titles")));
+                break;
+            }
+        }
+        Collections.sort(titles, Comparator.comparingInt(String::length));
+        this.searches = titles;
+        appendSearch(searches);
+    }
+    public void hideSearch(){
+        searchPane.setVisible(false);
+    }
+    public void showResult(ActionEvent event) {
         Parent root;
         Stage stage;
         Scene scene;
@@ -947,10 +1106,43 @@ public class VideoPage implements Initializable {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
+            MainPage mainPage = loader.getController();
+            mainPage.showResult(searchField.getText());
             //set client for next stage
 
             stage.show();
         }catch (IOException ignored){
         }
+    }
+    public void appendSearch(ArrayList<String> titles){
+        searchBox.getChildren().clear();
+        for(String title : titles){
+            Button button = new Button(title);
+            button.setOnAction(event -> {
+                searchField.setText(button.getText());
+            });
+            button.setPrefWidth(420);
+            button.setPrefHeight(50);
+            button.setStyle("-fx-font-size: 15px;");
+            searchBox.getChildren().add(button);
+        }
+    }
+    public void searching(){
+        String search = searchField.getText();
+        ArrayList<String> result = searchWords(searches, search);
+        appendSearch(result);
+    }
+    public static ArrayList<String> searchWords(ArrayList<String> words, String searchString) {
+        ArrayList<String> matchingWords = new ArrayList<>();
+        Pattern pattern = Pattern.compile("^" + searchString + "\\w*\\b", Pattern.CASE_INSENSITIVE);
+
+        for (String word : words) {
+            Matcher matcher = pattern.matcher(word);
+            if (matcher.find()) {
+                matchingWords.add(word);
+            }
+        }
+
+        return matchingWords;
     }
 }
