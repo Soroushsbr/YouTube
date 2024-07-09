@@ -4,6 +4,8 @@ package espresso.youtube.Front;
 import espresso.youtube.models.channel.Client_channel;
 import espresso.youtube.models.comment.Client_comment;
 import espresso.youtube.models.comment.Comment;
+import espresso.youtube.models.playlist.Client_playlist;
+import espresso.youtube.models.playlist.Playlist;
 import espresso.youtube.models.video.Client_video;
 import espresso.youtube.models.video.Video;
 import javafx.animation.KeyFrame;
@@ -64,6 +66,8 @@ public class VideoPage implements Initializable {
     @FXML
     VBox leftVbox;
     @FXML
+    VBox rightBox;
+    @FXML
     AnchorPane guidePane;
     @FXML
     Rectangle backWindow;
@@ -97,6 +101,11 @@ public class VideoPage implements Initializable {
     AnchorPane notifPane;
     @FXML
     Text infoTxt;
+    @FXML
+    AnchorPane savePane;
+    @FXML
+    VBox playlistBox;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeTextarea(addCommentArea , addCommentBox);
@@ -156,6 +165,9 @@ public class VideoPage implements Initializable {
     public void setVID(Video video) throws IOException {
         this.video = video;
         //to set hover action to show video icons when mouse hovers it
+        if(video.getChannel().getId().equals(client.getChannel_id())){
+            subBtn.setVisible(false);
+        }
         Client_video cv = new Client_video(client.getOut());
         client.setReq_id();
         int req = client.getReq_id();
@@ -177,7 +189,7 @@ public class VideoPage implements Initializable {
         channelLabel.setText(video.getChannel().getName());
         totoalTime.setText( "/" + Formatter.formatSeconds(video.getLength()));
         titleTxt.setText(video.getTitle());
-        infoTxt.setText(video.getViews() + "  " + Formatter.formatTime(video.getCreated_at()));
+        infoTxt.setText(video.getViews() + " views  " + Formatter.formatTime(video.getCreated_at()));
         descriptionTxt.setText(video.getDescription());
     }
     public void sendRequestInfo(){
@@ -250,7 +262,6 @@ public class VideoPage implements Initializable {
         while (true) {
             if (client.requests.get(req6) != null) {
                 dislikeFlag = (boolean) client.requests.get(req6).get_part("user_dislikes_post");
-                System.out.println(dislikeFlag);
                 if(dislikeFlag){
                     dislike.getStyleClass().removeAll("dislike");
                     dislike.getStyleClass().add("disliked");
@@ -547,16 +558,16 @@ public class VideoPage implements Initializable {
         leftVbox.getChildren().add(commentBox);
     }
     public void showReplays(int index, String id)  {
-        //todo: remove previous reps
-        System.out.println();
         if(replayIndex > 2){
             leftVbox.getChildren().remove(replayIndex);
         }
         try {
             replayIndex = index;
             VBox repBox = new VBox();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Add_Replay.fxml"));
+            repBox.getChildren().clear();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddReplay.fxml"));
             HBox addReplayBox = loader.load();
+            ((Button)((AnchorPane)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(1)).getChildren().get(1)).setText("Replay");
             ((Button)((AnchorPane)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(1)).getChildren().get(1)).setOnAction(event -> addReplay(id , ((TextArea)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(0))));
             repBox.getChildren().add(addReplayBox);
             //todo: add reps
@@ -576,19 +587,146 @@ public class VideoPage implements Initializable {
                     throw new RuntimeException(e);
                 }
             }
+
             for(int i = 0 ; i < comments.size() ; i++){
-                if(comments.get(i).getParent_comment_id() == id ){
+                if(comments.get(i).getParent_comment_id() != null && comments.get(i).getParent_comment_id().equals(id)){
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Comment_View.fxml"));
-                    VBox commentBox = fxmlLoader.load();
-                    ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
-                    ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
-                    leftVbox.getChildren().add(commentBox);
+                    VBox replayBox = fxmlLoader.load();
+                    ((Hyperlink)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
+                    ((Text)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
+                    ((Label)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5)).setText(String.valueOf(comments.get(i).getN_likes()));
+                    int finalI = i;
+                    ((Button)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(0)).setOnAction(event -> likeComment(comments.get(finalI), ((AnchorPane)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(1)), ((AnchorPane)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(4)), ((Label)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5))));
+                    ((Button)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(3)).setOnAction(event -> dislikeComment(comments.get(finalI), ((AnchorPane)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(1)), ((AnchorPane)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(4)), ((Label)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5))));
+                    ((Hyperlink)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(2)).setOnAction(event -> changeActionReplay(((Button)((AnchorPane)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(1)).getChildren().get(1)), comments.get(finalI).getUsername(), id,((TextArea)((VBox)addReplayBox.getChildren().get(1)).getChildren().get(0))));
+                    verifyComment(((AnchorPane)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(1)), ((AnchorPane)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(4)), ((Label)((AnchorPane)((VBox)((HBox)replayBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5)), comments.get(i).getComment_id());
+                    replayBox.setScaleX(0.9);
+                    replayBox.setScaleY(0.9);
+                    repBox.getChildren().add(replayBox);
                 }
             }
             leftVbox.getChildren().add(index , repBox);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void choseAnotherVid(ActionEvent event ,Video video){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
+            root = loader.load();
+            VideoPage videoPage = loader.getController();
+            videoPage.setVID(video);
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void choseAnotherPlaylist(ActionEvent event, Playlist playlist , int index){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
+            root = loader.load();
+            VideoPage videoPage = loader.getController();
+            videoPage.appendPlaylist(playlist , index);
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void appendPlaylist(Playlist playlist , int index){
+        try {
+            ScrollPane scrollPane = new ScrollPane();
+            scrollPane.setPrefSize(290, 300);
+            scrollPane.setFitToHeight(true);
+            scrollPane.setFitToWidth(true);
+            VBox vbox = new VBox();
+            vbox.getStyleClass().add("back");
+            scrollPane.setContent(vbox);
+
+            for(int i = 0 ; i < playlist.getVideos().size() ; i++){
+                if(i != index) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("Preview_long.fxml"));
+                    AnchorPane previewPane = loader.load();
+                    ((Label) ((VBox) previewPane.getChildren().get(2)).getChildren().get(0)).setText(playlist.getVideos().get(i).getTitle());
+                    ((Label) ((VBox) previewPane.getChildren().get(2)).getChildren().get(1)).setText(playlist.getVideos().get(i).getChannel().getName());
+                    ((Label) ((VBox) previewPane.getChildren().get(2)).getChildren().get(2)).setText(String.valueOf(playlist.getVideos().get(i).getViews()));
+                    int finalI = i;
+                    ((Button) previewPane.getChildren().get(5)).setOnAction(event -> choseAnotherPlaylist(event, playlist, finalI));
+                    vbox.getChildren().add(previewPane);
+                }
+            }
+            rightBox.getChildren().add(scrollPane);
+            setVID(playlist.getVideos().get(index));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void showSave(){
+        backWindow.setVisible(true);
+        savePane.setVisible(true);
+        playlistBox.getChildren().clear();
+
+        ArrayList<Playlist> playlists;
+        Client_playlist cp = new Client_playlist(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cp.get_playlists_of_account(client.getChannel_id(), req);
+        while (true){
+            if(client.requests.get(req) != null){
+                playlists = client.requests.get(req).getPlaylists_list();
+                break;
+            }
+        }
+
+        for(Playlist playlist : playlists){
+            Button playlistBtn = new Button();
+            if(playlist.getIs_public()){
+                playlistBtn.setText(playlist.getTitle() + " (Public)");
+            }else {
+                playlistBtn.setText(playlist.getTitle() + "  (Private)");
+            }
+            playlistBtn.setPrefWidth(352);
+            playlistBtn.setPrefHeight(50);
+            playlistBtn.setOnAction(event -> addToPlaylist(playlist));
+            playlistBox.getChildren().add(playlistBtn);
+        }
+
+    }
+    public void addToPlaylist(Playlist playlist){
+        Client_playlist cp = new Client_playlist(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        ArrayList<Video> videos = new ArrayList<>();
+        videos.add(video);
+        cp.add_video(playlist.getId(), videos, req);
+        hideSave();
+    }
+    public void hideSave(){
+        backWindow.setVisible(false);
+        savePane.setVisible(false);
+    }
+    public void changeActionReplay(Button btn, String username, String selectedID, TextArea textArea){
+        btn.setText("Replay to " + username);
+        btn.setOnAction(event -> replayTwice(username, selectedID, textArea));
+    }
+    public void replayTwice(String username, String selectedCommentID, TextArea textArea){
+        String content = "@" + username + "\n";
+        content += textArea.getText();
+        Client_comment cc = new Client_comment(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cc.reply_comment(content, client.getChannel_id(), video.getVideo_id(), selectedCommentID,req);
+        textArea.clear();
     }
     public void addReplay(String selectedCommentID , TextArea textArea){
         String content = textArea.getText();
@@ -597,6 +735,134 @@ public class VideoPage implements Initializable {
         int req = client.getReq_id();
         cc.reply_comment(content, client.getChannel_id(), video.getVideo_id(), selectedCommentID,req);
         textArea.clear();
+    }
+    public void likeComment(Comment comment, AnchorPane likeBtn, AnchorPane dislikeBtn, Label likesCnt){
+        if(likeBtn.getStyleClass().contains("liked")){
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.remove_user_like_from_comment(comment.getComment_id(), client.getChannel_id(), req);
+
+            likesCnt.setText(String.valueOf(Integer.parseInt(likesCnt.getText()) - 1));
+            likeBtn.getStyleClass().removeAll("liked");
+            likeBtn.getStyleClass().add("like");
+        }else if(dislikeBtn.getStyleClass().contains("disliked")){
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.remove_user_dislike_from_comment(comment.getComment_id(), client.getChannel_id(), req);
+            Client_comment cc2 = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req2 = client.getReq_id();
+            cc2.like_comment(comment.getComment_id(), client.getChannel_id(), req);
+
+            likesCnt.setText(String.valueOf(Integer.parseInt(likesCnt.getText()) + 1));
+            dislikeBtn.getStyleClass().removeAll("disliked");
+            dislikeBtn.getStyleClass().add("dislike");
+            likeBtn.getStyleClass().removeAll("like");
+            likeBtn.getStyleClass().add("liked");
+        }else {
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.like_comment(comment.getComment_id(), client.getChannel_id(), req);
+
+            likesCnt.setText(String.valueOf(Integer.parseInt(likesCnt.getText()) + 1));
+            likeBtn.getStyleClass().removeAll("like");
+            likeBtn.getStyleClass().add("liked");
+        }
+    }
+    public void dislikeComment(Comment comment, AnchorPane likeBtn, AnchorPane dislikeBtn, Label likesCnt){
+        if(dislikeBtn.getStyleClass().contains("disliked")){
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.remove_user_dislike_from_comment(comment.getComment_id(), client.getChannel_id(), req);
+
+            dislikeBtn.getStyleClass().removeAll("disliked");
+            dislikeBtn.getStyleClass().add("dislike");
+        }else if(likeBtn.getStyleClass().contains("liked")){
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.remove_user_like_from_comment(comment.getComment_id(), client.getChannel_id(), req);
+            Client_comment cc2 = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req2 = client.getReq_id();
+            cc2.dislike_comment(comment.getComment_id(), client.getChannel_id(), req2);
+
+            likesCnt.setText(String.valueOf(Integer.parseInt(likesCnt.getText()) - 1));
+            likeBtn.getStyleClass().removeAll("liked");
+            likeBtn.getStyleClass().add("like");
+            dislikeBtn.getStyleClass().removeAll("dislike");
+            dislikeBtn.getStyleClass().add("disliked");
+        }else {
+            Client_comment cc = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req = client.getReq_id();
+            cc.dislike_comment(comment.getComment_id(), client.getChannel_id(), req);
+
+            dislikeBtn.getStyleClass().removeAll("dislike");
+            dislikeBtn.getStyleClass().add("disliked");
+        }
+    }
+    public void verifyComment(AnchorPane like, AnchorPane dislike , Label likesCnt, String id){
+        //----checks if user liked the comment
+        Client_comment cc = new Client_comment(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cc.check_user_likes_comment(id, client.getChannel_id(), req);
+        while (true){
+            if(client.requests.get(req) != null){
+                if((boolean) client.requests.get(req).get_part("user_likes_comment")){
+                    like.getStyleClass().removeAll("like");
+                    like.getStyleClass().add("liked");
+                }
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //----check if user dislike the comment
+        if(!(boolean) client.requests.get(req).get_part("user_likes_comment")) {
+            Client_comment cc2 = new Client_comment(client.getOut());
+            client.setReq_id();
+            int req2 = client.getReq_id();
+            cc2.check_user_dislikes_comment(id, client.getChannel_id(), req2);
+            while (true) {
+                if (client.requests.get(req2) != null) {
+                    if ((boolean) client.requests.get(req2).get_part("user_dislikes_comment")) {
+                        dislike.getStyleClass().removeAll("dislike");
+                        dislike.getStyleClass().add("disliked");
+                    }
+                    break;
+                }
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        Client_comment cc3 = new Client_comment(client.getOut());
+        client.setReq_id();
+        int req3 = client.getReq_id();
+        cc3.number_of_likes(id, req3);
+        while (true){
+            if(client.requests.get(req3) != null){
+                int likes = (int) client.requests.get(req3).get_part("number_of_likes");
+                likesCnt.setText(String.valueOf(likes));
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
     public void cancelComment(){
         addCommentArea.clear();
@@ -626,8 +892,12 @@ public class VideoPage implements Initializable {
                 VBox commentBox = loader.load();
                 ((Hyperlink)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(0)).setText("@" + comments.get(i).getUsername());
                 ((Text)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(1)).setText(comments.get(i).getMessage());
+                ((Label)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5)).setText(String.valueOf(comments.get(i).getN_likes()));
                 int finalIndex = index;
+                ((Button)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(0)).setOnAction(event -> likeComment(comments.get(finalI), ((AnchorPane)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(1)), ((AnchorPane)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(4)), ((Label)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5))));
+                ((Button)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(3)).setOnAction(event -> dislikeComment(comments.get(finalI), ((AnchorPane)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(1)), ((AnchorPane)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(4)), ((Label)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5))));
                 ((Hyperlink)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(2)).setOnAction(event -> showReplays(finalIndex + 4, comments.get(finalI).getComment_id()));
+                verifyComment(((AnchorPane)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(1)), ((AnchorPane)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(4)), ((Label)((AnchorPane)((VBox)((HBox)commentBox.getChildren().get(0)).getChildren().get(1)).getChildren().get(2)).getChildren().get(5)), comments.get(i).getComment_id());
                 leftVbox.getChildren().add(commentBox);
                 index++;
             }

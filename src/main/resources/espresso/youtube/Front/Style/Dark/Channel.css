@@ -49,15 +49,8 @@
     -fx-fill: white;
     -fx-text-fill: white;
 }
-.prof{
-    -fx-stroke: transparent;
-    -fx-fill: black;
-}
 
-.prof:hover{
-    -fx-stroke: white;
-    -fx-filll: black;
-}
+
 
 .prof_svg{
     -fx-background-color: white;

@@ -30,7 +30,7 @@
          <children>
             <AnchorPane prefHeight="240.0" prefWidth="1018.0">
                <children>
-                  <Button layoutX="330.0" layoutY="184.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Change">
+                  <Button layoutX="330.0" layoutY="184.0" mnemonicParsing="false" onAction="#changeProfile" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Change">
                      <font>
                         <Font name="Roboto Bold" size="15.0" />
                      </font>

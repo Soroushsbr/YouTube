@@ -42,7 +42,7 @@
          <children>
             <AnchorPane>
                <children>
-                  <Button layoutX="8.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="50.0">
+                  <Button layoutX="8.0" mnemonicParsing="false" onAction="#appendVideos" prefHeight="55.0" prefWidth="50.0">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -219,7 +219,7 @@
                               </AnchorPane>
                               <AnchorPane>
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="   Playlists" textFill="WHITE">
+                                    <Button mnemonicParsing="false" onAction="#showPlaylists" prefHeight="34.0" prefWidth="177.0" text="   Playlists" textFill="WHITE">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -277,6 +277,9 @@
                            </VBox.margin>
                         </Line>
                      </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
                   </VBox>
                </content>
             </ScrollPane>

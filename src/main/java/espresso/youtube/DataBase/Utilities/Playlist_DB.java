@@ -299,7 +299,12 @@ public class Playlist_DB {
                     playlist.setDescription(resultSet.getString("description"));
                     playlist.setIs_public(resultSet.getBoolean("is_public"));
                     playlist.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                    ServerResponse sr = Post_DB.get_all_posts_of_a_playlist(UUID.fromString(playlist.getId()), request_id);
+                    playlist.setVideos(sr.getVideos_list());
+
                     playlists.add(playlist);
+
                 }
             }
 

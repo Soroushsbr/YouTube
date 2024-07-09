@@ -5,6 +5,7 @@ import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 import espresso.youtube.models.notification.Notification;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -132,6 +133,7 @@ public class Server_video extends Video {
         return null;
     }
     private ServerResponse insert_video_info(){
+
         Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(),UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
         return null;
     }

@@ -60,6 +60,14 @@ public class Video extends ClassInfo {
     public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
     public void setMedia_type(String media_type) {
         this.media_type = media_type;
+
+    }
+    public void setThumbnail_id(String thumbnail_id) {
+        this.thumbnail_id = thumbnail_id;
+    }
+    public void setWatched(boolean watched){
+        this.watched = watched;
+
     }
     public void setThumbnail_id(String thumbnail_id) {
         this.thumbnail_id = thumbnail_id;
