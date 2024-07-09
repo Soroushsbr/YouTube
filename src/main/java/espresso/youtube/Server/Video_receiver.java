@@ -6,7 +6,9 @@ import espresso.youtube.models.ServerResponse;
 
 import java.io.*;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Video_receiver implements Runnable {
     private Socket client;
@@ -32,7 +34,8 @@ public class Video_receiver implements Runnable {
             String type = rootNode.path("type").asText();
             String video_id = rootNode.path("video_id").asText();
             int request_id = rootNode.path("request_id").asInt();
-            System.out.println("[VIDEO RECEIVER] downloading video for request" + request_id);
+            System.out.println("[VIDEO RECEIVER] downloading video for request " + request_id);
+            log("[VIDEO RECEIVER] downloading video for request" + request_id, owner_id);
 
             File folder = new File("src/main/resources/espresso/youtube/Server/" + owner_id);
             if (!folder.exists()) {
@@ -42,6 +45,7 @@ public class Video_receiver implements Runnable {
             if (file.exists()) {
                 file.delete();
                 System.out.println("[VIDEO RECEIVER] "+video_id+" existed from before and deleted");
+                log("[VIDEO RECEIVER] "+video_id+" existed from before and deleted", owner_id);
             }
 
             DataOutputStream dos = new DataOutputStream(new FileOutputStream("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+video_id+"."+data_type));
@@ -55,6 +59,7 @@ public class Video_receiver implements Runnable {
 
 
             System.out.println("[VIDEO RECEIVER] video downloaded successfully");
+            log("[VIDEO RECEIVER] video downloaded successfully", owner_id);
         } catch (IOException e){
             e.printStackTrace();
         } finally {
@@ -67,5 +72,19 @@ public class Video_receiver implements Runnable {
             }
         }
     }
-
+    public void log(String message, String id) {
+        String LOG_FILE = "src/main/resources/espresso/youtube/Server/" + id + "/server_log.log";
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(new FileWriter(LOG_FILE, true));
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            writer.println(timeStamp + " - " + message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
+        }
+    }
 }
