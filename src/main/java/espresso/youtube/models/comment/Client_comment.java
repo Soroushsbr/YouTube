@@ -32,7 +32,7 @@ public class Client_comment {
         comment.setMessage(message);
         comment.setPost_id(post_id);
         comment.setUser_id(user_id);
-        comment.setComment_id(comment_id);
+        comment.setParent_comment_id(comment_id);
         send_request();
     }
     public void edit_comment(String new_message, String user_id, String comment_id, int request_id){
@@ -70,14 +70,14 @@ public class Client_comment {
         comment.setUser_id(user_id);
         send_request();
     }
-    private void remove_user_like_from_comment(String comment_id, String user_id, int request_id){
+    public void remove_user_like_from_comment(String comment_id, String user_id, int request_id){
         comment.setRequest("remove_user_like_from_comment");
         comment.setRequest_id(request_id);
         comment.setComment_id(comment_id);
         comment.setUser_id(user_id);
         send_request();
     }
-    private void remove_user_dislike_from_comment(String comment_id, String user_id, int request_id){
+    public void remove_user_dislike_from_comment(String comment_id, String user_id, int request_id){
         comment.setRequest("remove_user_dislike_from_comment");
         comment.setRequest_id(request_id);
         comment.setComment_id(comment_id);

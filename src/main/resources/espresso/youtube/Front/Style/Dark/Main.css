@@ -31,15 +31,9 @@
     -fx-background-radius: 10;
     -fx-text-fill: white;
 }
-.prof{
-    -fx-stroke: transparent;
-    -fx-fill: black;
-}
 
-.prof:hover{
-    -fx-stroke: white;
-    -fx-fill: black;
-}
+
+
 .glow {
     -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.8), 20, 0, 0, 0);
 }

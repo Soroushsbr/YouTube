@@ -38,6 +38,12 @@ public class Video_receiver implements Runnable {
             if (!folder.exists()) {
                 folder.mkdirs();
             }
+            File file = new File("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+video_id);
+            if (file.exists()) {
+                file.delete();
+                System.out.println("[VIDEO RECEIVER] "+video_id+" existed from before and deleted");
+            }
+
             DataOutputStream dos = new DataOutputStream(new FileOutputStream("src/main/resources/espresso/youtube/Server/"+owner_id+"/"+video_id+"."+data_type));
             byte[] buffer = new byte[4096];
             int bytesRead;
@@ -45,6 +51,9 @@ public class Video_receiver implements Runnable {
                 dos.write(buffer, 0, bytesRead);
             }
             dos.close();
+
+
+
             System.out.println("[VIDEO RECEIVER] video downloaded successfully");
         } catch (IOException e){
             e.printStackTrace();

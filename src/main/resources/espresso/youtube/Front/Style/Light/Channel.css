@@ -54,10 +54,6 @@
     -fx-fill: #ff2121;
 }
 
-.prof:hover{
-    -fx-stroke: black;
-    -fx-fill: #ff2121;
-}
 
 .prof_svg{
     -fx-background-color: black;

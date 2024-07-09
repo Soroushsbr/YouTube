@@ -157,15 +157,9 @@
     -fx-padding: 5;
     -fx-font-family: Arial, sans-serif;
 }
-.prof{
-    -fx-stroke: transparent;
-    -fx-fill: black;
-}
 
-.prof:hover{
-    -fx-stroke: white;
-    -fx-filll: black;
-}
+
+
 .text-area{
     -fx-background-color:  white;
     -fx-font-size: 15;

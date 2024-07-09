@@ -1,13 +1,14 @@
 package espresso.youtube.models.video;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.channel.Channel;
 
 import java.sql.Timestamp;
 
 public class Video extends ClassInfo {
-    private String title;
+    private String title, media_type, thumbnail_id;
     private String description;
     private Channel channel = new Channel();
     private String video_id;
@@ -15,6 +16,7 @@ public class Video extends ClassInfo {
     private String data_type;
     private boolean is_public;
     private boolean is_short;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp created_at;
     private int views, n_likes, length, n_comments;
     private boolean watched;
@@ -56,6 +58,12 @@ public class Video extends ClassInfo {
     public void setIs_public(boolean is_public) {this.is_public = is_public;}
     public void setIs_short(boolean is_short) {this.is_short = is_short;}
     public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
+    public void setMedia_type(String media_type) {
+        this.media_type = media_type;
+    }
+    public void setThumbnail_id(String thumbnail_id) {
+        this.thumbnail_id = thumbnail_id;
+    }
     public void setWatched(boolean watched){
         this.watched = watched;
     }
@@ -94,6 +102,12 @@ public class Video extends ClassInfo {
     public boolean getIs_public() {return is_public;}
     public boolean getIs_short() {return is_short;}
     public Timestamp getCreated_at() {return created_at;}
+    public String getMedia_type() {
+        return media_type;
+    }
+    public String getThumbnail_id() {
+        return thumbnail_id;
+    }
     public boolean getWatched(){
         return watched;
     }

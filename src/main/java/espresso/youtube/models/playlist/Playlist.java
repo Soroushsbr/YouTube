@@ -1,5 +1,6 @@
 package espresso.youtube.models.playlist;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import espresso.youtube.models.ClassInfo;
 import espresso.youtube.models.video.Video;
 
@@ -10,6 +11,7 @@ public class Playlist extends ClassInfo {
     private String title, description, channel_id, channel_name, id, user_id;
     private boolean is_public;
     private int n_posts;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp created_at;
     private ArrayList<Video> videos = new ArrayList<>();
     public Playlist(){

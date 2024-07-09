@@ -96,8 +96,9 @@ public class Account_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
-        Channel_DB.create_user_default_channel(uuid);
-        Playlist_DB.create_watch_later(uuid);
+        UUID id = UUID.randomUUID();
+        Channel_DB.create_user_default_channel(uuid , id);
+        Playlist_DB.create_watch_later(id);
     }
 
     public static boolean is_password_correct(String username, String password) {
