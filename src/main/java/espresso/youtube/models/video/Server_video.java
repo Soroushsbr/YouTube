@@ -1,6 +1,7 @@
 package espresso.youtube.models.video;
 
 import espresso.youtube.DataBase.Utilities.Post_DB;
+import espresso.youtube.DataBase.Utilities.Search;
 import espresso.youtube.models.ServerResponse;
 import espresso.youtube.models.account.Account;
 import espresso.youtube.models.notification.Notification;
@@ -28,6 +29,8 @@ public class Server_video extends Video {
             return send_videos();
         } else if(request.equals("search")) {
             return search();
+        } else if(request.equals("get_search_titles")){
+           return send_search_titles();
         } else if(request.equals("like")) {
             return like();
         } else if(request.equals("dislike")) {
@@ -129,8 +132,10 @@ public class Server_video extends Video {
         return Post_DB.remove_user_dislike_from_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse search(){
-//       return search(super.getText?? , super.getRequest_id())
-        return null;
+        return Search.search(super.getTitle() , super.getOwner_id() , super.getRequest_id());
+    }
+    public ServerResponse send_search_titles(){
+        return Search.search_titles(super.getRequest_id());
     }
     private ServerResponse insert_video_info(){
 

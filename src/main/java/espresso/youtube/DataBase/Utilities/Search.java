@@ -37,7 +37,7 @@ public class Search {
 
     public static ArrayList<Channel> search_in_channels(String text) {
         ArrayList<Channel> channels = new ArrayList<>();
-        String query = "SELECT id, title, username, owner_id, description FROM channels WHERE lower(title) LIKE ?";
+        String query = "SELECT * FROM channels WHERE lower(title) LIKE ?";
         text = "%" + text.toLowerCase() + "%";
 
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -59,19 +59,14 @@ public class Search {
         }
         return channels;
     }
-    public static ServerResponse search_titles(String text, int request_id) {
+    public static ServerResponse search_titles(int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         ArrayList<String> titles = new ArrayList<>();
-        String query = "SELECT title FROM channels WHERE title LIKE ? UNION SELECT title FROM posts WHERE title LIKE ? UNION SELECT title FROM playlists WHERE title LIKE ?";
+        String query = "SELECT title FROM channels UNION SELECT title FROM posts UNION SELECT title FROM playlists";
 
         try (Connection connection = create_connection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            String searchPattern = "%" + text + "%";
-            preparedStatement.setString(1, searchPattern);
-            preparedStatement.setString(2, searchPattern);
-            preparedStatement.setString(3, searchPattern);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     titles.add(resultSet.getString("title"));
@@ -84,9 +79,9 @@ public class Search {
         return serverResponse;
     }
 
-    public static ArrayList<Playlist> search_in_playlists(String text) {
+    public static ArrayList<Playlist> search_in_playlists(String text, int request_id) {
         ArrayList<Playlist> playlists = new ArrayList<>();
-        String query = "SELECT id, title, owner_id, description, is_public FROM playlists WHERE lower(title) LIKE ?";
+        String query = "SELECT * FROM playlists WHERE lower(title) LIKE ?";
         text = "%" + text.toLowerCase() + "%";
 
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -100,6 +95,10 @@ public class Search {
                     playlist.setDescription(resultSet.getString("description"));
                     playlist.setIs_public(resultSet.getBoolean("is_public"));
                     playlists.add(playlist);
+
+                    ServerResponse sr = Post_DB.get_all_posts_of_a_playlist(UUID.fromString(playlist.getId()), request_id);
+                    playlist.setVideos(sr.getVideos_list());
+
                 }
             }
 
@@ -110,9 +109,9 @@ public class Search {
         return playlists;
     }
 
-    public static ArrayList<Video> search_in_posts(String text) {
+    public static ArrayList<Video> search_in_posts(String text, String userID , int request_id) {
         ArrayList<Video> posts = new ArrayList<>();
-        String query = "SELECT id, title, owner_id, channel_id, description, is_public, is_short, video_length FROM posts WHERE lower(title) LIKE ?";
+        String query = "SELECT * FROM posts WHERE lower(title) LIKE ?";
         text = "%" + text.toLowerCase() + "%";
 
         try (Connection connection = create_connection();
@@ -131,6 +130,18 @@ public class Search {
                     post.setIs_public(resultSet.getBoolean("is_public"));
                     post.setIs_short(resultSet.getBoolean("is_short"));
                     post.setLength(resultSet.getInt("video_length"));
+                    post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                    ServerResponse sr = Channel_DB.get_info(UUID.fromString(post.getChannel().getId()) , request_id);
+                    post.getChannel().setName((String) sr.get_part("title"));
+                    post.getChannel().setOwner_id((String) sr.get_part("owner_id"));
+
+                    ServerResponse sr2 = Post_DB.number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
+                    post.setViews((int) sr2.get_part("number_of_views"));
+
+                    ServerResponse sr3 = Post_DB.check_if_user_viewed_post(UUID.fromString(post.getVideo_id()), UUID.fromString(userID), request_id);
+                    post.setWatched((boolean)sr3.get_part("user_viewed_post"));
+
                     posts.add(post);
                 }
             }
@@ -141,12 +152,13 @@ public class Search {
         return posts;
     }
     //+++
-    public static ServerResponse search(String text, int request_id){
+    public static ServerResponse search(String text, String user_id, int request_id){
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        serverResponse.setVideos_list(search_in_posts(text));
-        serverResponse.setPlaylists_list(search_in_playlists(text));
+        serverResponse.setVideos_list(search_in_posts(text,user_id , request_id));
+        serverResponse.setPlaylists_list(search_in_playlists(text, request_id));
         serverResponse.setChannels_list(search_in_channels(text));
+        System.out.println(serverResponse.getVideos_list().size());
         return serverResponse;
     }
 

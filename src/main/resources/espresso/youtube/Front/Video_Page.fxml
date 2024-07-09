@@ -21,7 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="parent" prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Dark/Video.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.VideoPage">
+<AnchorPane fx:id="parent" prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Light/Video.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.VideoPage">
    <children>
       <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutY="69.0" prefHeight="651.0" prefWidth="1280.0" style="-fx-background-color: transparent;">
          <content>
@@ -156,7 +156,7 @@
                                           </Button>
                                        </children>
                                     </HBox>
-                                    <Text fx:id="titleTxt" fill="WHITE" layoutX="29.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Title" wrappingWidth="879.13671875">
+                                    <Text fx:id="titleTxt" fill="WHITE" layoutX="29.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="Title" wrappingWidth="879.13671875">
                                        <font>
                                           <Font name="Arial Bold" size="24.0" />
                                        </font>
@@ -303,7 +303,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label layoutX="101.0" layoutY="6.0" prefHeight="22.0" scaleX="0.9" scaleY="1.2" styleClass="colored_text" text="YouTube" textFill="WHITE">
+            <Label layoutX="101.0" layoutY="6.0" prefHeight="22.0" scaleX="0.9" scaleY="1.2" styleClass="coloredText" text="YouTube" textFill="WHITE">
                <font>
                   <Font name="Roboto Condensed Bold" size="21.0" />
                </font>

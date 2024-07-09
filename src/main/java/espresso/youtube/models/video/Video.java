@@ -69,10 +69,6 @@ public class Video extends ClassInfo {
         this.watched = watched;
 
     }
-    public void setThumbnail_id(String thumbnail_id) {
-        this.thumbnail_id = thumbnail_id;
-    }
-    public void setWatched(boolean watched){this.watched = watched;}
 
     //------------------ getters -----------------------
     public String getTitle() {

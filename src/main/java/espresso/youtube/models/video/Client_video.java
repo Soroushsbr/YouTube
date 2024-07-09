@@ -26,10 +26,16 @@ public class Client_video {
         video.setVideo_id(video_id);
         send_request();
     }
-    public void search(String text, int request_id){
+    public void search(String text, String user_id ,int request_id){
         video.setRequest("search");
         video.setRequest_id(request_id);
+        video.setOwner_id(user_id);
         video.setTitle(text);
+        send_request();
+    }
+    public void get_search_titles(int request_id){
+        video.setRequest("get_search_titles");
+        video.setRequest_id(request_id);
         send_request();
     }
     public void like(String video_id, String user_id, int request_id){

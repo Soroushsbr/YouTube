@@ -104,7 +104,7 @@
       </VBox>
       <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
          <children>
-            <TextField layoutX="421.0" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
+            <TextField fx:id="searchField" layoutX="421.0" onAction="#showResult" onKeyTyped="#searching" onMouseClicked="#selectSearch" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
                <font>
                   <Font name="Roboto" size="14.0" />
                </font>
@@ -139,7 +139,7 @@
                </cursor>
             </Button>
             <Pane disable="true" layoutX="6.0" layoutY="14.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" />
-            <Button layoutX="817.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
+            <Button layoutX="817.0" mnemonicParsing="false" onAction="#showResult" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
             <AnchorPane disable="true" layoutX="837.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="search" />
          </children>
       </AnchorPane>
@@ -416,6 +416,21 @@
             <String fx:value="back" />
             <String fx:value="shadow" />
          </styleClass>
+      </AnchorPane>
+      <AnchorPane fx:id="searchPane" layoutX="451.0" layoutY="69.0" prefHeight="244.0" prefWidth="443.0" style="-fx-background-radius: 20;" visible="false">
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="7.0" layoutY="33.0" prefHeight="202.0" prefWidth="427.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox fx:id="searchBox" prefHeight="200.0" prefWidth="100.0" spacing="7.0" styleClass="back" />
+               </content>
+            </ScrollPane>
+            <Button layoutX="404.0" layoutY="5.0" mnemonicParsing="false" onAction="#hideSearch" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 100;" />
+            <AnchorPane disable="true" layoutX="409.0" layoutY="10.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" />
+         </children>
       </AnchorPane>
    </children>
 </AnchorPane>
