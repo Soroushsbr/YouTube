@@ -80,13 +80,15 @@ public class Setup {
                 "DROP TABLE IF EXISTS posts",
                 "DROP TABLE IF EXISTS playlist_posts",
                 "DROP TABLE IF EXISTS channel_subscription",
-                "DROP TABLE IF EXISTS playlist_subscription",
+                "DROP TABLE IF EXISTS saved_playlists",
                 "DROP TABLE IF EXISTS likes",
                 "DROP TABLE IF EXISTS dislikes",
                 "DROP TABLE IF EXISTS comments",
                 "DROP TABLE IF EXISTS replies",
                 "DROP TABLE IF EXISTS categories",
                 "DROP TABLE IF EXISTS notifications",
+                "DROP TABLE IF EXISTS views",
+                "DROP TABLE IF EXISTS categories"
         };
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost/youtube", "postgres", "123"); Statement statement = connection.createStatement()){
             connection.setAutoCommit(false);

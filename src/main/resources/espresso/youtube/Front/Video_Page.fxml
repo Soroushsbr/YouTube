@@ -214,6 +214,7 @@
                                           <Image url="@Images/loading.gif" />
                                        </image>
                                     </ImageView>
+                                    <Button layoutX="18.0" layoutY="603.0" mnemonicParsing="false" onAction="#switchTChannelPage" prefHeight="62.0" prefWidth="182.0" />
                                  </children>
                               </AnchorPane>
                               <VBox prefWidth="921.0" styleClass="description_back" VBox.vgrow="SOMETIMES">

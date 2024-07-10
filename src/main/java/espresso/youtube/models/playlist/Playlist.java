@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class Playlist extends ClassInfo {
     private String title, description, channel_id, channel_name, id, user_id;
+    private String playlist_id;
     private boolean is_public;
     private int n_posts;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -46,6 +47,10 @@ public class Playlist extends ClassInfo {
     public void setIs_public(boolean is_public) {this.is_public = is_public;}
     public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
 
+    public void setPlaylist_id(String playlist_id) {
+        this.playlist_id = playlist_id;
+    }
+
     //------------------ getters -----------------------
     public String getTitle() {
         return title;
@@ -74,5 +79,7 @@ public class Playlist extends ClassInfo {
     public boolean getIs_public() {return is_public;}
     public Timestamp getCreated_at() {return created_at;}
 
-
+    public String getPlaylist_id() {
+        return playlist_id;
+    }
 }

@@ -808,6 +808,16 @@ public class Post_DB {
                         post.setIs_short(resultSet.getBoolean("is_short"));
                         post.setLength(resultSet.getInt("video_length"));
                         post.setCreated_at(resultSet.getTimestamp("created_at"));
+
+                        ServerResponse sr = Channel_DB.get_info(UUID.fromString(post.getChannel().getId()) , request_id);
+                        post.getChannel().setName((String) sr.get_part("title"));
+                        post.getChannel().setOwner_id((String) sr.get_part("owner_id"));
+
+                        ServerResponse sr2 = number_of_views(UUID.fromString(post.getVideo_id()) , request_id);
+                        post.setViews((int) sr2.get_part("number_of_views"));
+
+                        ServerResponse sr3 = check_if_user_viewed_post(UUID.fromString(post.getVideo_id()), user_id, request_id);
+                        post.setWatched((boolean)sr3.get_part("user_viewed_post"));
                         recommended_posts.add(post);
                     }
                 }

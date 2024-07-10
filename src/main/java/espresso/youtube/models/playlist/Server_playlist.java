@@ -67,13 +67,14 @@ public class Server_playlist extends Playlist {
         return Playlist_DB.number_of_posts(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_info(){
-        return Playlist_DB.get_info(UUID.fromString(super.getId()), super.getRequest_id());
+        return Playlist_DB.get_info(UUID.fromString(super.getPlaylist_id()), super.getRequest_id());
 
     }
     private ServerResponse delete_playlist(){
         return Playlist_DB.delete_playlist(UUID.fromString(super.getId()), super.getRequest_id());
     }
     private ServerResponse get_playlists_of_account(){
+        System.out.println(super.getUser_id());
         return Playlist_DB.get_playlists_of_account(UUID.fromString(super.getUser_id()), super.getRequest_id());
     }
     private ServerResponse create_playlist(){
@@ -83,7 +84,9 @@ public class Server_playlist extends Playlist {
         return Playlist_DB.change_playlist_info(UUID.fromString(super.getUser_id()), super.getDescription(), super.getTitle(), super.getRequest_id());
     }
     private ServerResponse add_video(){
-        return Post_DB.add_post_to_playlist(super.getVideos(), UUID.fromString(super.getId()), super.getRequest_id());
+        System.out.println(super.getId() + "this is me");
+        System.out.println(super.getPlaylist_id() + "yooo");
+        return Post_DB.add_post_to_playlist(super.getVideos(), UUID.fromString(super.getPlaylist_id()), super.getRequest_id());
     }
     private ServerResponse remove_video(){
         return Post_DB.delete_post_from_playlist(super.getVideos(), UUID.fromString(super.getId()), super.getRequest_id());
