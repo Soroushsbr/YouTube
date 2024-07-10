@@ -508,41 +508,66 @@ public class Account_DB {
         System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        String query = "UPDATE accounts SET username = ? WHERE id = ?";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            connection.setAutoCommit(false);
-            preparedStatement.setString(1, username);
-            preparedStatement.setObject(2, user_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            serverResponse.add_part("isSuccessful", true);
-        } catch (SQLException e) {
-            printSQLException(e);
-            serverResponse.add_part("isSuccessful", false);
+        if(!check_username_exists(username)) {
+            String query = "UPDATE accounts SET username = ? WHERE id = ?";
+            try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                connection.setAutoCommit(false);
+                preparedStatement.setString(1, username);
+                preparedStatement.setObject(2, user_id);
+                preparedStatement.executeUpdate();
+                connection.commit();
+                serverResponse.add_part("isSuccessful", true);
+            } catch (SQLException e) {
+                printSQLException(e);
+                serverResponse.add_part("isSuccessful", false);
+            }
+            System.out.println("[DATABASE] Done");
+            return serverResponse;
         }
-        System.out.println("[DATABASE] Done");
+        serverResponse.add_part("isSuccessful", false);
         return serverResponse;
     }
+
 
     //Change gmail of account
     public static ServerResponse change_gmail(UUID user_id, String gmail, int request_id) {
         System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
-        String query = "UPDATE accounts SET gmail = ? WHERE id = ?";
-        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            connection.setAutoCommit(false);
+        if(!check_gmail_exists(gmail)) {
+            String query = "UPDATE accounts SET gmail = ? WHERE id = ?";
+            try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                connection.setAutoCommit(false);
+                preparedStatement.setString(1, gmail);
+                preparedStatement.setObject(2, user_id);
+                preparedStatement.executeUpdate();
+                connection.commit();
+                serverResponse.add_part("isSuccessful", true);
+            } catch (SQLException e) {
+                printSQLException(e);
+                serverResponse.add_part("isSuccessful", false);
+            }
+            System.out.println("[DATABASE] Done");
+            return serverResponse;
+        }
+        serverResponse.add_part("isSuccessful", false);
+        return serverResponse;
+    }
+    public static boolean check_if_gmail_exists(String gmail, int request_id) {
+        String sql = "SELECT COUNT(*) FROM channels WHERE gmail = ?";
+        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, gmail);
-            preparedStatement.setObject(2, user_id);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            serverResponse.add_part("isSuccessful", true);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
         } catch (SQLException e) {
             printSQLException(e);
-            serverResponse.add_part("isSuccessful", false);
         }
-        System.out.println("[DATABASE] Done");
-        return serverResponse;
+        return false ;
     }
 
     //Get posts that user has liked

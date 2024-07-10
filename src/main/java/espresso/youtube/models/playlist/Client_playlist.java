@@ -18,9 +18,10 @@ public class Client_playlist {
         this.out = out;
     }
 
-    public void create_playlist(String title, String description, boolean is_public, ArrayList<Video> videos, int request_id){
+    public void create_playlist(String user_id ,String title, String description, boolean is_public, ArrayList<Video> videos, int request_id){
         playlist.setRequest("create_playlist");
         playlist.setRequest_id(request_id);
+        playlist.setUser_id(user_id);
         playlist.setVideos(videos);
         playlist.setTitle(title);
         playlist.setDescription(description);

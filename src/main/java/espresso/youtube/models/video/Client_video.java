@@ -201,7 +201,7 @@ public class Client_video {
         DataOutputStream out = new DataOutputStream(v.getOutputStream());
         DataInputStream in = new DataInputStream(v.getInputStream());
         DataInputStream fin = new DataInputStream(new FileInputStream(mediaFile));
-
+        video.setVideo_id(media_id);
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode json = mapper.createObjectNode();

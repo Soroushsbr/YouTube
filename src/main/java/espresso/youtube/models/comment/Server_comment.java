@@ -81,7 +81,7 @@ public class Server_comment extends Comment {
         ServerResponse sr2 = Post_DB.get_info(UUID.fromString(super.getPost_id()), 0);
 
         if((boolean) sr.get_part("isSuccessful"))
-            super.notification.put_comment(super.getUser_id(), (String) sr.get_part("comment_id"), (String) sr2.get_part("channel_id"));
+            super.notification.put_comment(super.getUser_id(), (String) sr.get_part("comment_id"), (String) sr2.get_part("owner_id"));
         return sr;
     }
     private ServerResponse reply_comment(){

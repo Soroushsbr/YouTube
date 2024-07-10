@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,6 +78,14 @@ public class MainPage implements Initializable {
     Text urName;
     @FXML
     Text urUsername;
+    @FXML
+    AnchorPane addPlaylistPane;
+    @FXML
+    TextField playlistNameTF;
+    @FXML
+    RadioButton publicBtn;
+    @FXML
+    RadioButton privateBtn;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         appendTheme();
@@ -180,7 +189,7 @@ public class MainPage implements Initializable {
                 Thread threadProf = new Thread(taskProf);
                 threadProf.start();
                 taskProf.setOnSucceeded(event -> {
-                    if(task.getValue() != null) {
+                    if(taskProf.getValue() != null) {
                         ImagePattern pattern = new ImagePattern(new Image(taskProf.getValue().toURI().toString()));
                         ((Circle)((HBox)((VBox)previewPane.getChildren().get(1)).getChildren().get(2)).getChildren().get(0)).setFill(pattern);
                         threadProf.interrupt();
@@ -253,7 +262,7 @@ public class MainPage implements Initializable {
             client.setReq_id();
 
             System.out.println("Waiting to get videos...");
-            cv.get_videos(client.getReq_id(), client.getChannel_id());
+            cv.get_recommended_posts( client.getChannel_id(),client.getReq_id());
             ArrayList<Video> videos ;
 
             while (true) {
@@ -271,9 +280,31 @@ public class MainPage implements Initializable {
             throw new RuntimeException(e);
         }
     }
+    public void showAddPlaylist(){
+        backWindow.setVisible(true);
+        addPlaylistPane.setVisible(true);
+    }
+    public void hideAddPlaylist(){
+        backWindow.setVisible(false);
+        addPlaylistPane.setVisible(false);
+    }
 
+    public void createPlaylist(){
+        Client_playlist cp = new Client_playlist(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        ArrayList<Video> videos = new ArrayList<>();
+        cp.create_playlist(client.getChannel_id(), playlistNameTF.getText(), "" , !privateBtn.isSelected(),videos, req);
+        addPlaylistPane.setVisible(false);
+    }
     public void showPlaylists() throws IOException {
         videosBox.getChildren().clear();
+        Button addBtn = new Button("          +\nCreate Playlist");
+        addBtn.setStyle("-fx-font-size: 15px;");
+        addBtn.setOnAction(event -> showAddPlaylist());
+        videosBox.getChildren().add(addBtn);
+
+        videosBox.getChildren().removeIf(node -> videosBox.getChildren().indexOf(node) != 0);
         ArrayList<Playlist> playlists ;
         Client_playlist cp = new Client_playlist(client.getOut());
         client.setReq_id();
@@ -320,8 +351,9 @@ public class MainPage implements Initializable {
                         throw new RuntimeException(e);
                     }
                     taskNail.setOnSucceeded(e -> {
-
-                        ((ImageView) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(taskNail.getValue().toURI().toString()));
+                        if(taskNail.getValue() != null){
+                            ((ImageView) ((AnchorPane)   playlistPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(taskNail.getValue().toURI().toString()));
+                        }
                         threadNail.interrupt();
                         Task<File> taskProf = new Task<File>() {
                             @Override
@@ -536,7 +568,9 @@ public class MainPage implements Initializable {
                     Thread thread = new Thread(task);
                     thread.start();
                     task.setOnSucceeded(e -> {
-                        ((ImageView)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(task.getValue().toURI().toString()));
+                        if(task.getValue() !=null){
+                            ((ImageView)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(task.getValue().toURI().toString()));
+                        }
                         thread.interrupt();
                         Task<File> taskProf = new Task<File>() {
                             @Override
@@ -613,6 +647,23 @@ public class MainPage implements Initializable {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void setting(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Setting.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            Setting setting = loader.getController();
+            setting.initializeSetting();
 
             stage.show();
         }catch (IOException ignored){

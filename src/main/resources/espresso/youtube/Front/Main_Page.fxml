@@ -5,6 +5,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -399,7 +400,7 @@
                   </Line>
                   <AnchorPane>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" text="       Setting                                               " textFill="WHITE">
+                        <Button mnemonicParsing="false" onAction="#setting" prefHeight="34.0" prefWidth="295.0" text="       Setting                                               " textFill="WHITE">
                            <font>
                               <Font name="Roboto" size="14.0" />
                            </font>
@@ -430,6 +431,27 @@
             </ScrollPane>
             <Button layoutX="404.0" layoutY="5.0" mnemonicParsing="false" onAction="#hideSearch" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 100;" />
             <AnchorPane disable="true" layoutX="409.0" layoutY="10.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="addPlaylistPane" layoutX="490.0" layoutY="209.0" prefHeight="202.0" prefWidth="366.0" style="-fx-background-radius: 20;" visible="false">
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+         <children>
+            <TextField fx:id="playlistNameTF" layoutX="21.0" layoutY="37.0" prefHeight="35.0" prefWidth="245.0" promptText="Playlits's name..." styleClass="tf">
+               <font>
+                  <Font name="Roboto" size="13.0" />
+               </font>
+            </TextField>
+            <RadioButton fx:id="privateBtn" layoutX="21.0" layoutY="101.0" mnemonicParsing="false" styleClass="colored_text" text="Private" />
+            <Button layoutX="266.0" layoutY="148.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create">
+               <font>
+                  <Font name="Roboto Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button layoutX="328.0" layoutY="12.0" mnemonicParsing="false" onAction="#hideAddPlaylist" prefHeight="25.0" prefWidth="25.0" />
+            <AnchorPane disable="true" layoutX="333.0" layoutY="18.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" />
          </children>
       </AnchorPane>
    </children>

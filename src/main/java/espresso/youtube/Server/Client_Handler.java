@@ -79,22 +79,21 @@ public class Client_Handler implements Runnable {
                         server_handler = mapper.readValue(jsonString, Server_playlist.class);
                     }
                 }
-
-
-                server_handler.setNotification(notification);
-                if(random_key_changed)
-                    server_handler.setId(random_key);
                 serverResponse = server_handler.handle_request();
 
+//                server_handler.setNotification(notification);
+//                if(random_key_changed)
+//                    server_handler.setId(random_key);
+//                serverResponse = server_handler.handle_request();
 
-                if((server_handler.getRequest().equals("login") || server_handler.getRequest().equals("sign_up")) && (boolean) serverResponse.get_part("isSuccessful")){
-                    Client_Handler clientHandler = online_clients.get(random_key);
-                    online_clients.remove(random_key);
-                    online_clients.put((String) serverResponse.get_part("ChannelID"), clientHandler);
-                    random_key = (String) serverResponse.get_part("ChannelID");
-                    System.out.println("random key : " + random_key);
-                    random_key_changed = true;
-                }
+//
+//                if((server_handler.getRequest().equals("login") || server_handler.getRequest().equals("sign_up")) && (boolean) serverResponse.get_part("isSuccessful")){
+//                    Client_Handler clientHandler = online_clients.get(random_key);
+//                    online_clients.remove(random_key);
+//                    online_clients.put((String) serverResponse.get_part("ChannelID"), clientHandler);
+//                    random_key = (String) serverResponse.get_part("ChannelID");
+//                    random_key_changed = true;
+//                }
 
 
                 if (serverResponse != null) {
