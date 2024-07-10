@@ -157,8 +157,8 @@ public class Server_video extends Video {
         return Post_DB.dislike_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse like(){
-//        ServerResponse sr = Post_DB.get_info(UUID.fromString(super.getVideo_id()), 0);
-//        notification.like_post(super.getOwner_id(), super.getVideo_id(), (String) sr.get_part("owner_id"));
+        ServerResponse sr = Post_DB.get_info(UUID.fromString(super.getVideo_id()), 0);
+        notification.like_post(super.getOwner_id(), super.getVideo_id(), (String) sr.get_part("channel_id"));
 
         return Post_DB.like_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
