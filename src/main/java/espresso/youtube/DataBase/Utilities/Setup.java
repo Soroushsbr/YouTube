@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 public class Setup {
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -23,6 +24,7 @@ public class Setup {
         }
     }
 
+    //Create the youtube database
     public static void create_database() {
         System.out.println("[DATABASE] Creating youtube database...");
         String query = "CREATE DATABASE youtube;";
@@ -34,6 +36,7 @@ public class Setup {
         }
     }
 
+    //Create tables of database
     public static void create_tables() {
         System.out.println("[DATABASE] Creating database tables...");
         String[] queries = {
@@ -66,6 +69,7 @@ public class Setup {
         }
     }
 
+    //Restart the tables(delete them and create again)
     public static void restart_tables() {
         System.out.println("[DATABASE] Restarting database tables...");
         System.out.println("Deleting database tables...");

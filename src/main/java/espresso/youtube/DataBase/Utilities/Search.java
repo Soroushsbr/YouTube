@@ -15,10 +15,13 @@ public class Search {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
     private static final String PASSWORD = "123";
+
+    //Creates connection to database
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -35,6 +38,7 @@ public class Search {
         }
     }
 
+    //Search given text in title of channels
     public static ArrayList<Channel> search_in_channels(String text) {
         ArrayList<Channel> channels = new ArrayList<>();
         String query = "SELECT * FROM channels WHERE lower(title) LIKE ?";
@@ -59,6 +63,8 @@ public class Search {
         }
         return channels;
     }
+
+    //Search given text in all titles
     public static ServerResponse search_titles(int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -79,6 +85,7 @@ public class Search {
         return serverResponse;
     }
 
+    //Search given text in title of playlists
     public static ArrayList<Playlist> search_in_playlists(String text, int request_id) {
         ArrayList<Playlist> playlists = new ArrayList<>();
         String query = "SELECT * FROM playlists WHERE lower(title) LIKE ?";
@@ -109,6 +116,7 @@ public class Search {
         return playlists;
     }
 
+    //Search given text in title of posts
     public static ArrayList<Video> search_in_posts(String text, String userID , int request_id) {
         ArrayList<Video> posts = new ArrayList<>();
         String query = "SELECT * FROM posts WHERE lower(title) LIKE ?";
@@ -151,7 +159,7 @@ public class Search {
 
         return posts;
     }
-    //+++
+
     public static ServerResponse search(String text, String user_id, int request_id){
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);

@@ -13,10 +13,13 @@ public class Playlist_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
     private static final String PASSWORD = "123";
+
+    //Creates connection to database
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -33,6 +36,7 @@ public class Playlist_DB {
         }
     }
 
+    //Save a new playlist to database
     public static ServerResponse create_playlist(UUID owner_id, String title, boolean is_public, String description, int request_id) {
         System.out.println("[DATABASE] Creating playlist as "+title+" for user "+owner_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -57,6 +61,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Make private a playlist public
     public static ServerResponse make_playlist_public(UUID playlist_id, int request_id) {
         System.out.println("[DATABASE] Making playlist "+playlist_id+" public ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -77,6 +82,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Make a public playlist private
     public static ServerResponse make_playlist_private(UUID playlist_id, int request_id) {
         System.out.println("[DATABASE] Making playlist "+playlist_id+" private ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -97,6 +103,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Change title of a playlist
     public static void change_playlist_title(UUID playlist_id, String title) {
         //check if user is owner of playlist??
         System.out.println("[DATABASE] Changing title of playlist "+playlist_id+" to "+title+" ...");
@@ -113,6 +120,7 @@ public class Playlist_DB {
         }
     }
 
+    //Change description of a playlist
     public static void change_playlist_description(UUID playlist_id, String description) {
         //check if user is owner of playlist??
         System.out.println("[DATABASE] Changing description of playlist "+playlist_id+" to "+description+" ...");
@@ -129,6 +137,7 @@ public class Playlist_DB {
         }
     }
 
+    //User save the playlist fot himself
     public static ServerResponse save_playlist(UUID playlist_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -149,6 +158,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    ////User usSave the playlist
     public static ServerResponse unSave_playlist(UUID playlist_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -169,6 +179,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Check if user has saved the playlist
     public static ServerResponse check_if_user_saved_playlist(UUID playlist_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -190,6 +201,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Create watch later playlist for user
     public static void create_watch_later(UUID user_id) {
         System.out.println("[DATABASE] Creating Watch later playlist for user " + user_id + "...");
         String query = "INSERT INTO playlists (id, title, owner_id, is_public) VALUES (?, ?, ?, ?)";
@@ -208,6 +220,7 @@ public class Playlist_DB {
         }
     }
 
+    //Get number of posts playlist has
     public static ServerResponse number_of_posts(UUID playlist_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM playlist_posts WHERE playlist_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -227,6 +240,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Get full information of playlist
     public static ServerResponse get_info(UUID id, int request_id){
         System.out.println("[DATABASE] Getting info of playlist "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -251,6 +265,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Delete playlist from database
     public static ServerResponse delete_playlist(UUID playlist_id, int request_id) {
         System.out.println("[DATABASE] Deleting playlist "+playlist_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -281,6 +296,7 @@ public class Playlist_DB {
         return serverResponse;
     }
 
+    //Get all playlists that a account has(created them)
     public static ServerResponse get_playlists_of_account(UUID owner_id, int request_id) {
         ArrayList<Playlist> playlists = new ArrayList<>();
         ServerResponse serverResponse = new ServerResponse();
@@ -314,7 +330,8 @@ public class Playlist_DB {
         serverResponse.setPlaylists_list(playlists);
         return serverResponse;
     }
-    ///+++
+
+    //Change info of playlist
     public static ServerResponse change_playlist_info(UUID playlist_id, String description, String title, int request_id){
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);

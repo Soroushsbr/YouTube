@@ -16,10 +16,13 @@ public class Post_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
     private static final String PASSWORD = "123";
+
+    //Creates connection to database
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -36,6 +39,7 @@ public class Post_DB {
         }
     }
 
+    //Save a new post to database
     public static void add_post(UUID id, UUID owner_id, String title, UUID channel_id, String description, Boolean is_public, Boolean is_short, int video_length) {
         System.out.println("[DATABASE] User "+owner_id+" adding post to channel "+channel_id+" ...");
         String query = "INSERT INTO posts (id, title, owner_id, channel_id, description, is_public, is_short, video_length) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -57,6 +61,7 @@ public class Post_DB {
         }
     }
 
+    //Delete post from playlist
     public static ServerResponse delete_post_from_playlist(ArrayList<Video> videos, UUID playlist_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -88,6 +93,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Add post to playlist
     public static ServerResponse add_post_to_playlist(ArrayList<Video> videos, UUID playlist_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -117,6 +123,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Like a post
     public static ServerResponse like_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] User "+user_id+" liking post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -137,6 +144,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //dislike a post
     public static ServerResponse dislike_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] User "+user_id+" disliking post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -157,6 +165,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Check if user likes a post
     public static ServerResponse check_user_likes_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user "+user_id+" has liked post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -179,6 +188,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Check if user dislikes a post
     public static ServerResponse check_user_dislikes_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user "+user_id+" has disliked post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -201,6 +211,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Remove like of user from post
     public static ServerResponse remove_user_like_from_post(UUID post_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -221,6 +232,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Remove dislike of user from post
     public static ServerResponse remove_user_dislike_from_post(UUID post_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -241,6 +253,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Add an account as viewer of a post
     public static ServerResponse add_to_post_viewers(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Adding a viewer to post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -261,6 +274,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Check if a user viewed the post
     public static ServerResponse check_if_user_viewed_post(UUID post_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user "+user_id+" has viewed the post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -281,6 +295,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //
     public static void restart_post_views(UUID post_id) {
         System.out.println("[DATABASE] Restarting views of post "+post_id+" ...");
         String query = "DELETE FROM views WHERE post_id = ?";
@@ -295,56 +310,7 @@ public class Post_DB {
         }
     }
 
-//    public static void change_post_title(UUID post_id, String title) {
-//        //check if user is owner of post??
-//        System.out.println("[DATABASE] Changing title of post "+post_id+" to "+title+" ...");
-//        String query = "UPDATE posts SET title = ? WHERE id = ?";
-//        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
-//            connection.setAutoCommit(false);
-//            preparedStatement.setString(1, title);
-//            preparedStatement.setObject(2, post_id);
-//            preparedStatement.executeUpdate();
-//            connection.commit();
-//            System.out.println("[DATABASE] Done");
-//        } catch (SQLException e) {
-//            printSQLException(e);
-//        }
-//    }
-//
-//    public static void change_post_description(UUID post_id, String description) {
-//        //check if user is owner of post??
-//        System.out.println("[DATABASE] Changing description of post "+post_id+" to "+description+" ...");
-//        String query = "UPDATE posts SET description = ? WHERE id = ?";
-//        try (Connection connection = create_connection();PreparedStatement preparedStatement = connection.prepareStatement(query);){
-//            connection.setAutoCommit(false);
-//            preparedStatement.setString(1, description);
-//            preparedStatement.setObject(2, post_id);
-//            preparedStatement.executeUpdate();
-//            connection.commit();
-//            System.out.println("[DATABASE] Done");
-//        } catch (SQLException e) {
-//            printSQLException(e);
-//        }
-//    }
-
-//    public static ServerResponse number_of_views(UUID post_id, int request_id) {
-//        String query = "SELECT COUNT(*) AS row_count FROM views WHERE post_id = ?";
-//        ServerResponse serverResponse = new ServerResponse();
-//        serverResponse.setRequest_id(request_id);
-//        try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-//            preparedStatement.setObject(1, post_id);
-//            try(ResultSet resultSet = preparedStatement.executeQuery();){
-//                if (resultSet.next()) {
-//                    serverResponse.add_part("number_of_views", resultSet.getInt("row_count"));
-//                } else {
-//                    return serverResponse;
-//                }
-//            }
-//        } catch (SQLException e) {
-//            printSQLException(e);
-//        }
-//        return serverResponse;
-//    }
+    //Get number of views of post
     public static ServerResponse number_of_views(UUID post_id, int request_id) {
         String query = "SELECT COUNT(DISTINCT user_id) AS row_count FROM views WHERE post_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -364,6 +330,8 @@ public class Post_DB {
         }
         return serverResponse;
     }
+
+    //Get number of likes of post
     public static ServerResponse number_of_likes(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM post_likes WHERE post_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -383,6 +351,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Get number of dislikes of post
     public static ServerResponse number_of_dislikes(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM post_dislikes WHERE post_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -402,6 +371,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Get number of comments of post
     public static ServerResponse number_of_comments(UUID post_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM comments WHERE post_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -421,6 +391,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Get full information of post
     public static ServerResponse get_info(UUID id, int request_id){
         System.out.println("[DATABASE] Getting info of post "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -448,6 +419,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Delete a post from database
     public static ServerResponse delete_post(UUID post_id, int request_id) {
         System.out.println("[DATABASE] Deleting post "+ post_id +" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -483,6 +455,7 @@ public class Post_DB {
         return serverResponse;
     }
 
+    //Gets all posts saved in database
     public static ServerResponse get_all_posts(int request_id , UUID userID) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -521,7 +494,9 @@ public class Post_DB {
         serverResponse.setVideos_list(posts);
         return serverResponse;
     }
-public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int request_id) {
+
+    //Get all posts an account created
+    public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
         ArrayList<Video> posts = new ArrayList<>();
@@ -554,6 +529,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //Get all posts a channel has
     public static ServerResponse get_all_posts_of_channel(UUID channel_id, UUID userID, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -595,6 +571,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //get all posts a playlist has
     public static ServerResponse get_all_posts_of_a_playlist(UUID playlist_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -635,6 +612,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //get all accounts that viewed the post
     public static ServerResponse get_all_viewers_of_a_post(UUID post_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -664,7 +642,8 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         serverResponse.setAccounts_list(viewers);
         return serverResponse;
     }
-    ///+++
+
+    //change info of post
     public static ServerResponse change_post_info(UUID post_id, String title, String description, Boolean is_public, Boolean is_short, int video_length, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -723,6 +702,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //Get posts that are sorted from highest rank to lowest rank. Rank of a post of number of its like multiply by its views
     public static ArrayList<UUID> get_ranked_posts() {
         ArrayList<UUID> rankedPosts = new ArrayList<>();
         String sql = "SELECT v.post_id, COUNT(v.post_id) * COALESCE(l.like_count, 0) AS score FROM views v LEFT JOIN (SELECT post_id, COUNT(*) AS like_count FROM post_likes GROUP BY post_id) l ON v.post_id = l.post_id GROUP BY v.post_id, l.like_count ORDER BY score DESC";
@@ -739,6 +719,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return rankedPosts;
     }
 
+    //Get posts that have the same category of the last post user watched
     public static ArrayList<UUID> get_posts_by_last_watched_category(UUID user_id) {
         ArrayList<UUID> postIds = new ArrayList<>();
         String findLastWatchedVideoQuery = "SELECT post_id FROM views WHERE user_id = ? ORDER BY created_at DESC LIMIT 1";
@@ -791,6 +772,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return postIds;
     }
 
+    //Get posts that are recommended for user
     public static ServerResponse get_recommended_posts(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -837,6 +819,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //Get watch history of user
     public static ServerResponse get_watch_history(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -866,6 +849,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //Get list of categories
     public static ServerResponse get_categories(int request_id){
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -887,6 +871,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //Set categories of a post
     public static ServerResponse set_category(UUID post_id, ArrayList<String> category_names, int request_id) {
         String query = "INSERT INTO categories (post_id, category_name) VALUES (?, ?)";
         ServerResponse serverResponse = new ServerResponse();
@@ -907,6 +892,7 @@ public static ServerResponse get_all_Posts_of_a_account(UUID account_id, int req
         return serverResponse;
     }
 
+    //Get posts that has given category
     public static ServerResponse get_posts_by_category(String category_name, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);

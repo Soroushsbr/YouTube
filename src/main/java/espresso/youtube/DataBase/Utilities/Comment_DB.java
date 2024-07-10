@@ -12,10 +12,13 @@ public class Comment_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
     private static final String PASSWORD = "123";
+
+    //Creates connection to database
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -32,6 +35,7 @@ public class Comment_DB {
         }
     }
 
+    //Save a new comment to database
     public static ServerResponse add_comment(UUID owner_id, UUID post_id, String content, int request_id) {
         System.out.println("[DATABASE] Adding comment to post "+post_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -57,6 +61,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Reply to a comment
     public static ServerResponse reply_to_comment(UUID owner_id, UUID post_id, String content, UUID parent_comment_id, int request_id) {
         System.out.println("[DATABASE] Replying to comment "+parent_comment_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -82,6 +87,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Like a comment
     public static ServerResponse like_comment(UUID comment_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] User "+user_id+" is liking comment "+comment_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -102,6 +108,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Dislike a comment
     public static ServerResponse dislike_comment(UUID comment_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] User "+user_id+" is disliking comment "+comment_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -122,6 +129,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Check if a user liked a comment
     public static ServerResponse check_user_likes_comment(UUID comment_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Check if user "+user_id+" has liked comment "+comment_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -145,6 +153,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Check if a user disliked a comment
     public static ServerResponse check_user_dislikes_comment(UUID comment_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Check if user "+user_id+" has disliked comment "+comment_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -167,6 +176,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Remove like of a user from comment
     public static ServerResponse remove_user_like_from_comment(UUID comment_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -187,6 +197,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Remove dis    like of a user from comment
     public static ServerResponse remove_user_dislike_from_comment(UUID comment_id, UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -207,6 +218,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Return number of likes of a comment
     public static ServerResponse number_of_likes(UUID comment_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM comment_likes WHERE comment_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -226,6 +238,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Return number of dislikes of a comment
     public static ServerResponse number_of_dislikes(UUID comment_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM comment_dislikes WHERE comment_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -245,6 +258,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Get full information of a comment
     public static ServerResponse get_info(UUID id, int request_id){
         System.out.println("[DATABASE] Getting info of comment "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -269,6 +283,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Delete a comment from playlist
     public static ServerResponse delete_comment(UUID comment_id, int request_id) {
         System.out.println("[DATABASE] Deleting comment "+comment_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -300,6 +315,7 @@ public class Comment_DB {
         return serverResponse;
     }
 
+    //Get all comments a post has
     public static ServerResponse get_all_comments_of_a_post(UUID post_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -333,7 +349,8 @@ public class Comment_DB {
         serverResponse.setComments_list(comments);
         return serverResponse;
     }
-    ///+++
+
+    //Edit info of a comment
     public static ServerResponse edit_comment(UUID comment_id, String content, int request_id) {
         System.out.println("[DATABASE] Editing content of comment " + comment_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
