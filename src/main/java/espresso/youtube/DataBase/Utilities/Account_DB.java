@@ -20,10 +20,13 @@ public class Account_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
     private static final String PASSWORD = "123";
+
+    //Creates connection to database
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -40,6 +43,7 @@ public class Account_DB {
         }
     }
 
+    //Checks if a gmail exists in database
     public static boolean check_gmail_exists(String gmail) {
         System.out.println("[DATABASE] Checking if " + gmail + " exists... ");
         String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE gmail = ?)";
@@ -57,6 +61,7 @@ public class Account_DB {
         return false;
     }
 
+    //Checks if a gmail is valid if form of syntax
     public static boolean check_gmail_validation(String gmail) {
         System.out.println("[DATABASE] Checking if "+ gmail + " is a valid gmail... ");
         String regex = "^[\\w.+-]+@gmail\\.com$";
@@ -66,6 +71,7 @@ public class Account_DB {
         return matcher.matches();
     }
 
+    //Hash a given password
     public static String hash_password(String password) {
         System.out.println("[DATABASE] Hashing password... ");
         String salt = BCrypt.gensalt(11);
@@ -75,6 +81,7 @@ public class Account_DB {
         return(hashed_password);
     }
 
+    //Saves info of a account in database
     public static void save_account(String username, String password, String gmail,UUID uuid) {
         System.out.println("[DATABASE] Saving account of user "+username+" ...");
         boolean dark_mode = true;
@@ -92,9 +99,7 @@ public class Account_DB {
             preparedStatement.setBoolean(6, isPremium);
             preparedStatement.executeUpdate();
             connection.commit();
-
             System.out.println("[DATABASE] Done");
-
         } catch (SQLException e) {
             printSQLException(e);
         }
@@ -103,6 +108,7 @@ public class Account_DB {
         Playlist_DB.create_watch_later(id);
     }
 
+    //Check if given username and password match in database
     public static boolean is_password_correct(String username, String password) {
         System.out.println("[DATABASE] Checking if password is correct... ");
         String query = "SELECT password FROM accounts WHERE username = ?";
@@ -119,6 +125,8 @@ public class Account_DB {
         }
         return false;
     }
+
+    //Checks if a given username exists in the database
     public static boolean check_username_exists(String username) {
         System.out.println("[DATABASE] Checking if " + username + " username exists...");
         String query = "SELECT EXISTS (SELECT 1 FROM accounts WHERE username = ?)";
@@ -136,6 +144,7 @@ public class Account_DB {
         return false;
     }
 
+    //Change an account to premium
     public static ServerResponse make_user_premium(UUID user_id, int request_id) {
         System.out.println("[DATABASE] Making " + user_id + " user premium...");
         ServerResponse serverResponse = new ServerResponse();
@@ -156,6 +165,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Removes premium of a given account
     public static ServerResponse remove_premium_of_user(UUID user_id, int request_id) {
         System.out.println("[DATABASE] Removing premium of user " + user_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -176,6 +186,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Changes dark mode/light mode of an account
     public static ServerResponse change_dark_mode(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -203,7 +214,8 @@ public class Account_DB {
         }
         return serverResponse;
     }
-    //??
+
+    //Changes account password
     public static ServerResponse change_password(UUID user_id, String password, int request_id) {
         System.out.println("[DATABASE] Changing password of user " + user_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -226,6 +238,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Save a notification in database
     public static ServerResponse add_notification(UUID user_id, String title, UUID comment_id, UUID post_id, UUID channel_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -250,6 +263,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Set a notification as seen
     public static ServerResponse set_notification_seen(UUID notification_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -265,6 +279,8 @@ public class Account_DB {
         }
         return serverResponse;
     }
+
+    //Deletes a notification from database
     public static ServerResponse delete_notification(UUID notification_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -281,6 +297,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //User sign up
     public static ServerResponse sign_up(String username, String password, String gmail, int request_id) {
         System.out.println("[DATABASE] Signing up for user " + username + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -303,6 +320,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //User login
     public static ServerResponse login(String username , String password, int request_id){
         System.out.println("[DATABASE] User " + username + " is logging in ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -320,6 +338,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Return ID of an account by username
     public static UUID get_id_by_username(String username){
         String query = "SELECT id FROM accounts WHERE username = ?";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -337,6 +356,7 @@ public class Account_DB {
         return null;
     }
 
+    //return username of an account by ID
     public static String get_username_by_id(UUID id){
         String query = "SELECT username FROM accounts WHERE id = ?";
         try (Connection connection = create_connection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -354,6 +374,7 @@ public class Account_DB {
         return null;
     }
 
+    //Get full information of an account
     public static ServerResponse get_info(UUID id, int request_id){
         System.out.println("[DATABASE] Getting info of account " + id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -382,6 +403,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //delete an account and all other channels, posts, ... related to it
     public static ServerResponse delete_account(UUID account_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -422,6 +444,8 @@ public class Account_DB {
         }
         return serverResponse;
     }
+
+    //Get all channels that user is subscribed them
     public static ServerResponse get_subscribed_channels(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -446,10 +470,10 @@ public class Account_DB {
             printSQLException(e);
         }
         serverResponse.setChannels_list(channels);
-
         return serverResponse;
     }
 
+    //Get all playlists that user saved them
     public static ServerResponse get_saved_playlists(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -478,7 +502,8 @@ public class Account_DB {
         serverResponse.setPlaylists_list(playlists);
         return serverResponse;
     }
-    /////+++
+
+    //Change username of account
     public static ServerResponse change_username(UUID user_id, String username, int request_id) {
         System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -499,6 +524,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Change gmail of account
     public static ServerResponse change_gmail(UUID user_id, String gmail, int request_id) {
         System.out.println("[DATABASE] Changing username of user " + user_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -519,6 +545,7 @@ public class Account_DB {
         return serverResponse;
     }
 
+    //Get posts that user has liked
     public static ServerResponse get_liked_posts(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -555,8 +582,6 @@ public class Account_DB {
         serverResponse.setVideos_list(likedPosts);
         return serverResponse;
     }
-
-
 
     public static void main(String[] args) {
 

@@ -15,10 +15,13 @@ public class Channel_DB {
     private static final String URL = "jdbc:postgresql://localhost/youtube";
     private static final String USER = "postgres";
     private static final String PASSWORD = "123";
+
+    //Creates connection to database
     private static Connection create_connection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
+    //Handles the sql exceptions and prints full details of error
     public static void printSQLException(SQLException ex) {
         for (Throwable e : ex) {
             if (e instanceof SQLException) {
@@ -35,6 +38,7 @@ public class Channel_DB {
         }
     }
 
+    //Save a new channel to database
     public static ServerResponse create_channel(UUID owner_id, String title, String description, int request_id) {
         System.out.println("[DATABASE] Creating channel ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -59,6 +63,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Subscribe a user to a channel
     public static ServerResponse subscribe_to_channel(UUID channel_id, UUID subscriber_id, int request_id) {
         System.out.println("[DATABASE] Subscribing user " + subscriber_id + "to channel "+channel_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -79,6 +84,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Create the default channel of account, that has same username
     public static void create_user_default_channel(UUID user_id, UUID id) {
         System.out.println("[DATABASE] Creating default channel of user " + user_id + " ...");
         String query = "INSERT INTO channels (id, title, username, owner_id) VALUES (?, ?, ?, ?)";
@@ -96,6 +102,7 @@ public class Channel_DB {
         }
     }
 
+    //Checks if user is subscribed to a channel
     public static ServerResponse check_if_user_subscribed(UUID channel_id, UUID user_id, int request_id) {
         System.out.println("[DATABASE] Checking if user " + user_id + " is subscribed to channel "+channel_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -116,6 +123,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Unsubscribe a user from a channel
     public static ServerResponse unsubscribe_to_channel(UUID channel_id, UUID subscriber_id, int request_id) {
         System.out.println("[DATABASE] Unsubscribing user " + subscriber_id + "from channel "+channel_id + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -136,6 +144,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Change title of a channel
     public static ServerResponse change_channel_title(UUID channel_id, String title, int request_id) {
         System.out.println("[DATABASE] Changing title of channel " + channel_id + "to "+title + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -156,6 +165,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Change description of a channel
     public static ServerResponse change_channel_description(UUID channel_id, String description, int request_id) {
         System.out.println("[DATABASE] Changing description of channel " + channel_id + "to "+description + " ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -176,6 +186,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Return number of subscribers of channel
     public static ServerResponse number_of_subscribers(UUID channel_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM channel_subscription WHERE channel_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -195,6 +206,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Returns number of posts of channel
     public static ServerResponse number_of_posts(UUID channel_id, int request_id) {
         String query = "SELECT COUNT(*) AS row_count FROM posts WHERE channel_id = ?";
         ServerResponse serverResponse = new ServerResponse();
@@ -214,6 +226,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Get full information of channel
     public static ServerResponse get_info(UUID id, int request_id){
         System.out.println("[DATABASE] Getting info of channel "+id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -239,6 +252,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Deletes a channel from database
     public static ServerResponse delete_channel(UUID channel_id, int request_id) {
         System.out.println("[DATABASE] Deleting channel "+channel_id+" ...");
         ServerResponse serverResponse = new ServerResponse();
@@ -273,6 +287,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Get all channels an account have(is owner of them)
     public static ServerResponse get_channels_of_account(UUID user_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -299,7 +314,8 @@ public class Channel_DB {
         serverResponse.setChannels_list(channels);
         return serverResponse;
     }
-  
+
+    //get all accounts that subscribed the channel
     public static ServerResponse get_subscribers(UUID channel_id, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -329,6 +345,7 @@ public class Channel_DB {
         return serverResponse;
     }
 
+    //Change channel username
     public static ServerResponse change_channel_username(UUID channel_id, String username, int request_id) {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse.setRequest_id(request_id);
@@ -348,7 +365,6 @@ public class Channel_DB {
         }
         return serverResponse;
     }
-    /////+++
 
     public static void main(String[] args) {
 
