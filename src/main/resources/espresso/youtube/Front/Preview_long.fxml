@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="109.0" prefWidth="302.0" styleClass="back" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="7.0" layoutY="6.0" prefHeight="98.0" prefWidth="165.0" style="-fx-background-color: black;" />
+      <ImageView fitHeight="91.0" fitWidth="165.0" layoutX="6.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" />
+      <VBox layoutX="178.0" layoutY="6.0" prefHeight="98.0" prefWidth="124.0">
+         <children>
+            <Label alignment="TOP_LEFT" maxHeight="47.0" prefWidth="123.0" styleClass="coloredText" text="title" wrapText="true">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label prefHeight="17.0" prefWidth="127.0" text="username" textFill="#838383">
+               <font>
+                  <Font name="Roboto" size="12.0" />
+               </font></Label>
+            <Label text="views" textFill="#838383">
+               <font>
+                  <Font name="Roboto" size="12.0" />
+               </font></Label>
+         </children>
+      </VBox>
+      <Line endX="41.0" layoutX="125.0" layoutY="97.0" startX="-112.0" stroke="RED" strokeWidth="6.0" />
+      <Rectangle arcHeight="22.0" arcWidth="22.0" fill="#ffffff00" height="98.0" layoutX="6.0" layoutY="5.0" stroke="#0f0f0f" strokeWidth="12.0" styleClass="rect_border" width="165.0" />
+      <Button mnemonicParsing="false" opacity="0.0" prefHeight="98.0" prefWidth="177.0" text="Button">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>

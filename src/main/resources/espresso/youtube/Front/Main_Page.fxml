@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="parent" prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Dark/Main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.MainPage">
+   <children>
+      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="126.0" layoutY="108.0" prefHeight="612.0" prefWidth="1155.0" style="-fx-background-color: transparnet;">
+         <content>
+            <VBox fx:id="videosBox" prefHeight="612.0" prefWidth="1159.0" styleClass="back" />
+         </content>
+      </ScrollPane>
+      <ScrollPane hbarPolicy="NEVER" layoutX="202.0" layoutY="67.0" prefHeight="41.0" prefWidth="1079.0" style="-fx-background-color: transparnet;" vbarPolicy="NEVER" vmax="0.0">
+         <content>
+            <HBox prefHeight="41.0" prefWidth="1079.0" styleClass="back" />
+         </content>
+      </ScrollPane>
+      <AnchorPane fx:id="notifPane" layoutX="909.0" layoutY="69.0" prefHeight="373.0" prefWidth="277.0" style="-fx-background-radius: 20;" visible="false">
+         <children>
+            <VBox prefHeight="373.0" prefWidth="277.0" style="-fx-background-radius: 20;" />
+         </children>
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+      </AnchorPane>
+      <VBox alignment="TOP_CENTER" layoutX="3.0" layoutY="113.0" spacing="16.0">
+         <children>
+            <AnchorPane>
+               <children>
+                  <Button layoutX="8.0" mnemonicParsing="false" onAction="#appendVideos" prefHeight="55.0" prefWidth="50.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Pane disable="true" layoutX="25.0" layoutY="8.0" prefHeight="19.0" prefWidth="17.0" styleClass="home" />
+                  <Text disable="true" layoutX="20.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Home">
+                     <font>
+                        <Font name="Roboto Bold" size="10.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Button layoutX="8.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="50.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Pane disable="true" layoutX="24.0" layoutY="4.0" prefHeight="21.0" prefWidth="17.0" styleClass="shorts" />
+                  <Text disable="true" layoutX="18.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Shorts">
+                     <font>
+                        <Font name="Roboto Bold" size="10.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="65.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Pane disable="true" layoutX="21.0" layoutY="9.0" prefHeight="19.0" prefWidth="23.0" styleClass="sub" />
+                  <Text disable="true" layoutX="2.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Subscriptions">
+                     <font>
+                        <Font name="Roboto Bold" size="10.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <Button layoutX="8.0" mnemonicParsing="false" onAction="#switchToYourChannel" prefHeight="55.0" prefWidth="50.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Pane disable="true" layoutX="24.0" layoutY="8.0" prefHeight="19.0" prefWidth="19.0" styleClass="your-channel" />
+                  <Text disable="true" layoutX="25.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="You">
+                     <font>
+                        <Font name="Roboto Bold" size="10.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
+         <children>
+            <TextField fx:id="searchField" layoutX="421.0" onAction="#getSearch" onKeyTyped="#searching" onMouseClicked="#selectSearch" prefHeight="41.0" prefWidth="396.0" promptText="  Search" styleClass="searchBar">
+               <font>
+                  <Font name="Roboto" size="14.0" />
+               </font>
+            </TextField>
+            <Button layoutX="1128.0" layoutY="4.0" mnemonicParsing="false" onAction="#selectNotif" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane layoutX="77.0" layoutY="14.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
+            <Button layoutX="64.0" layoutY="8.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="101.0" layoutY="6.0" prefHeight="22.0" scaleX="0.9" scaleY="1.2" styleClass="colored_text" text="YouTube" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Condensed Bold" size="21.0" />
+               </font>
+            </Label>
+            <Button layoutX="1067.0" layoutY="3.0" mnemonicParsing="false" onAction="#switchToDashboard" prefHeight="38.0" prefWidth="38.0" style="-fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" />
+            <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" />
+            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" onMouseClicked="#selectProf" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+            <Button contentDisplay="BOTTOM" layoutY="4.0" mnemonicParsing="false" onAction="#showGuide" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane disable="true" layoutX="6.0" layoutY="14.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" />
+            <Button layoutX="817.0" mnemonicParsing="false" onAction="#getSearch" prefHeight="41.0" prefWidth="59.0" styleClass="search_button" />
+            <AnchorPane disable="true" layoutX="837.0" layoutY="11.0" prefHeight="19.0" prefWidth="19.0" styleClass="search" />
+         </children>
+      </AnchorPane>
+      <Rectangle fx:id="backWindow" arcHeight="5.0" arcWidth="5.0" height="720.0" layoutY="-1.0" onMouseClicked="#hideGuide" opacity="0.19" stroke="BLACK" strokeType="INSIDE" visible="false" width="1281.0" />
+      <AnchorPane fx:id="guidePane" layoutX="-200.0" prefHeight="720.0" prefWidth="202.0" styleClass="back">
+         <children>
+            <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutY="75.0" prefHeight="645.0" prefWidth="202.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox fx:id="leftSideBox" prefHeight="644.0" prefWidth="196.0" styleClass="back">
+                     <children>
+                        <VBox>
+                           <children>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#appendVideos" prefHeight="34.0" prefWidth="177.0" text="Home" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="9.0" layoutY="7.0" prefHeight="19.0" prefWidth="17.0" styleClass="home" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="Shorts" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="9.0" layoutY="7.0" prefHeight="21.0" prefWidth="17.0" styleClass="shorts" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="           Subscriptions" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="9.0" layoutY="8.0" prefHeight="19.0" prefWidth="21.0" styleClass="sub" />
+                                 </children>
+                              </AnchorPane>
+                              <Line endX="67.5" startX="-115.0" stroke="#686868">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Line>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="You">
+                                 <font>
+                                    <Font name="Roboto Bold" size="17.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" top="5.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#switchToYourChannel" prefHeight="34.0" prefWidth="177.0" text="           Your channel" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="9.0" layoutY="8.0" prefHeight="19.0" prefWidth="19.0" styleClass="your-channel" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#showPlaylists" prefHeight="34.0" prefWidth="177.0" text="   Playlists" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="10.0" layoutY="11.0" prefHeight="15.0" prefWidth="21.0" styleClass="playlists" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="177.0" text="          Watch Later" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="10.0" layoutY="8.0" prefHeight="20.0" prefWidth="20.0" styleClass="watch-later" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane>
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#showLiked" prefHeight="34.0" prefWidth="177.0" text="           Liked videos" textFill="WHITE">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Pane disable="true" layoutX="12.0" layoutY="7.0" prefHeight="19.0" prefWidth="19.0" styleClass="liked" />
+                                 </children>
+                              </AnchorPane>
+                              <Line endX="67.5" startX="-115.0" stroke="#686868">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Line>
+                           </children>
+                        </VBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Subscriptions">
+                           <font>
+                              <Font name="Roboto Bold" size="17.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="15.0" top="5.0" />
+                           </VBox.margin>
+                        </Text>
+                        <Line endX="67.5" startX="-115.0" stroke="#686868">
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </VBox.margin>
+                        </Line>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Button layoutX="10.0" layoutY="15.0" mnemonicParsing="false" onAction="#hideGuide" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane disable="true" layoutX="16.0" layoutY="25.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" />
+            <Label layoutX="103.0" layoutY="18.0" prefHeight="22.0" scaleX="0.9" scaleY="1.2" styleClass="colored_text" text="YouTube" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Condensed Bold" size="21.0" />
+               </font>
+            </Label>
+            <Pane layoutX="76.0" layoutY="22.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
+            <Button layoutX="65.0" layoutY="20.0" mnemonicParsing="false" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="profPane" layoutX="934.0" layoutY="69.0" prefHeight="314.0" prefWidth="295.0" style="-fx-background-radius: 20;" visible="false">
+         <children>
+            <VBox layoutY="3.0" prefHeight="307.0" prefWidth="295.0" spacing="5.0" style="-fx-background-radius: 20;">
+               <children>
+                  <HBox prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Circle fx:id="profile2" fill="WHITE" onMouseClicked="#changeTheme" radius="22.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Circle>
+                        <VBox prefWidth="144.0" spacing="5.0">
+                           <children>
+                              <Text fx:id="urName" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Cahnnel name" wrappingWidth="220.40869140625">
+                                 <font>
+                                    <Font name="Roboto Bold" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="8.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Text fx:id="urUsername" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel username" wrappingWidth="220.40869140625">
+                                 <font>
+                                    <Font name="Roboto Bold" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="8.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Button mnemonicParsing="false" onAction="#switchToYourChannel" style="-fx-text-fill: #445dff;" text="View your channel" textFill="#445dff">
+                                 <font>
+                                    <Font name="Roboto" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" text="             Switch account                                       " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="20.0" styleClass="your-channel" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="295.0" text="             Log out                                                    " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="18.0" styleClass="logout" />
+                     </children>
+                  </AnchorPane>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#changeTheme" prefHeight="34.0" prefWidth="295.0" text="       Change Appearance                        " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="15.0" styleClass="theme" />
+                     </children>
+                  </AnchorPane>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#setting" prefHeight="34.0" prefWidth="295.0" text="       Setting                                               " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="15.0" layoutY="8.0" prefHeight="20.0" prefWidth="20.0" styleClass="setting" />
+                     </children>
+                  </AnchorPane>
+               </children></VBox>
+         </children>
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+      </AnchorPane>
+      <AnchorPane fx:id="searchPane" layoutX="451.0" layoutY="69.0" prefHeight="244.0" prefWidth="443.0" style="-fx-background-radius: 20;" visible="false">
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="7.0" layoutY="33.0" prefHeight="202.0" prefWidth="427.0" style="-fx-background-color: transparent;">
+               <content>
+                  <VBox fx:id="searchBox" prefHeight="200.0" prefWidth="100.0" spacing="7.0" styleClass="back" />
+               </content>
+            </ScrollPane>
+            <Button layoutX="404.0" layoutY="5.0" mnemonicParsing="false" onAction="#hideSearch" prefHeight="25.0" prefWidth="25.0" style="-fx-background-radius: 100;" />
+            <AnchorPane disable="true" layoutX="409.0" layoutY="10.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="addPlaylistPane" layoutX="490.0" layoutY="209.0" prefHeight="202.0" prefWidth="366.0" style="-fx-background-radius: 20;" visible="false">
+         <styleClass>
+            <String fx:value="back" />
+            <String fx:value="shadow" />
+         </styleClass>
+         <children>
+            <TextField fx:id="playlistNameTF" layoutX="21.0" layoutY="37.0" prefHeight="35.0" prefWidth="245.0" promptText="Playlits's name..." styleClass="tf">
+               <font>
+                  <Font name="Roboto" size="13.0" />
+               </font>
+            </TextField>
+            <RadioButton fx:id="privateBtn" layoutX="21.0" layoutY="101.0" mnemonicParsing="false" styleClass="colored_text" text="Private" />
+            <Button layoutX="266.0" layoutY="148.0" mnemonicParsing="false" onAction="#createPlaylist" text="Create">
+               <font>
+                  <Font name="Roboto Bold" size="15.0" />
+               </font>
+            </Button>
+            <Button layoutX="328.0" layoutY="12.0" mnemonicParsing="false" onAction="#hideAddPlaylist" prefHeight="25.0" prefWidth="25.0" />
+            <AnchorPane disable="true" layoutX="333.0" layoutY="18.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

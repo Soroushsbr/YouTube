@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fillWidth="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox focusTraversable="true" styleClass="back">
+         <children>
+            <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" HBox.hgrow="ALWAYS">
+               <children>
+                  <Circle fill="WHITE" radius="20.0" stroke="WHITE" strokeType="INSIDE" styleClass="prof">
+                     <VBox.margin>
+                        <Insets left="20.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Circle>
+               </children>
+            </VBox>
+            <VBox fillWidth="false" HBox.hgrow="ALWAYS">
+               <children>
+                  <Hyperlink styleClass="coloredText" text="\@username" textFill="#7c7c7c">
+                     <font>
+                        <Font name="Roboto Light" size="15.0" />
+                     </font>
+                  </Hyperlink>
+                  <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="coloredText" text="comment" wrappingWidth="911.4580078125" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Arial" size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="7.0" />
+                     </VBox.margin>
+                  </Text>
+                  <AnchorPane prefWidth="886.0">
+                     <children>
+                        <Button fx:id="commentLike" layoutX="5.0" layoutY="-2.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 100;">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <AnchorPane fx:id="like" disable="true" layoutX="12.0" layoutY="4.0" prefHeight="19.0" prefWidth="19.0" styleClass="like" />
+                        <Hyperlink layoutX="4.0" layoutY="30.0" text="Replies" textFill="#0076ff">
+                           <font>
+                              <Font name="Roboto Bold" size="14.0" />
+                           </font>
+                        </Hyperlink>
+                        <Button fx:id="commentDislike" layoutX="90.0" layoutY="-2.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" style="-fx-background-radius: 100;">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <AnchorPane fx:id="dislike" disable="true" layoutX="96.0" layoutY="6.0" prefHeight="19.0" prefWidth="19.0" styleClass="dislike" />
+                        <Label alignment="CENTER" layoutX="34.0" layoutY="6.0" prefHeight="17.0" prefWidth="57.0" styleClass="coloredText" text="123" textAlignment="CENTER">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

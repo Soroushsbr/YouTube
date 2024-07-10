@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="dark_back" stylesheets="@Style/Dark/Dashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.Dashboard">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutY="82.0" prefHeight="638.0" prefWidth="263.0" styleClass="dark2_back">
+         <children>
+            <AnchorPane prefHeight="103.0" prefWidth="263.0">
+               <children>
+                  <Circle fx:id="profile2" layoutX="132.0" layoutY="60.0" onMouseEntered="#hoverProfile" onMouseExited="#unhoverProfile" radius="52.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="prof">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Circle>
+                  <AnchorPane fx:id="goChannelSvg" disable="true" layoutX="122.0" layoutY="50.0" opacity="0.0" prefHeight="21.0" prefWidth="20.0" styleClass="GOchannel_svg" />
+                  <Button layoutX="80.0" layoutY="8.0" mnemonicParsing="false" onAction="#switchToYourChannel" onMouseEntered="#hoverProfile" onMouseExited="#unhoverProfile" opacity="0.0" prefHeight="104.0" prefWidth="104.0" style="-fx-background-radius: 100;" text="Button">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="7.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="55.0" prefWidth="263.0">
+               <children>
+                  <Text fill="WHITE" layoutX="82.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Your channel">
+                     <font>
+                        <Font name="Roboto Bold" size="17.0" />
+                     </font>
+                  </Text>
+                  <Text fx:id="channelName" fill="#c6c6c6" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Channel name" textAlignment="CENTER" wrappingWidth="263.0">
+                     <font>
+                        <Font name="Roboto Bold" size="13.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="         Dashboard">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="40.0" layoutY="16.0" prefHeight="20.0" prefWidth="20.0" styleClass="dashboard_svg" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="     Content">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane layoutX="40.0" layoutY="16.0" prefHeight="20.0" prefWidth="20.0" styleClass="content_svg" />
+                  <AnchorPane disable="true" layoutX="36.0" layoutY="20.0" prefHeight="20.0" prefWidth="20.0" styleClass="back_content_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="         Comments">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="40.0" layoutY="16.0" prefHeight="20.0" prefWidth="20.0" styleClass="comments_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="                 Customisation">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="39.0" layoutY="15.0" prefHeight="23.0" prefWidth="23.0" styleClass="customisation_svg" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="50.0" prefWidth="263.0">
+               <children>
+                  <Button layoutX="18.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="228.0" text="   Setting">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <AnchorPane disable="true" layoutX="39.0" layoutY="14.0" prefHeight="23.0" prefWidth="23.0" styleClass="setting_svg" />
+               </children>
+               <VBox.margin>
+                  <Insets top="185.0" />
+               </VBox.margin>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <ScrollPane hbarPolicy="NEVER" hmax="0.0" layoutX="263.0" layoutY="87.0" prefHeight="633.0" prefWidth="1017.0" style="-fx-background-color: transparent;">
+         <content>
+            <VBox fx:id="box" prefHeight="633.0" prefWidth="1017.0" styleClass="dark_back" />
+         </content>
+      </ScrollPane>
+      <AnchorPane layoutX="-1.0" prefHeight="85.0" prefWidth="1280.0">
+         <children>
+            <Button layoutX="16.0" layoutY="22.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <TextField layoutX="371.0" layoutY="19.0" prefHeight="41.0" prefWidth="538.0" promptText="  Search across your channel" styleClass="search_field">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </TextField>
+            <Pane layoutX="77.0" layoutY="31.0" prefHeight="17.0" prefWidth="20.0" style="-fx-background-color: white;" />
+            <Button layoutX="64.0" layoutY="26.0" mnemonicParsing="false" onAction="#switchToMainPage" prefHeight="2.0" prefWidth="36.0" style="-fx-background-color: red;" styleClass="youtube_logo" stylesheets="@Style/Dark/Main.css">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Label layoutX="104.25" layoutY="25.700000762939453" prefHeight="22.0" scaleX="0.9" scaleY="1.2" styleClass="colored2_text" text="Studio" textFill="WHITE">
+               <font>
+                  <Font name="TradeGothic-BoldCondTwenty" size="24.0" />
+               </font>
+            </Label>
+            <Button layoutX="882.0" layoutY="32.0" mnemonicParsing="false" prefHeight="15.0" prefWidth="15.0" styleClass="search">
+               <font>
+                  <Font size="1.0" />
+               </font>
+            </Button>
+            <Button layoutX="1081.0" layoutY="20.0" mnemonicParsing="false" onAction="#showUploadPane" prefHeight="38.0" prefWidth="111.0" style="-fx-background-radius: 100;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Pane disable="true" layoutX="1095.0" layoutY="29.0" prefHeight="20.0" prefWidth="27.0" style="-fx-background-color: red;" styleClass="create" />
+            <Circle fx:id="profile" fill="WHITE" layoutX="1234.0" layoutY="39.0" onMouseClicked="#selectProf" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+            <Pane disable="true" layoutX="22.0" layoutY="31.0" prefHeight="15.0" prefWidth="20.0" styleClass="dashboard" />
+            <Text disable="true" fill="WHITE" fontSmoothingType="LCD" layoutX="1128.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="CREATE">
+               <font>
+                  <Font name="Roboto Bold" size="14.0" />
+               </font>
+            </Text>
+         </children>
+         <styleClass>
+            <String fx:value="dark2_back" />
+            <String fx:value="shadow" />
+         </styleClass>
+      </AnchorPane>
+      <Rectangle fx:id="backgroundFade" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.44" stroke="BLACK" strokeType="INSIDE" visible="false" width="1280.0" />
+      <AnchorPane fx:id="createPane" layoutX="251.0" layoutY="63.0" prefHeight="549.0" prefWidth="778.0" style="-fx-background-radius: 10;" visible="false">
+         <children>
+            <AnchorPane fx:id="selectVidPane" layoutX="62.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" visible="false">
+               <children>
+                  <Button layoutX="239.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="176.0" prefWidth="176.0" style="-fx-background-radius: 1000;" styleClass="dark_back">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button layoutX="264.0" layoutY="269.0" mnemonicParsing="false" onAction="#selectFile" prefHeight="33.0" prefWidth="127.0" style="-fx-background-color: #3da5fe;" text="SELECT FILES">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Text fill="WHITE" fontSmoothingType="LCD" layoutX="203.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Drag and drop video files to upload">
+                     <font>
+                        <Font name="Arial" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#c3c3c3" fontSmoothingType="LCD" layoutX="196.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Your videos will be private until you publish them.">
+                     <font>
+                        <Font name="Roboto" size="12.0" />
+                     </font>
+                  </Text>
+                  <Text fill="#c3c3c3" layoutY="374.05078125" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="By submitting your videos to YouTube, you acknowledge that you agree to YouTube's Terms of Service and Community Guidelines.Please make sure that you do not violate others' copyright or privacy rights. Learn more" textAlignment="CENTER" wrappingWidth="654.404296875" />
+                  <AnchorPane disable="true" layoutX="295.0" layoutY="46.0" prefHeight="85.0" prefWidth="65.0" styleClass="upload" />
+               </children>
+            </AnchorPane>
+            <Line endX="664.0" layoutX="111.0" layoutY="55.0" startX="-108.0" stroke="#686868" />
+            <Button layoutX="734.0" layoutY="10.0" mnemonicParsing="false" onAction="#hideUploadPane" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane disable="true" layoutX="743.0" layoutY="19.0" prefHeight="15.0" prefWidth="15.0" styleClass="exit" stylesheets="@Style/Dark/Dashboard.css" />
+            <Text fill="WHITE" layoutX="20.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Upload videos">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+            </Text>
+            <Circle fill="#656565" layoutX="389.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Circle fill="#656565" layoutX="427.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Circle fill="#656565" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Circle fx:id="circle" fill="#3da5fe" layoutX="351.0" layoutY="519.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <ScrollPane fx:id="detailsPane" hbarPolicy="NEVER" hmax="0.0" layoutX="112.0" layoutY="84.0" prefWidth="657.0" style="-fx-background-color: transparent;" visible="false">
+               <content>
+                  <AnchorPane prefHeight="397.0" prefWidth="655.0" styleClass="dark2_back">
+                     <children>
+                        <AnchorPane layoutX="378.0" layoutY="75.0" prefHeight="207.0" prefWidth="256.0" style="-fx-background-radius: 10;" styleClass="dark_back" />
+                        <Text fill="WHITE" layoutX="23.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Details">
+                           <font>
+                              <Font name="Arial Bold" size="20.0" />
+                           </font>
+                        </Text>
+                        <TextField fx:id="titleTF" alignment="TOP_LEFT" layoutX="23.0" layoutY="58.0" prefHeight="55.0" prefWidth="300.0" promptText="Title" styleClass="text-field">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <TextArea fx:id="descriptionTA" layoutX="23.0" layoutY="126.0" prefHeight="127.0" prefWidth="300.0" promptText="Description" styleClass="text-area">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </TextArea>
+                        <VBox fx:id="videoPre" alignment="CENTER" layoutX="378.0" layoutY="58.0" prefHeight="161.0" prefWidth="256.0" style="-fx-background-color: black;" />
+                        <Label fx:id="fileName" layoutX="382.0" layoutY="233.0" prefHeight="31.0" prefWidth="248.0" styleClass="colored2_text" text="File name:" textFill="WHITE">
+                           <font>
+                              <Font name="Roboto Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="tagsBox" accessibleRole="BUTTON" layoutX="24.0" layoutY="492.0" onAction="#appTag" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Style/Dark/Dashboard.css">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ComboBox>
+                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="24.0" layoutY="449.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Tag">
+                           <font>
+                              <Font name="Arial Bold" size="15.0" />
+                           </font>
+                        </Text>
+                        <Text fill="#cccccc" layoutX="24.0" layoutY="478.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Put a tag so people can find it." />
+                        <Button layoutX="93.0" layoutY="348.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0" styleClass="upImage_svg">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Button>
+                        <Text fill="#656565" layoutX="75.0" layoutY="394.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Upload file" />
+                        <Rectangle accessibleRole="BUTTON" arcHeight="5.0" arcWidth="5.0" fill="#cd9d9d00" height="95.0" layoutX="24.0" layoutY="321.0" onMouseClicked="#selectThumbnail" stroke="BLACK" strokeType="INSIDE" strokeWidth="12.0" styleClass="upImage" width="158.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Rectangle>
+                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="24.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Thumbnail">
+                           <font>
+                              <Font name="Arial Bold" size="15.0" />
+                           </font>
+                        </Text>
+                        <Text fill="#cccccc" layoutX="24.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Set a thumbnail that stands out and draws viewers' attention." />
+                        <HBox fx:id="selectedTagsBox" alignment="CENTER_LEFT" layoutX="23.0" layoutY="539.0" prefHeight="44.0" prefWidth="618.0" style="-fx-border-color: gray; -fx-border-radius: 10;" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
+            <Button layoutX="337.0" layoutY="507.0" mnemonicParsing="false" onAction="#uploadVidScene" prefHeight="25.0" prefWidth="27.0" style="-fx-background-color: transparent;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <AnchorPane fx:id="uploadingPane" layoutX="112.0" layoutY="84.0" prefHeight="409.0" prefWidth="655.0" visible="false">
+               <children>
+                  <VBox fx:id="upVid" alignment="CENTER" layoutX="167.0" layoutY="65.0" prefHeight="191.0" prefWidth="321.0" />
+                  <ProgressBar fx:id="progressBar" layoutX="167.0" layoutY="66.0" prefHeight="191.0" prefWidth="321.0" progress="0.0" />
+                  <Text fx:id="uploadText" fill="WHITE" layoutX="79.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Uploading..." textAlignment="CENTER" wrappingWidth="497.13671875">
+                     <font>
+                        <Font name="Arial Bold" size="22.0" />
+                     </font>
+                  </Text>
+                  <Button fx:id="doneBtn" disable="true" layoutX="291.0" layoutY="340.0" mnemonicParsing="false" onAction="#hideUploadPane" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Done">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <Button fx:id="nextBtn" layoutX="681.0" layoutY="503.0" mnemonicParsing="false" onAction="#confirmUpload" prefHeight="33.0" prefWidth="73.0" style="-fx-background-color: #3da5fe;" text="Next" visible="false">
+               <font>
+                  <Font size="13.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+         <styleClass>
+            <String fx:value="shadow" />
+            <String fx:value="dark2_back" />
+         </styleClass>
+      </AnchorPane>
+      <AnchorPane fx:id="profPane" layoutX="934.0" layoutY="69.0" prefHeight="265.0" prefWidth="295.0" style="-fx-background-radius: 20;" visible="false">
+         <children>
+            <VBox layoutY="3.0" prefHeight="263.0" prefWidth="295.0" spacing="5.0" style="-fx-background-radius: 20;">
+               <children>
+                  <HBox prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Circle fx:id="profile1" fill="WHITE" onMouseClicked="#changeTheme" radius="22.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Circle>
+                        <VBox prefWidth="144.0" spacing="5.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Cahnnel name" wrappingWidth="220.40869140625">
+                                 <font>
+                                    <Font name="Roboto Bold" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="8.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Channel username" wrappingWidth="220.40869140625">
+                                 <font>
+                                    <Font name="Roboto Bold" size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="8.0" />
+                                 </VBox.margin>
+                              </Text>
+                              <Button mnemonicParsing="false" style="-fx-text-fill: #445dff;" text="View your channel" textFill="#445dff">
+                                 <font>
+                                    <Font name="Roboto" size="15.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="295.0" text="             Log out                                                    " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="18.0" styleClass="logout" />
+                     </children>
+                  </AnchorPane>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#changeTheme" prefHeight="34.0" prefWidth="295.0" text="       Change Appearance                        " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="17.0" layoutY="8.0" prefHeight="20.0" prefWidth="15.0" styleClass="theme" />
+                     </children>
+                  </AnchorPane>
+                  <Line endX="178.5" startX="-115.0" stroke="#686868" strokeWidth="0.5">
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Line>
+                  <AnchorPane>
+                     <children>
+                        <Button mnemonicParsing="false" prefHeight="34.0" prefWidth="295.0" text="       Setting                                               " textFill="WHITE">
+                           <font>
+                              <Font name="Roboto" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Pane disable="true" layoutX="15.0" layoutY="8.0" prefHeight="20.0" prefWidth="20.0" styleClass="setting_svg" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+         <styleClass>
+            <String fx:value="dark2_back" />
+            <String fx:value="shadow" />
+         </styleClass>
+      </AnchorPane>
+   </children>
+</AnchorPane>

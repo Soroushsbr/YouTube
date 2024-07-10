@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="803.0" prefWidth="1019.0" styleClass="dark2_back" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.DashCustom">
+   <children>
+      <Line endX="916.0" layoutX="101.0" layoutY="62.0" startX="-100.0" stroke="#909090" strokeWidth="0.5" />
+      <Button layoutX="14.0" layoutY="23.0" mnemonicParsing="false" onAction="#showBrand" prefHeight="39.0" prefWidth="106.0" styleClass="topBtn" text="Branding">
+         <font>
+            <Font name="Roboto Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="143.0" layoutY="23.0" mnemonicParsing="false" onAction="#showInfo" prefHeight="39.0" prefWidth="106.0" styleClass="topBtn" text="Basic info">
+         <font>
+            <Font name="Roboto Bold" size="18.0" />
+         </font>
+      </Button>
+      <VBox fx:id="brandingBox" layoutX="1.0" layoutY="82.0" prefHeight="633.0" prefWidth="1018.0">
+         <children>
+            <AnchorPane prefHeight="240.0" prefWidth="1018.0">
+               <children>
+                  <Button layoutX="330.0" layoutY="184.0" mnemonicParsing="false" onAction="#changeProfile" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Change">
+                     <font>
+                        <Font name="Roboto Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="423.0" layoutY="184.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Remove">
+                     <font>
+                        <Font name="Roboto Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Text layoutX="23.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Picture">
+                     <font>
+                        <Font name="Roboto Black" size="20.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="23.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Your profile picture will appear where your channel is presented on YouTube, such as next to your videos and comments">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Text>
+                  <VBox alignment="CENTER" layoutX="23.0" layoutY="56.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
+                     <children>
+                        <Circle fx:id="profile" radius="73.0" stroke="#ae4646" strokeType="INSIDE" strokeWidth="0.0" />
+                     </children>
+                  </VBox>
+                  <Text layoutX="330.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="It's recommended that you use a picture that's at least 98 x 98 pixels and 4 MB or less. Use a PNG file. Make sure that your picture follows the YouTube Community Guidelines." wrappingWidth="251.767578125">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="240.0" prefWidth="1018.0">
+               <children>
+                  <Button layoutX="332.0" layoutY="143.0" mnemonicParsing="false" onAction="#changeBanner" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Upload">
+                     <font>
+                        <Font name="Roboto Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Text layoutX="23.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Banner image">
+                     <font>
+                        <Font name="Roboto Black" size="20.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="23.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="This image will appear across the top of your channel.">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Text>
+                  <VBox alignment="CENTER" layoutX="23.0" layoutY="62.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
+                     <children>
+                        <ImageView fitHeight="165.0" fitWidth="291.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@Images/banner.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <Text layoutX="332.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="For the best results on all devices, use an image that's at least 2048 x 1152 pixels and 6 MB or less. " wrappingWidth="291.3632812499999">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="240.0" prefWidth="1018.0">
+               <children>
+                  <Button layoutX="334.0" layoutY="175.0" mnemonicParsing="false" onAction="#changeWatermark" prefHeight="35.0" prefWidth="82.0" style="-fx-background-radius: 15;" styleClass="lightBtn" text="Upload">
+                     <font>
+                        <Font name="Roboto Bold" size="15.0" />
+                     </font>
+                  </Button>
+                  <Text layoutX="23.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Video watermark">
+                     <font>
+                        <Font name="Roboto Black" size="20.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="23.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="The watermark will appear on your videos in the right-hand corner of the video player.">
+                     <font>
+                        <Font name="Roboto Bold" size="12.0" />
+                     </font>
+                  </Text>
+                  <VBox alignment="CENTER" layoutX="23.0" layoutY="59.0" prefHeight="165.0" prefWidth="285.0" style="-fx-background-radius: 15;" styleClass="dark_back">
+                     <children>
+                        <ImageView fitHeight="170.0" fitWidth="285.0" pickOnBounds="true" preserveRatio="true" styleClass="dark_back">
+                           <image>
+                              <Image url="@Images/watermark.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <Text layoutX="336.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="An image that's 150 x 150 pixels is recommended. Use a PNG, GIF (no animations), BMP or JPEG file that's 1 MB or less." wrappingWidth="225.767578125">
+                     <font>
+                        <Font name="Roboto Bold" size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" top="20.0" />
+               </VBox.margin>
+            </AnchorPane>
+         </children>
+      </VBox>
+      <VBox fx:id="basicInfoBox" layoutX="1.0" layoutY="82.0" prefHeight="732.0" prefWidth="1018.0" visible="false">
+         <children>
+            <AnchorPane prefHeight="175.0" prefWidth="1018.0">
+               <children>
+                  <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Name">
+                     <font>
+                        <Font name="Roboto Bold" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fontSmoothingType="LCD" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Choose a channel name that represents you and your content. Changes made to your name and picture are only visible on YouTube and not on other Google services. You can change your name twice in 14 days. " wrappingWidth="647.443359375" />
+                  <TextField fx:id="nameField" layoutX="21.0" layoutY="95.0" prefHeight="47.0" prefWidth="677.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane prefHeight="175.0" prefWidth="1018.0">
+               <children>
+                  <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Handle">
+                     <font>
+                        <Font name="Roboto Bold" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text fontSmoothingType="LCD" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Choose your unique handle by adding letters and numbers. You can change your handle back within 14 days. Handles can be changed twice every 14 days" wrappingWidth="647.443359375" />
+                  <TextField fx:id="handleField" layoutX="21.0" layoutY="96.0" prefHeight="47.0" prefWidth="677.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="175.0" prefWidth="1018.0">
+               <children>
+                  <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Description">
+                     <font>
+                        <Font name="Roboto Bold" size="16.0" />
+                     </font>
+                  </Text>
+                  <TextArea fx:id="bioArea" layoutX="20.0" layoutY="59.0" prefHeight="165.0" prefWidth="677.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="883.0" layoutY="57.0" mnemonicParsing="false" onAction="#saveChanges" prefHeight="39.0" prefWidth="106.0" styleClass="lightBtn" text="Save">
+                     <font>
+                        <Font name="Roboto Bold" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="752.0" layoutY="57.0" mnemonicParsing="false" onAction="#cancelChanges" prefHeight="39.0" prefWidth="106.0" styleClass="lightBtn" text="Cancel">
+                     <font>
+                        <Font name="Roboto Bold" size="18.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
