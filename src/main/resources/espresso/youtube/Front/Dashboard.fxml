@@ -259,17 +259,17 @@
                               <Font name="Roboto Bold" size="14.0" />
                            </font>
                         </Label>
-                        <ComboBox accessibleRole="BUTTON" layoutX="24.0" layoutY="497.0" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Style/Dark/Dashboard.css">
+                        <ComboBox fx:id="tagsBox" accessibleRole="BUTTON" layoutX="24.0" layoutY="492.0" onAction="#appTag" prefHeight="38.0" prefWidth="176.0" promptText="Select" stylesheets="@Style/Dark/Dashboard.css">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </ComboBox>
-                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="24.0" layoutY="454.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Playlists">
+                        <Text fill="WHITE" fontSmoothingType="LCD" layoutX="24.0" layoutY="449.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored2_text" text="Tag">
                            <font>
                               <Font name="Arial Bold" size="15.0" />
                            </font>
                         </Text>
-                        <Text fill="#cccccc" layoutX="24.0" layoutY="483.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Add your video to one playlist to organise your content for viewers." />
+                        <Text fill="#cccccc" layoutX="24.0" layoutY="478.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Put a tag so people can find it." />
                         <Button layoutX="93.0" layoutY="348.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="22.0" styleClass="upImage_svg">
                            <font>
                               <Font size="10.0" />
@@ -287,6 +287,7 @@
                            </font>
                         </Text>
                         <Text fill="#cccccc" layoutX="24.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Set a thumbnail that stands out and draws viewers' attention." />
+                        <HBox fx:id="selectedTagsBox" alignment="CENTER_LEFT" layoutX="23.0" layoutY="539.0" prefHeight="44.0" prefWidth="618.0" style="-fx-border-color: gray; -fx-border-radius: 10;" />
                      </children>
                   </AnchorPane>
                </content>

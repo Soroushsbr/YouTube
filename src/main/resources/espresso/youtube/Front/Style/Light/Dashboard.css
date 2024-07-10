@@ -128,6 +128,26 @@
 .scroll-bar:horizontal .track {
     -fx-background-color: #0f0f0f;
 }
+.combo-box {
+    -fx-background-color: #e1e1e1;
+    -fx-border-color: #8b8b8b;
+    -fx-border-radius: 5;
+    -fx-text-fill: #000000;
+    -fx-padding: 5px;
+}
+
+.combo-box .arrow {
+    -fx-background-color: black;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #848484;
+    -fx-text-fill: #000000;
+}
 .text-field {
     -fx-background-color:  white;
     -fx-border-color:  #4d4d4d;
