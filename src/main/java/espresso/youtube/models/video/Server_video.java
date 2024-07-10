@@ -157,8 +157,8 @@ public class Server_video extends Video {
         return Post_DB.dislike_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
     private ServerResponse like(){
-        ServerResponse sr = Post_DB.get_info(UUID.fromString(super.getVideo_id()), 0);
-        notification.like_post(super.getOwner_id(), super.getVideo_id(), (String) sr.get_part("owner_id"));
+//        ServerResponse sr = Post_DB.get_info(UUID.fromString(super.getVideo_id()), 0);
+//        notification.like_post(super.getOwner_id(), super.getVideo_id(), (String) sr.get_part("owner_id"));
 
         return Post_DB.like_post(UUID.fromString(super.getVideo_id()), UUID.fromString(super.getOwner_id()), super.getRequest_id());
     }
@@ -175,11 +175,11 @@ public class Server_video extends Video {
         return Search.search_titles(super.getRequest_id());
     }
     private ServerResponse insert_video_info(){
-        ServerResponse sr = Channel_DB.get_subscribers(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
-        ArrayList<String> ids = new ArrayList<>();
-        for(Channel channel : sr.getChannels_list())
-            ids.add(channel.getId());
-        notification.upload_post(ids, super.getVideo_id());
+//        ServerResponse sr = Channel_DB.get_subscribers(UUID.fromString(super.getChannel().getId()), super.getRequest_id());
+//        ArrayList<String> ids = new ArrayList<>();
+//        for(Channel channel : sr.getChannels_list())
+//            ids.add(channel.getId());
+//        notification.upload_post(ids, super.getVideo_id());
 
         Post_DB.add_post(UUID.fromString(super.getVideo_id()) , UUID.fromString(super.getOwner_id()), super.getTitle(), UUID.fromString(super.getChannel().getId()), super.getDescription(), true, false, super.getLength());
         return null;

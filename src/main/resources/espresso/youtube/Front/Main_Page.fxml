@@ -132,7 +132,7 @@
             </Button>
             <Pane disable="true" layoutX="1137.0" layoutY="10.0" prefHeight="25.0" prefWidth="20.0" styleClass="notif" />
             <Pane disable="true" layoutX="1074.0" layoutY="12.0" prefHeight="20.0" prefWidth="27.0" styleClass="create" />
-            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" onMouseClicked="#s" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+            <Circle fx:id="profile" fill="WHITE" layoutX="1212.0" layoutY="20.0" onMouseClicked="#selectProf" radius="19.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
             <Button contentDisplay="BOTTOM" layoutY="4.0" mnemonicParsing="false" onAction="#showGuide" prefHeight="33.0" prefWidth="33.0" style="-fx-background-radius: 1000;">
                <cursor>
                   <Cursor fx:constant="HAND" />

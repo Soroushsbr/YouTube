@@ -549,7 +549,7 @@ public class MainPage implements Initializable {
                         Thread threadProf = new Thread(taskProf);
                         threadProf.start();
                         taskProf.setOnSucceeded(event -> {
-                            if(task.getValue() != null) {
+                            if(taskProf.getValue() != null) {
                                 ImagePattern pattern = new ImagePattern(new Image(taskProf.getValue().toURI().toString()));
                                 ((Circle) videoPane.getChildren().get(1)).setFill(pattern);
                                 threadProf.interrupt();
