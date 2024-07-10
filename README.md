@@ -67,27 +67,68 @@ You can use methods inside the setup class to create the database and reset tabl
 If its your first time using the project, **You MUST create tables for app to work correctly**, using create_database() and then create_tables() methods.
 
 <h2 id="key-features">✨ Key Features</h2>
+
 - Hashing for account security
+
 - Recommendation algorithm
+
 - Live notifications
+
 - Video preview and shorts
+
 - Dynamic video speed change
+
 - Watch later/history feature
+
 - Live search recommendations
+
 - Multi-threaded server
+
 - Concurrent video uploads/downloads
+
 - Request saving
+
 
 ***
 <h2 id="front-end-0verview">🎨 Front-End Overview</h2>
-front end of project uses javaFX framework.
+
+The front end of this project uses the **JavaFX** framework, a powerful library for building rich desktop applications with a modern UI. JavaFX allows us to create highly interactive and visually appealing user interfaces.
+JavaFX is a set of graphics and media packages that enables developers to design, create, test, debug, and deploy rich client applications. It provides a comprehensive set of features to create engaging user interfaces, including:
+
+- **UI Controls**: Buttons, text fields, tables, and more.
+- **Layouts**: Arrange UI elements in flexible and responsive ways.
+- **CSS Styling**: Customize the appearance of UI elements using CSS.
+- **FXML**: Define the user interface in XML format.
+
+### Other Libraries
+
+#### Media
+
+We use the **Media** library to handle video and image display within the application. This allows us to incorporate rich media content seamlessly into the UI.
+
+Key features:
+- **Video Playback**: Supports various video formats and controls.
+- **Image Handling**: Display and manipulate images.
+
+#### Timeline
+
+The **Timeline** library is used for creating animations and transitions of nodes. It allows us to add dynamic behavior to the UI components, making the application more interactive and engaging.
+
+Key features:
+- **Animation**: Smooth transitions and animations of UI elements.
+- **Transition Effects**: Fade, slide, scale, and rotate nodes.
+
+### Multi-threading in UI
+
+In our project, we also implemented multi-threading to handle UI updates efficiently.
 you can see a tutorial on how it works [here](https://www.youtube.com/watch?v=9XJicRt_FaI).
+
 other libraries:
 media: to show and work with video and images
 timeline: animation and transition? of nodes
 
-mechnism:
-frame multi thread handling?
+
+it out project we laso used mult-threadinf to handle UI frames frame multi thread handling?
 
 any other mechanism??
 
@@ -169,16 +210,6 @@ If you would like to support this project, you can make a donation [here](#).
 
 
 </div>
-
-
-
-table of content-->>https://github.com/amitmerchant1990/electron-markdownify?tab=readme-ov-file#readme
-https://github.com/antoinezanardi/werewolves-assistant-api-next#readme
-
-
-gif +image
-
-image for database tables schema
 
 
 
