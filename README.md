@@ -6,20 +6,6 @@
 
 ---
 
-[//]: # (<p align="center">)
-
-[//]: # (  <iframe width="560" height="315" src="media/video_2024-07-10_09-34-51.mp4" frameborder="0" allowfullscreen></iframe>)
-
-[//]: # (</p>)
-<video width="320" height="240" controls>
-  <source src="https://raw.githubusercontent.com/Soroushsbr/YouTube/tree/database/media/video_2024-07-10_09-34-51.mp4" type="video/mp4">
-</video>
-
-[//]: # (<video width="320" height="240" controls>)
-
-[//]: # (  <source src="media/video_2024-07-10_09-34-51.mp4" type="video/mp4">)
-
-[//]: # (</video>)
 
 
 <div style="padding-left: 45px; padding-right: 20px;">
@@ -42,6 +28,10 @@
 - 📞 [Contact Us](#contact-us)
 
 ***
+
+<p align="center">
+  <img src="media/demo.gif" width="700" alt="Demo GIF"/>
+</p>
 
 <h2 id="overview">👀 Overview</h2>
 This project is a mini version of YouTube, developed as a university project for our Advanced Programming (AP) course. The goal was to create an application closely resembling the real YouTube app while implementing core object-oriented programming concepts such as Object, Encapsulation, Polymorphism, and Inheritance. Additionally, the project incorporates advanced programming concepts like multi-threading for the client/server, socket programming for server-client communication, and a database for data management.
