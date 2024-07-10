@@ -101,10 +101,10 @@ public class ChannelPage implements Initializable {
         //todo: database changes
         if(darkmode){
             parent.getStylesheets().clear();
-            parent.getStylesheets().add(this.getClass().getResource("Style/Dark/Video.css").toExternalForm());
+            parent.getStylesheets().add(this.getClass().getResource("Style/Dark/Channel.css").toExternalForm());
         }else{
             parent.getStylesheets().clear();
-            parent.getStylesheets().add(this.getClass().getResource("Style/Light/Video.css").toExternalForm());
+            parent.getStylesheets().add(this.getClass().getResource("Style/Light/Channel.css").toExternalForm());
         }
     }
     public void logout(ActionEvent event){
@@ -420,6 +420,22 @@ public class ChannelPage implements Initializable {
             MainPage mainPage = loader.getController();
             mainPage.showLiked();
             //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void setting(ActionEvent event){
+        client.setUser_id("");
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Setting.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
 
             stage.show();
         }catch (IOException ignored){

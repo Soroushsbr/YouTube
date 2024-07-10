@@ -191,6 +191,38 @@
     -fx-background-radius: 10 10 0 0;
     -fx-background-color: #737390;
 }
+.tf {
+    -fx-background-color:  #1f1f1f;
+    -fx-border-color:  #4d4d4d;
+    -fx-font-size: 15;
+    -fx-border-radius: 3;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-family: Arial, sans-serif;
+}
+.tf:hover {
+    -fx-background-color:  #1f1f1f;
+    -fx-border-color: white;
+    -fx-font-size: 15;
+    -fx-border-radius: 3;
+    -fx-border-width: 1;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-family: Arial, sans-serif;
+}
+
+
+.tf:focused{
+    -fx-background-color:  #1f1f1f;
+    -fx-border-color:  white;
+    -fx-font-size: 15;
+    -fx-border-radius: 3;
+    -fx-border-width: 1.5;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-family: Arial, sans-serif;
+}
+
 
 .login_Button{
     -fx-background-color: transparent;

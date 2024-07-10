@@ -16,25 +16,23 @@ public class Server_account extends Account {
         } else if (request.equals("sign_up")) {
             return sign_up();
         } else if (request.equals("change_name")) {
-            return sign_up();
+            return change_username();
         } else if (request.equals("change_email")) {
-            return sign_up();
+            return change_email();
         } else if (request.equals("change_password")) {
-            return sign_up();
+            return change_password();
         } else if (request.equals("make_user_premium")) {
-            return sign_up();
+            return make_user_premium();
         } else if (request.equals("remove_premium_of_user")) {
-            return sign_up();
+            return remove_premium_of_user();
         } else if (request.equals("change_dark_mode")) {
-            return sign_up();
-        } else if (request.equals("get_username_by_id")) {
-            return sign_up();
+            return change_dark_mode();
         } else if (request.equals("get_info")) {
-            return sign_up();
+            return get_info();
         } else if (request.equals("get_subscribed_channels")) {
             return sign_up();
         } else if (request.equals("change_username")) {
-            return sign_up();
+            return change_username();
         } else if (request.equals("get_liked_posts")) {
             return get_liked_posts();
         }
@@ -65,7 +63,7 @@ public class Server_account extends Account {
         return Account_DB.change_password(UUID.fromString(super.getId()), super.getPassword(), super.getRequest_id());
     }
     private ServerResponse change_username(){
-        return Account_DB.change_username(UUID.fromString(super.getId()),super.getPassword() ,super.getRequest_id());
+        return Account_DB.change_username(UUID.fromString(super.getId()),super.getUsername() ,super.getRequest_id());
     }
     private ServerResponse login() {
         return Account_DB.login(super.getUsername() , super.getPassword() , super.getRequest_id());

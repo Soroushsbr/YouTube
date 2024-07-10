@@ -1,10 +1,12 @@
 package espresso.youtube.Front;
 
+import espresso.youtube.models.account.Client_account;
 import espresso.youtube.models.channel.Client_channel;
 import espresso.youtube.models.video.Client_video;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -32,6 +35,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -43,6 +47,7 @@ import static espresso.youtube.Front.LoginMenu.darkmode;
 public class Dashboard implements Initializable {
     private File selectedVideo;
     private File selectedThumbnail;
+    private ArrayList<String> selectedTags = new ArrayList<>();
     @FXML
     AnchorPane parent;
     @FXML
@@ -87,6 +92,10 @@ public class Dashboard implements Initializable {
     Circle profile2;
     @FXML
     Text channelName;
+    @FXML
+    HBox selectedTagsBox;
+    @FXML
+    ComboBox<String> tagsBox;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sendRequest();
@@ -211,13 +220,15 @@ public class Dashboard implements Initializable {
                     client.setReq_id();
                     Client_video client_video = new Client_video(client.getOut());
 
-                    client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id(), length);
                     UUID id = UUID.randomUUID();
+                    client_video.send_thumbnail_info(id.toString(), "jpg", client.getReq_id());
                     client_video.upload_media(selectedThumbnail, id.toString() ,client.getChannel_id(), "jpg","video",(int) client.requests.get(0).get_part("client_handler_id"));
                     Thread.sleep(200);
                     client.setReq_id();
-                    client_video.send_video_info(client.getUser_id(),title,description, client.getChannel_id(), "mp4", client.getReq_id(), length);
+                    client_video.send_video_info(client.getUser_id(), title ,description, client.getChannel_id(), "mp4", client.getReq_id(), length);
                     client_video.upload_media(selectedFile, id.toString() ,client.getChannel_id(), "mp4","video",(int) client.requests.get(0).get_part("client_handler_id"));
+                    client.setReq_id();
+                    client_video.set_category(id.toString() , selectedTags, client.getReq_id());
                 }
                 return null;
             }
@@ -298,6 +309,40 @@ public class Dashboard implements Initializable {
         mediaView.fitHeightProperty().bind(videoPre.heightProperty());
 
         videoPre.getChildren().add(mediaView);
+
+        Client_video cv = new Client_video(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cv.get_categories(req);
+        ArrayList<String> tags;
+        while (true){
+            if(client.requests.get(req) != null){
+                tags = (ArrayList<String>)client.requests.get(req).get_part("categories");
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        selectedTags = new ArrayList<>();
+        tagsBox.getItems().clear();
+        selectedTagsBox.getChildren().clear();
+        for(String tag :tags){
+            tagsBox.getItems().add(tag);
+        }
+    }
+    public void appTag(){
+        Button button = new Button(tagsBox.getValue());
+        selectedTags.add(tagsBox.getValue());
+        button.setOnAction(event -> {
+            button.setVisible(false);
+            HBox parentHBox = (HBox) button.getParent();
+            parentHBox.getChildren().remove(button);
+            selectedTags.remove(button.getText());
+        });
+        selectedTagsBox.getChildren().add(button);
     }
     public void confirmUpload() throws IOException, InterruptedException {
         if(!titleTF.getText().isEmpty() && !descriptionTA.getText().isEmpty()) {
@@ -354,6 +399,22 @@ public class Dashboard implements Initializable {
             MainPage mainPage = loader.getController();
             mainPage.appendVideos();
             //set client for next stage
+
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void setting(ActionEvent event){
+        client.setUser_id("");
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Setting.fxml"));
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
 
             stage.show();
         }catch (IOException ignored){

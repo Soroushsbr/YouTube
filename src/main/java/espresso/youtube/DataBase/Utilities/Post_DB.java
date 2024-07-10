@@ -715,7 +715,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
-
+        System.out.println(rankedPosts);
         return rankedPosts;
     }
 
@@ -815,6 +815,14 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+        for (int i = 0; i < recommended_posts.size(); i++) {
+            for (int j = i + 1; j < recommended_posts.size(); j++) {
+                if (recommended_posts.get(i).getVideo_id().equals(recommended_posts.get(j).getVideo_id())) {
+                    recommended_posts.remove(j);
+                    j--;
+                }
+            }
+        }
         serverResponse.setVideos_list(recommended_posts);
         return serverResponse;
     }
@@ -845,6 +853,7 @@ public class Post_DB {
         } catch (SQLException e) {
             printSQLException(e);
         }
+
         serverResponse.setVideos_list(watchHistory);
         return serverResponse;
     }
@@ -980,7 +989,7 @@ public class Post_DB {
 
 
     public static void main(String[] args) {
-
+        get_recommended_posts(UUID.fromString("b5ca8426-8181-40cf-b5d3-db09f1851764"), 1);
     }
 }
 
