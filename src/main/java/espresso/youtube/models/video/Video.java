@@ -60,6 +60,11 @@ public class Video extends ClassInfo {
     public void setIs_public(boolean is_public) {this.is_public = is_public;}
     public void setIs_short(boolean is_short) {this.is_short = is_short;}
     public void setCreated_at(Timestamp created_at) {this.created_at = created_at;}
+
+    public void setCategory_names(ArrayList<String> category_names) {
+        this.category_names = category_names;
+    }
+
     public void setMedia_type(String media_type) {
         this.media_type = media_type;
 
