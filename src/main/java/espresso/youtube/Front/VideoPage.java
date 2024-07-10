@@ -911,8 +911,25 @@ public class VideoPage implements Initializable {
         int req = client.getReq_id();
         ArrayList<Video> videos = new ArrayList<>();
         videos.add(video);
+        System.out.println(playlist.getId());
         cp.add_video(playlist.getId(), videos, req);
         hideSave();
+    }
+    public void switchTChannelPage(ActionEvent event){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Channel.fxml"));
+            root = loader.load();
+            ChannelPage channelPage = loader.getController();
+            channelPage.setChannel(video.getChannel());
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException ignored){
+        }
     }
     public void hideSave(){
         backWindow.setVisible(false);

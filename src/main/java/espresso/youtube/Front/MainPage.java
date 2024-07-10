@@ -315,6 +315,11 @@ public class MainPage implements Initializable {
                 playlists = client.requests.get(req).getPlaylists_list();
                 break;
             }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         int i = 0;

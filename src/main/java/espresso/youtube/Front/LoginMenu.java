@@ -21,9 +21,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -32,6 +34,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginMenu implements Initializable {
     @FXML
@@ -54,6 +58,8 @@ public class LoginMenu implements Initializable {
     TextField loginUsernameTF;
     @FXML
     PasswordField loginPasswordTF;
+    @FXML
+    VBox msgBox;
 
     private Parent root;
     private Stage stage;
@@ -98,7 +104,21 @@ public class LoginMenu implements Initializable {
         );
         timelineMove.setOnFinished(event -> timelineMove2.play());
     }
-
+    public void showMassage(String msg){
+        Text text = new Text();
+        text.setText(msg);
+        text.setStyle("-fx-font-size: 15px; -fx-fill:red ");
+        msgBox.getChildren().add(0 , text);
+        Timeline tl = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(text.opacityProperty(), 1)),
+                new KeyFrame(Duration.seconds(6), new KeyValue(text.opacityProperty(), 0 ))
+        );
+        tl.setOnFinished(event -> {
+            VBox vBox = (VBox) text.getParent();
+            vBox.getChildren().remove(text);
+        });
+        tl.play();
+    }
     public void signUp(ActionEvent event) {
         String username = signupUsernameTF.getText();
         String gmail = singupgmailTF.getText();
@@ -147,9 +167,15 @@ public class LoginMenu implements Initializable {
                 } else {
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidGmail")) {
                         applyShakeEffect(singupgmailTF);
+                        if(check_gmail_validation(gmail)){
+                            showMassage("Gmail Already Exist!");
+                        }else {
+                            showMassage("Not valid Gmail!");
+                        }
                     }
                     if (!(boolean) client.requests.get(client.getReq_id()).get_part("isValidUsername")) {
                         applyShakeEffect(signupUsernameTF);
+                        showMassage("Username Already Exist!");
                     }
                 }
             });
@@ -157,10 +183,14 @@ public class LoginMenu implements Initializable {
             new Thread(task).start();
         }
     }
-
-
-
-
+    public static boolean check_gmail_validation(String gmail) {
+        System.out.println("[DATABASE] Checking if "+ gmail + " is a valid gmail... ");
+        String regex = "^[\\w.+-]+@gmail\\.com$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(gmail);
+        System.out.println("[DATABASE] Done");
+        return matcher.matches();
+    }
     public void logIn(ActionEvent event) {
         String username = loginUsernameTF.getText();
         String password = loginPasswordTF.getText();
@@ -204,6 +234,7 @@ public class LoginMenu implements Initializable {
                 } else {
                     applyShakeEffect(loginUsernameTF);
                     applyShakeEffect(loginPasswordTF);
+                    showMassage("Username or Password is Wrong");
                 }
             });
 

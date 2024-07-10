@@ -40,7 +40,8 @@ public class Client_playlist {
     public void add_video(String playlist_id, ArrayList<Video> videos, int request_id){
         playlist.setRequest("add_video");
         playlist.setRequest_id(request_id);
-        playlist.setId(playlist_id);
+        System.out.println(playlist_id);
+        playlist.setPlaylist_id(playlist_id);
         playlist.setVideos(videos);
         send_request();
     }
@@ -72,7 +73,7 @@ public class Client_playlist {
     public void get_info(String playlist_id, int request_id){
         playlist.setRequest("get_info");
         playlist.setRequest_id(request_id);
-        playlist.setId(playlist_id);
+        playlist.setPlaylist_id(playlist_id);
         send_request();
     }
     public void delete_playlist(String playlist_id, String user_id, int request_id){

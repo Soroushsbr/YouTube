@@ -315,8 +315,9 @@ public class Playlist_DB {
                     playlist.setDescription(resultSet.getString("description"));
                     playlist.setIs_public(resultSet.getBoolean("is_public"));
                     playlist.setCreated_at(resultSet.getTimestamp("created_at"));
-
+                    System.out.println(playlist.getId());
                     ServerResponse sr = Post_DB.get_all_posts_of_a_playlist(UUID.fromString(playlist.getId()), request_id);
+                    System.out.println(sr.getVideos_list());
                     playlist.setVideos(sr.getVideos_list());
 
                     playlists.add(playlist);

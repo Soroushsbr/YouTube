@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="parent" prefHeight="720.0" prefWidth="1280.0" styleClass="back" stylesheets="@Style/Light/Channel.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.ChannelPage">
+<AnchorPane fx:id="parent" prefHeight="720.0" prefWidth="1280.0" styleClass="back" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="espresso.youtube.Front.ChannelPage">
    <children>
       <AnchorPane layoutX="21.0" layoutY="15.0" prefHeight="41.0" prefWidth="1238.0">
          <children>
@@ -64,114 +64,114 @@
          <content>
             <VBox fx:id="contentBox" prefHeight="639.0" prefWidth="1116.0" styleClass="back">
                <children>
-                  <AnchorPane prefHeight="237.0" prefWidth="1125.0" styleClass="background">
+                  <VBox>
+                     <VBox.margin>
+                        <Insets bottom="20.0" top="30.0" />
+                     </VBox.margin>
                      <children>
-                        <HBox layoutX="105.0" prefHeight="148.0" prefWidth="795.0">
+                        <Rectangle fx:id="banner" arcHeight="20.0" arcWidth="20.0" height="151.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1074.0">
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin>
+                        </Rectangle>
+                        <AnchorPane prefHeight="237.0" prefWidth="1125.0" styleClass="background">
                            <children>
-                              <Circle fx:id="channelProfile" radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
-                              <VBox prefHeight="124.0" prefWidth="338.0" spacing="7.0" HBox.hgrow="SOMETIMES">
+                              <HBox layoutX="105.0" prefHeight="148.0" prefWidth="795.0">
                                  <children>
-                                    <Text fx:id="nameTxt" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel name">
-                                       <font>
-                                          <Font name="Roboto Bold" size="28.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Text>
-                                    <Text fx:id="infoTxt" fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="\@username  • subs • vids">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Text>
-                                    <Text fx:id="bioTxt" fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="about">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets />
-                                       </VBox.margin>
-                                    </Text>
-                                    <HBox fx:id="btnBox" spacing="16.0">
-                                       <VBox.margin>
-                                          <Insets top="5.0" />
-                                       </VBox.margin>
+                                    <Circle fx:id="channelProfile" radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="prof" />
+                                    <VBox prefHeight="124.0" prefWidth="338.0" spacing="7.0" HBox.hgrow="SOMETIMES">
                                        <children>
-                                          <Button fx:id="subBtn" mnemonicParsing="false" onAction="#subscribe" prefHeight="33.0" styleClass="coloredBtn" text="Subscribe">
+                                          <Text fx:id="nameTxt" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="colored_text" text="Channel name">
                                              <font>
-                                                <Font name="Roboto Bold" size="15.0" />
+                                                <Font name="Roboto Bold" size="28.0" />
                                              </font>
-                                          </Button>
-                                          <Button fx:id="subBtn1" mnemonicParsing="false" onAction="#switchToDashboard" prefHeight="33.0" styleClass="coloredBtn" text="Customise channel">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="infoTxt" fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="\@username  • subs • vids">
                                              <font>
-                                                <Font name="Roboto Bold" size="15.0" />
+                                                <Font size="15.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Text>
+                                          <Text fx:id="bioTxt" fill="#868686" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="about">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Text>
+                                          <HBox fx:id="btnBox" spacing="16.0">
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin>
+                                             <children>
+                                                <Button fx:id="subBtn" mnemonicParsing="false" onAction="#subscribe" prefHeight="33.0" styleClass="coloredBtn" text="Subscribe">
+                                                   <font>
+                                                      <Font name="Roboto Bold" size="15.0" />
+                                                   </font>
+                                                </Button>
+                                                <Button fx:id="subBtn1" mnemonicParsing="false" onAction="#switchToDashboard" prefHeight="33.0" styleClass="coloredBtn" text="Customise channel">
+                                                   <font>
+                                                      <Font name="Roboto Bold" size="15.0" />
+                                                   </font>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" layoutX="104.5" layoutY="178.0" prefHeight="42.0" prefWidth="691.0">
+                                 <children>
+                                    <AnchorPane prefHeight="42.0" prefWidth="56.0">
+                                       <children>
+                                          <Button layoutY="12.0" mnemonicParsing="false" onAction="#appendVideos" prefHeight="30.0" prefWidth="65.0" styleClass="channel_button" text="Videos">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
                                              </font>
                                           </Button>
                                        </children>
-                                    </HBox>
+                                    </AnchorPane>
+                                    <AnchorPane prefHeight="42.0" prefWidth="56.0">
+                                       <children>
+                                          <Button layoutY="12.0" mnemonicParsing="false" onAction="#showPlaylists" prefHeight="30.0" prefWidth="71.0" styleClass="channel_button" text="Playlists">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                    </AnchorPane>
                                  </children>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </VBox>
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" layoutX="104.5" layoutY="178.0" prefHeight="42.0" prefWidth="691.0">
-                           <children>
-                              <AnchorPane prefHeight="42.0" prefWidth="56.0">
+                              </HBox>
+                              <Line endX="803.0" fill="#85858500" layoutX="312.0" layoutY="223.0" startX="-313.0" stroke="#868686" strokeWidth="0.5" />
+                              <AnchorPane fx:id="profPane" layoutX="107.0" opacity="0.0" prefHeight="105.0" prefWidth="149.0">
                                  <children>
-                                    <Button layoutY="12.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="59.0" styleClass="channel_button" text="Home">
-                                       <font>
-                                          <Font name="System Bold" size="13.0" />
-                                       </font>
-                                    </Button>
+                                    <Circle layoutX="71.0" layoutY="75.0" onMouseEntered="#hoverProf" onMouseExited="#unhoverProf" opacity="0.27" radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Circle>
+                                    <AnchorPane layoutX="65.0" layoutY="67.0" prefHeight="16.0" prefWidth="19.0" styleClass="prof_svg" />
+                                    <Circle fill="TRANSPARENT" layoutX="71.0" layoutY="75.0" onMouseEntered="#hoverProf" onMouseExited="#unhoverProf" radius="74.0" stroke="WHITE" strokeType="INSIDE">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Circle>
+                                    <Button mnemonicParsing="false" onAction="#switchToDashboard" opacity="0.0" prefHeight="149.0" prefWidth="149.0" text="Button" />
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="42.0" prefWidth="56.0">
-                                 <children>
-                                    <Button layoutY="12.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" styleClass="channel_button" text="Videos">
-                                       <font>
-                                          <Font name="System Bold" size="13.0" />
-                                       </font>
-                                    </Button>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="42.0" prefWidth="56.0">
-                                 <children>
-                                    <Button layoutY="12.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="71.0" styleClass="channel_button" text="Playlists">
-                                       <font>
-                                          <Font name="System Bold" size="13.0" />
-                                       </font>
-                                    </Button>
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </HBox>
-                        <Line endX="803.0" fill="#85858500" layoutX="312.0" layoutY="223.0" startX="-313.0" stroke="#868686" strokeWidth="0.5" />
-                        <AnchorPane fx:id="profPane" layoutX="107.0" opacity="0.0" prefHeight="105.0" prefWidth="149.0">
-                           <children>
-                              <Circle layoutX="71.0" layoutY="75.0" onMouseEntered="#hoverProf" onMouseExited="#unhoverProf" opacity="0.27" radius="74.0" stroke="TRANSPARENT" strokeType="INSIDE">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Circle>
-                              <AnchorPane layoutX="65.0" layoutY="67.0" prefHeight="16.0" prefWidth="19.0" styleClass="prof_svg" />
-                              <Circle fill="TRANSPARENT" layoutX="71.0" layoutY="75.0" onMouseEntered="#hoverProf" onMouseExited="#unhoverProf" radius="74.0" stroke="WHITE" strokeType="INSIDE">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Circle>
-                              <Button mnemonicParsing="false" onAction="#switchToDashboard" opacity="0.0" prefHeight="149.0" prefWidth="149.0" text="Button" />
                            </children>
                         </AnchorPane>
                      </children>
-                     <VBox.margin>
-                        <Insets top="30.0" />
-                     </VBox.margin>
-                  </AnchorPane>
+                  </VBox>
                </children>
             </VBox>
          </content>

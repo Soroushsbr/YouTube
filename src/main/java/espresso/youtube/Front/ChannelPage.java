@@ -2,6 +2,7 @@ package espresso.youtube.Front;
 
 import espresso.youtube.models.channel.Channel;
 import espresso.youtube.models.channel.Client_channel;
+import espresso.youtube.models.playlist.Client_playlist;
 import espresso.youtube.models.playlist.Playlist;
 import espresso.youtube.models.video.Client_video;
 import espresso.youtube.models.video.Video;
@@ -87,6 +88,8 @@ public class ChannelPage implements Initializable {
     Text urName;
     @FXML
     Text urUsername;
+    @FXML
+    Rectangle banner;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setProfile();
@@ -153,6 +156,7 @@ public class ChannelPage implements Initializable {
                 thread.interrupt();
             }
         });
+
     }
     public void initializeChannel(){
         nameTxt.setText(channel.getName());
@@ -222,17 +226,40 @@ public class ChannelPage implements Initializable {
             if(taskProf.getValue() != null) {
                 ImagePattern pattern = new ImagePattern(new Image(taskProf.getValue().toURI().toString()));
                 channelProfile.setFill(pattern);
-                threadProf.interrupt();
             }
+                threadProf.interrupt();
+                Task<File> taskBanner = new Task<File>() {
+                    @Override
+                    protected File call() throws Exception {
+                        client.setReq_id();
+                        int req = client.getReq_id();
+                        return Client_video.get_media("banner", channel.getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req );
+                    }
+                };
+                Thread threadBanner = new Thread(taskBanner);
+                threadBanner.start();
+                taskBanner.setOnSucceeded(e -> {
+                    if(taskBanner.getValue() != null) {
+                        ImagePattern p = new ImagePattern(new Image(taskBanner.getValue().toURI().toString()));
+                        banner.setFill(p);
+                        threadBanner.interrupt();
+                    }else {
+                        VBox vBox = (VBox) banner.getParent();
+                        vBox.getChildren().remove(banner);
+                    }
+                });
         });
     }
     public void setChannel(Channel channel) throws IOException {
         this.channel = channel;
         initializeChannel();
+        appendVideos();
+    }
+    public void appendVideos() throws IOException {
+        ArrayList<Video> videos;
         Client_video cv = new Client_video(client.getOut());
         client.setReq_id();
         int req = client.getReq_id();
-        ArrayList<Video> videos;
         cv.get_all_posts_of_a_channel(channel.getId(), client.getChannel_id(), req);
 
         System.out.println("Waiting to get videos...");
@@ -243,7 +270,6 @@ public class ChannelPage implements Initializable {
             }
         }
         System.out.println("Done.");
-
         contentBox.getChildren().removeIf(node -> contentBox.getChildren().indexOf(node) != 0);
         int i = 0;
         while (i <videos.size()) {
@@ -275,7 +301,9 @@ public class ChannelPage implements Initializable {
                     Thread thread = new Thread(task);
                     thread.start();
                     task.setOnSucceeded(e -> {
-                        ((ImageView)((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(task.getValue().toURI().toString()));
+                        if(task.getValue() != null) {
+                            ((ImageView) ((AnchorPane) videoPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(task.getValue().toURI().toString()));
+                        }
                         thread.interrupt();
                         Task<File> taskProf = new Task<File>() {
                             @Override
@@ -307,9 +335,7 @@ public class ChannelPage implements Initializable {
         }
         infoTxt.setText(infoTxt.getText() + Formatter.formatNumber(videos.size()) + " videos");
     }
-    public void changeProf(){
 
-    }
     public void subscribe(){
         if(subBtn.getText().equals("Subscribe")){
             Client_channel cc = new Client_channel(client.getOut());
@@ -371,6 +397,97 @@ public class ChannelPage implements Initializable {
         }catch (IOException ignored){
         }
     }
+    public void showPlaylists() throws IOException {
+
+        contentBox.getChildren().removeIf(node -> contentBox.getChildren().indexOf(node) != 0);
+        ArrayList<Playlist> playlists ;
+        Client_playlist cp = new Client_playlist(client.getOut());
+        client.setReq_id();
+        int req = client.getReq_id();
+        cp.get_playlists_of_account(channel.getId() ,req);
+        while (true){
+            if(client.requests.get(req) != null){
+                playlists = client.requests.get(req).getPlaylists_list();
+                break;
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        int i = 0;
+        while (i < playlists.size()){
+            HBox previewBox = new HBox();
+            previewBox.setSpacing(10);
+            previewBox.getChildren().clear();
+            for(int j = 0 ; j < 3; j ++){
+                if(i < playlists.size()) {
+                    if(playlists.get(i).getIs_public()) {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("Playlist_Box.fxml"));
+                        AnchorPane playlistPane = loader.load();
+                        ((Label) playlistPane.getChildren().get(0)).setText(playlists.get(i).getTitle());
+                        ((Text) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(8)).setText(playlists.get(i).getVideos().size() + " Videos");
+                        int finalI = i;
+                        if (playlists.get(i).getVideos().size() != 0) {
+                            ((Button) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(2)).setOnAction(event -> selectPlaylist(event, playlists.get(finalI)));
+                        }
+                        ((AnchorPane) playlistPane.getChildren().get(2)).setOnMouseEntered(mouseEvent -> hoverPreview(((AnchorPane) playlistPane.getChildren().get(2))));
+                        ((AnchorPane) playlistPane.getChildren().get(2)).setOnMouseExited(mouseEvent -> unhoverPreview(((AnchorPane) playlistPane.getChildren().get(2))));
+                        Task<File> taskNail = new Task<File>() {
+                            @Override
+                            protected File call() throws Exception {
+                                client.setReq_id();
+                                int req = client.getReq_id();
+                                System.out.println(playlists.get(finalI).getVideos().get(0).getVideo_id());
+                                return Client_video.get_media(playlists.get(finalI).getVideos().get(0).getVideo_id(), playlists.get(finalI).getVideos().get(0).getChannel().getId(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req);
+                            }
+                        };
+                        Thread threadNail = new Thread(taskNail);
+                        threadNail.start();
+                        try {
+                            threadNail.join();
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        taskNail.setOnSucceeded(e -> {
+                            if (taskNail.getValue() != null) {
+                                ((ImageView) ((AnchorPane) playlistPane.getChildren().get(2)).getChildren().get(1)).setImage(new Image(taskNail.getValue().toURI().toString()));
+                            }
+                            threadNail.interrupt();
+                            Task<File> taskProf = new Task<File>() {
+                                @Override
+                                protected File call() throws Exception {
+                                    client.setReq_id();
+                                    int req = client.getReq_id();
+                                    return Client_video.get_media("profile", playlists.get(finalI).getUser_id(), "jpg", "picture", (int) client.requests.get(0).get_part("client_handler_id"), req);
+                                }
+                            };
+                            Thread threadProf = new Thread(taskProf);
+                            threadProf.start();
+                            taskProf.setOnSucceeded(event -> {
+                                if (taskProf.getValue() != null) {
+                                    ImagePattern pattern = new ImagePattern(new Image(taskProf.getValue().toURI().toString()));
+                                    ((Circle) playlistPane.getChildren().get(1)).setFill(pattern);
+                                    threadProf.interrupt();
+                                }
+                            });
+                        });
+
+                        previewBox.getChildren().add(playlistPane);
+                        i++;
+                    }else {
+                        j--;
+                        i++;
+                    }
+                }else {
+                    break;
+                }
+            }
+            contentBox.getChildren().add(previewBox);
+        }
+    }
     public void switchToYourChannel(ActionEvent event){
         Parent root;
         Stage stage;
@@ -403,6 +520,22 @@ public class ChannelPage implements Initializable {
             mainPage.appendVideos();
             //set client for next stage
 
+            stage.show();
+        }catch (IOException ignored){
+        }
+    }
+    public void selectPlaylist(ActionEvent event, Playlist playlist){
+        Parent root;
+        Stage stage;
+        Scene scene;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Video_Page.fxml"));
+            root = loader.load();
+            VideoPage videoPage = loader.getController();
+            videoPage.appendPlaylist(playlist , 0);
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
             stage.show();
         }catch (IOException ignored){
         }
